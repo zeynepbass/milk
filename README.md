@@ -1,6 +1,6 @@
 
 
-ilk, giriş ve kayıt sistemine sahip bir web uygulamasıdır.
+Giriş ve kayıt sistemine sahip bir randevu sistemi web uygulamasıdır.
 ---
 Kimlik doğrulama
 Kullanıcılar kayıt olabilir ve giriş yapabilirler .
