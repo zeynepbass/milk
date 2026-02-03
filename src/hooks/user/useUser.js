@@ -1,15 +1,22 @@
 import { useState } from "react";
-import userPostService from "../../services/userServices";
+import userPostService from "@/services/userServices";
+import { useUserStore } from "@/store";
 export default function userLogin() {
-  const [data, setData] = useState(null);
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const setUser = useUserStore((state) => state.setUser);
+
   const handleSubmit = async (formData) => {
     try {
+      setLoading(true);
       const res = await userPostService.postService(formData);
-      setData(res);
+      setUser(res);
     } catch (error) {
-      console.log(error);
+      setError(error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
-  return { data, handleSubmit };
+  return { handleSubmit, loading, error };
 }

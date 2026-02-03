@@ -1,5 +1,5 @@
-import {Container} from "./components/shared/Container"
-import Section from "./pages/section"
+import {Container} from "@/components/shared/Container"
+import Section from "@/pages/section"
 import { Route,Routes } from "react-router-dom";
 function App() {
   return (
