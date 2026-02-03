@@ -1,4 +1,4 @@
-Proje Tanımı – Milk
+
 
 ilk, giriş ve kayıt sistemine sahip bir web uygulamasıdır.
 ---
