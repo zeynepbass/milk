@@ -100,3 +100,43 @@ Bildirim
 Admin panel
 
 💡 MVP = “Instagram ama köy ürünü”
+
+---
+
+🚀 V2 (ÜRÜN OLMA YOLU)
+
+👉 “Kullanan geri geldi mi?”
+
+EKLENENLER
+
+💬 DM (satıcıya sor)
+
+⭐ Favori üretici
+
+🔔 Bildirim (yeni gönderi / takip)
+
+🟢 Doğrulanmış satıcı
+
+📊 Profil istatistikleri
+
+🧾 Sipariş talebi (checkout yok)
+
+---
+
+🌍 V3 (PLATFORM OLMA)
+
+👉 “Bu iş büyür mü?”
+
+EKLENENLER
+
+🤖 Keşfet algoritması
+
+📈 Satıcı paneli
+
+🛡️ Gelişmiş admin panel
+
+🌱 Organik sertifika yükleme
+
+
+
+
