@@ -63,3 +63,40 @@ Axios – API istekleri için
 Tailwind CSS – Kullanıcı arayüzü stillendirmesi için
 React Router DOM – Sayfa yönlendirmesi için
 Node.js – Arka uç ve sunucu tarafı geliştirme için
+
+---
+
+🥛 MILK – MVP (İLK SÜRÜM)
+ZORUNLU OLANLAR
+
+✅ Login / Register
+
+✅ Profil bilgileri
+
+✅ Gönderi oluşturma
+
+✅ Ürün listeleme (ISR)
+
+✅ Ürün detayı (SSR)
+
+✅ Beğeni
+
+✅ Yorum
+
+✅ Takip / takipçi
+
+✅ İlçe filtreleme
+
+✅ Favori (kaydet)
+
+🚫 YOK
+
+Ödeme
+
+DM
+
+Bildirim
+
+Admin panel
+
+💡 MVP = “Instagram ama köy ürünü”
