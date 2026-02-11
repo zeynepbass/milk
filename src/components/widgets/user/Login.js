@@ -59,7 +59,7 @@ export function Login() {
           <p className="mt-4 text-sm text-gray-500 text-center">
             Üye değil misin?{" "}
             <Link
-              to="/register"
+              to="/uye-ol"
               className="text-[rgb(82,144,246)] font-medium hover:underline"
             >
               Üye ol

@@ -99,7 +99,7 @@ export function Register() {
           <p className="mt-4 text-sm text-gray-500 text-center">
             Üye misin?{" "}
             <Link
-              to="/login"
+              to="/giris-yap"
               className="text-[rgb(82,144,246)] font-medium hover:underline"
             >
               Giriş yap

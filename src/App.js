@@ -2,6 +2,9 @@ import {Container} from "./components/shared/Container"
 import Section from "./pages/section"
 import Login from "./pages/login/index"
 import Register from "./pages/register/index"
+import Profile from "./pages/profile/index"
+import Favorite from "./pages/favorite/index"
+import Dialog from "./pages/dialog/index"
 import { Route,Routes } from "react-router-dom";
 function App() {
   return (
@@ -15,18 +18,50 @@ function App() {
   }
 />
 <Route
-  path="/login"
+  path="/giris-yap"
   element={
-
-      <Login />
+    <Container>
+      <Login /></Container>
 
   }
 />
 <Route
-  path="/register"
+  path="/uye-ol"
+  element={
+    <Container>
+      <Register /></Container>
+
+  }
+/>
+<Route
+  path="/profil"
   element={
 
-      <Register />
+    <Container>  <Profile /></Container>
+
+  }
+/>
+<Route
+  path="/ayarlar"
+  element={
+
+    <Container> <Profile /></Container>
+
+  }
+/>
+<Route
+  path="/favoriler"
+  element={
+
+    <Container>   <Favorite /></Container>
+
+  }
+/>
+<Route
+  path="/mesajlar"
+  element={
+
+    <Container> <Dialog /></Container>
 
   }
 />
