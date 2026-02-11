@@ -1,0 +1,22 @@
+{
+    "_id": "64f9b2a7c1f0a123456789ab",
+    "user": "64f9b1f2c1f0a123456789aa",
+    "ownerName": "Ahmet",
+    "ownerSurname": "Yılmaz",
+    "ownerRole": "satıcı",
+    "title": "Doğal Keçi Tereyağı",
+    "description": "El yapımı, katkısız ve doğal keçi tereyağı. Taze üretim, organik beslenmiş keçilerden.",
+    "images": [
+      "https://www.butikkahvalti.com/images/urunler/Keci-Tereyag-resim-371.jpg",
+      "https://via.placeholder.com/600x400",
+      "https://via.placeholder.com/600x400/ffcc00/000000"
+    ],
+    "district": "Kadıköy",
+    "category": "sut_urunleri",
+    "likes": ["64f9b1f2c1f0a123456789ab", "64f9b1f2c1f0a123456789ac"],
+    "savedBy": ["64f9b1f2c1f0a123456789ad"],
+    "isActive": true,
+    "createdAt": "2026-02-11T17:30:00.000Z",
+    "updatedAt": "2026-02-11T17:45:00.000Z"
+  }
+  

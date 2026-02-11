@@ -49,8 +49,9 @@ export function Login() {
 
           <button
             type="submit"
-            className="mt-6 w-full rounded-md bg-[rgb(82,144,246)] py-2.5
-            text-sm font-semibold text-white hover:opacity-90 transition"
+            className="mt-6 w-full rounded-md  py-2.5
+            text-sm font-semibold text-white bg-[rgb(137,205,251)]
+hover:bg-gray-200  transition"
           >
             Giriş Yap
           </button>

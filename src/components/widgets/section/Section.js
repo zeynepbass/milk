@@ -1,5 +1,6 @@
+import Card from "./card"
 export function Section(){
     return(
-        <p>section</p>
+        <Card/>
     )
 }

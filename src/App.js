@@ -5,6 +5,7 @@ import Register from "./pages/register/index"
 import Profile from "./pages/profile/index"
 import Favorite from "./pages/favorite/index"
 import Dialog from "./pages/dialog/index"
+import Details from "./pages/section/details/index"
 import { Route,Routes } from "react-router-dom";
 function App() {
   return (
@@ -20,16 +21,16 @@ function App() {
 <Route
   path="/giris-yap"
   element={
-    <Container>
-      <Login /></Container>
+
+      <Login />
 
   }
 />
 <Route
   path="/uye-ol"
   element={
-    <Container>
-      <Register /></Container>
+
+      <Register />
 
   }
 />
@@ -62,6 +63,14 @@ function App() {
   element={
 
     <Container> <Dialog /></Container>
+
+  }
+/>
+<Route
+  path="/detay"
+  element={
+
+    <Container> <Details /></Container>
 
   }
 />
