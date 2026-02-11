@@ -1,4 +1,5 @@
 import { ChevronDownIcon } from "@heroicons/react/16/solid";
+import { Link } from "react-router-dom";
 
 export function Register() {
   return (
@@ -24,7 +25,7 @@ export function Register() {
   
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-sm font-medium text-gray-500">
                   Ad
                 </label>
                 <input
@@ -34,7 +35,7 @@ export function Register() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-sm font-medium text-gray-500">
                   Soyad
                 </label>
                 <input
@@ -44,7 +45,7 @@ export function Register() {
               </div>
 
               <div className="sm:col-span-2">
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-sm font-medium text-gray-500">
                   Email
                 </label>
                 <input
@@ -54,7 +55,7 @@ export function Register() {
               </div>
 
               <div className="sm:col-span-2">
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-sm font-medium text-gray-500">
                   Parola
                 </label>
                 <input
@@ -64,16 +65,17 @@ export function Register() {
               </div>
 
               <div className="sm:col-span-2 relative">
-                <label className="block text-sm font-medium text-gray-700">
+                <label className="block text-sm font-medium text-gray-500">
                   Üye Alanı
                 </label>
-                <select className="mt-1 w-full appearance-none rounded-md border border-gray-200 px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[rgb(82,144,246)]">
-                  <option>Satıcı</option>
+                <select className="mt-1 w-full appearance-none rounded-md border border-gray-200 px-3 py-2 text-sm focus:outline-none text-gray-500 focus:ring-2 focus:ring-[rgb(82,144,246)]">
+                  <option >Satıcı</option>
                   <option>Alıcı</option>
                 </select>
-                <ChevronDownIcon className="absolute right-3 top-9 w-5 h-5 text-gray-400 pointer-events-none" />
+                <ChevronDownIcon className="absolute right-3 top-9 w-5 h-5 text-gray-500 pointer-events-none" />
               </div>
             </div>
+
 
  
             <button
@@ -82,6 +84,16 @@ export function Register() {
             >
               Üye Ol
             </button>
+            <p className="text-sm text-gray-500 text-center">
+  Üye misin?{" "}
+  <Link
+    to="/login"
+    className="text-[rgb(82,144,246)] font-medium hover:underline"
+  >
+    Giriş yap
+  </Link>
+</p>
+
           </div>
         </form>
       </div>
