@@ -1,5 +1,5 @@
-import {Login} from "@/components/widgets/login"
-export default function Login()
+import {Login} from "../../components/widgets/user"
+export default function LoginPost()
 {
     return(
         <Login/>

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import userPostService from "@/services/userServices";
+import {userLoginService,userRegisterService} from "@/services/userServices";
 import { useUserStore } from "@/store";
 export default function userLogin() {
   const [error, setError] = useState(null);
@@ -9,7 +9,7 @@ export default function userLogin() {
   const handleSubmit = async (formData) => {
     try {
       setLoading(true);
-      const res = await userPostService.postService(formData);
+      const res = await userLoginService.postService(formData);
       setUser(res);
     } catch (error) {
       setError(error.message);
@@ -17,6 +17,18 @@ export default function userLogin() {
       setLoading(false);
     }
   };
+const handleSubmitRegister=async(formData)=>{
+  try {
+    setLoading(true);
+    const res = await userRegisterService.postService(formData);
+    setUser(res);
+  } catch (error) {
+    setError(error.message);
+  } finally {
+    setLoading(false);
+  }
+};
+  
 
-  return { handleSubmit, loading, error };
+  return { handleSubmit,handleSubmitRegister, loading, error };
 }
