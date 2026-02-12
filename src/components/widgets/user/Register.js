@@ -1,15 +1,34 @@
 import { ChevronDownIcon } from "@heroicons/react/16/solid";
 import { Link } from "react-router-dom";
-
+import useUserLogin from "../../../hooks/user/useUser"
+import { useState } from "react";
 export function Register() {
+  const {handleSubmitRegister,loading}=useUserLogin()
+  const [formData,setFormData]=useState({
+    name:"",
+    surname:"",
+    email:"",
+    role:"",
+    password:""
+  })
+  const handleChange=(e)=>{
+    setFormData({
+      ...formData,
+      [e.target.name]:e.target.value
+    })
+  }
+  const onSubmit = (e) => {
+    console.log(formData)
+    e.preventDefault();
+    handleSubmitRegister(formData);
+  };
   return (
     <div
       className="hidden md:block relative h-screen bg-cover bg-center"
       style={{ backgroundImage: "url('/images/wallpaper.png')" }}
     >
-
       <div className="absolute top-1/2 right-[12%] -translate-y-1/2">
-        <form className="w-[420px] rounded-xl  backdrop-blur-md p-8 shadow-xl">
+        <form className="w-[420px] rounded-xl  backdrop-blur-md p-8 shadow-xl" onSubmit={onSubmit}>
 
           <div className="border-b border-gray-900/10 pb-4 mb-6">
             <h2 className="text-lg font-semibold text-[rgb(71,92,120)]">
@@ -29,6 +48,8 @@ export function Register() {
               <input
                 type="text"
                 placeholder="Adınız"
+                name="name"
+                onChange={handleChange}
                 className="mt-1 w-full rounded-md border border-gray-200 px-3 py-2 text-sm
                 focus:outline-none focus:ring-2 focus:ring-[rgb(82,144,246)]"
               />
@@ -40,6 +61,8 @@ export function Register() {
               </label>
               <input
                 type="text"
+                name="surname"
+                onChange={handleChange}
                 placeholder="Soyadınız"
                 className="mt-1 w-full rounded-md border border-gray-200 px-3 py-2 text-sm
                 focus:outline-none focus:ring-2 focus:ring-[rgb(82,144,246)]"
@@ -52,6 +75,8 @@ export function Register() {
               </label>
               <input
                 type="email"
+                name="email"
+                onChange={handleChange}
                 placeholder="ornek@mail.com"
                 className="mt-1 w-full rounded-md border border-gray-200 px-3 py-2 text-sm
                 focus:outline-none focus:ring-2 focus:ring-[rgb(82,144,246)]"
@@ -64,6 +89,8 @@ export function Register() {
               </label>
               <input
                 type="password"
+                name="password"
+                onChange={handleChange}
                 placeholder="••••••••"
                 className="mt-1 w-full rounded-md border border-gray-200 px-3 py-2 text-sm
                 focus:outline-none focus:ring-2 focus:ring-[rgb(82,144,246)]"
@@ -75,27 +102,37 @@ export function Register() {
                 Üye Alanı
               </label>
               <select
+               name="role"
+               onChange={handleChange}
+         
                 className="mt-1 w-full appearance-none rounded-md border border-gray-200
                 px-3 py-2 text-sm text-gray-500 focus:outline-none
                 focus:ring-2 focus:ring-[rgb(82,144,246)]"
               >
-                <option>Satıcı</option>
-                <option>Alıcı</option>
+                <option value="" disabled>
+  Rol seçiniz
+</option>
+                <option value="satici">satıcı</option>
+                <option value="alici">alıcı</option>
               </select>
               <ChevronDownIcon className="pointer-events-none absolute right-3 top-9 h-5 w-5 text-gray-400" />
             </div>
           </div>
 
 
-          <button
-            type="submit"
-            className="mt-6 w-full rounded-md bg-[rgb(137,205,251)]
-hover:bg-gray-200
-            py-2.5 text-sm font-semibold text-white  transition"
-          >
-            Üye Ol
-          </button>
 
+
+          <button
+  type="submit"
+  disabled={loading}
+  className={`mt-6 w-full rounded-md py-2.5 text-sm font-semibold text-white transition
+    ${loading
+      ? "bg-gray-300 cursor-not-allowed"
+      : "bg-[rgb(137,205,251)] hover:bg-gray-200"}
+  `}
+>
+  {loading ? "Gönderiliyor..." : "Üye Ol"}
+</button>
 
           <p className="mt-4 text-sm text-gray-500 text-center">
             Üye misin?{" "}

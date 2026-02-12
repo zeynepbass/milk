@@ -7,8 +7,18 @@ import Favorite from "./pages/favorite/index"
 import Dialog from "./pages/dialog/index"
 import Details from "./pages/section/details/index"
 import { Route,Routes } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 function App() {
+  
   return (
+    <>
+<ToastContainer
+  toastClassName="rounded-xl shadow-md"
+  bodyClassName="text-sm font-medium"
+  theme="colored"
+/>
+
 <Routes>
 <Route
   path="/"
@@ -75,7 +85,7 @@ function App() {
   }
 />
 </Routes>
-
+</>
   );
 }
 

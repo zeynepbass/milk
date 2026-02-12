@@ -18,7 +18,7 @@ export function Profile() {
   const navigate = useNavigate();
 
   return (
-    <div className="grid grid-cols-12 ">
+    <div className="grid grid-cols-12 h-[100vh]">
       <div className="col-span-4 overflow-hidden relative p-6 border-r border-gray-100">
         <button className="absolute top-4 right-4 bg-gray-100 p-2 rounded-full hover:bg-gray-200 transition">
           <PencilIcon className="w-5 h-5 text-gray-500" />
