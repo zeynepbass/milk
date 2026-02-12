@@ -123,7 +123,7 @@ hover:bg-gray-200
 
           {activeTab === "settings" && (
             <div className="space-y-6">
-              <div className="p-4 border rounded-lg bg-yellow-50">
+              <div className="p-4 border rounded-lg bg-[rgb(246,246,246)]">
                 <h3 className="font-semibold text-gray-700 border-b border-gray-300 pb-1 mb-2">
                   Hesabı Dondur
                 </h3>
@@ -139,7 +139,7 @@ hover:bg-gray-200
                 </button>
               </div>
 
-              <div className="p-4 border rounded-lg bg-red-50">
+              <div className="p-4 border rounded-lg bg-[rgb(246,246,246)]">
                 
                 <h3 className="font-semibold text-gray-700 border-b border-gray-300 pb-1 mb-2">
                   Hesabı Sil

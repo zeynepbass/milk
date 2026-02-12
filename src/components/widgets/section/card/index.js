@@ -64,7 +64,7 @@ export default function Card() {
             
      
               </button>
-              <button className="flex items-center justify-center  rounded-full hover:bg-[#B38471] transition">
+              <button className="flex items-center justify-center  rounded-full hover:bg-yellow-100 transition">
               <TrashIcon className="w-6 h-6 text-yellow-500" />
 
               </button>
