@@ -4,12 +4,15 @@ import {
   BookmarkIcon,
   ChatBubbleBottomCenterIcon,
   ArrowRightIcon,
+  UserPlusIcon,
   TrashIcon,
-  UserPlusIcon
+  XMarkIcon
 } from "@heroicons/react/24/outline";
+
+
 import { Link } from "react-router-dom";
 import usePostAll from "../../../../hooks/post/usePost";
-
+import useCommentAll from "../../../../hooks/post/comments/useComments"
 export default function Card() {
   const { data = [], loading, user } = usePostAll();
 
@@ -26,17 +29,19 @@ export default function Card() {
 
 
 
-function PostItem({ item,currentUser }) {
-  const [comments, setComments] = useState([]);
-  const [newComment, setNewComment] = useState("");
+function PostItem({ item, currentUser }) {
+
+  const { handleComment, comments } = useCommentAll(item._id);
+
   const [showComments, setShowComments] = useState(false);
+  const [newComment, setNewComment] = useState("");
 
   const handleAddComment = () => {
     if (!newComment.trim()) return;
-    setComments([...comments, newComment]);
+
+    handleComment(newComment);
     setNewComment("");
   };
-
   return (
     <div className="max-w-md bg-white rounded-2xl shadow-md hover:shadow-xl transition duration-300 mb-8">
 
@@ -112,35 +117,58 @@ function PostItem({ item,currentUser }) {
 
         {showComments && (
           <div className="mt-4">
-            <div className="space-y-2 max-h-40 overflow-y-auto mb-3">
+              <div className="space-y-2 max-h-40 overflow-y-auto mb-3">
               {comments.length === 0 ? (
                 <p className="text-gray-400 text-sm italic">
                   Henüz yorum yok
                 </p>
               ) : (
-                comments.map((comment, index) => (
-                  <div
-                    key={index}
-                    className="bg-gray-100 px-3 py-2 rounded-lg text-sm"
-                  >
-                    {comment}
+                comments.map((comment) => (
+                  <div key={comment._id} className="mb-3">
+                  <div className="flex items-start gap-3">
+                
+       
+                    <img
+                      src={comment?.user?.profileImage || "https://i.pravatar.cc/150"}
+                      alt="profile"
+                      className="w-8 h-8 rounded-full object-cover"
+                    />
+                
+   
+                    <div className="flex flex-col w-full">
+                      <div className="flex justify-around">
+                       <p className="text-sm font-semibold">{comment?.user?.name} {comment?.user?.surname}</p>
+                        <p className="text-right text-sm"><span> <XMarkIcon
+    
+    className="w-4 h-4 text-gray-400 hover:text-red-500 cursor-pointer transition"
+  /></span></p>
+                      </div>
+
+                      <p className="text-sm text-gray-600">
+                        {comment.text}
+                      </p>
+                   
+                    </div>
+                
                   </div>
+                </div>
+                
                 ))
               )}
             </div>
 
             <div className="flex space-x-2">
-              <input
+            <input
                 type="text"
                 placeholder="Yorum yap..."
                 value={newComment}
                 onChange={(e) => setNewComment(e.target.value)}
-                className="flex-1 border rounded-full px-3 py-2 text-sm focus:ring-2 focus:ring-blue-400 outline-none"
+                className="flex-1 border rounded-full px-3 py-2 text-sm"
               />
 
               <button
                 onClick={handleAddComment}
-                className="bg-[rgb(137,205,251)] hover:bg-blue-400 text-white p-2 rounded-full transition"
+                className="bg-[rgb(137,205,251)] text-white p-2 rounded-full"
               >
                 <ArrowRightIcon className="w-4 h-4" />
               </button>

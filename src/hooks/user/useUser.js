@@ -11,16 +11,24 @@ export default function useUserLogin() {
   const [loading, setLoading] = useState(false);
   const setUser = useUserStore((state) => state.setUser);
   const navigate = useNavigate();
+
   const handleSubmit = async (formData) => {
     try {
       setLoading(true);
 
       const res = await userLoginService.postService(formData);
-
       setUser(res);
-      toast.success(res.message || "Giriş başarılı ");
+
+
+      localStorage.setItem("auth-storage", JSON.stringify({
+        state: {
+          user: res.user,
+          token: res.token
+        }
+      }));
+
+      toast.success(res.message || "Giriş başarılı");
       navigate("/");
-      localStorage.setItem("userID",JSON.stringify(res))
 
     } catch (err) {
       toast.error(
@@ -31,19 +39,18 @@ export default function useUserLogin() {
     }
   };
 
-
   const handleSubmitRegister = async (formData) => {
     try {
       setLoading(true);
 
       const res = await userRegisterService.postService(formData);
 
-      toast.success(res.message || "Kayıt başarılı ");
+      toast.success(res.message || "Kayıt başarılı");
       navigate("/giris-yap");
 
     } catch (err) {
       toast.error(
-        err?.response?.data?.message || "Kayıt sırasında hata oluştu "
+        err?.response?.data?.message || "Kayıt sırasında hata oluştu"
       );
     } finally {
       setLoading(false);
