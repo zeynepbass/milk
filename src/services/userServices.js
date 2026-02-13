@@ -1,5 +1,5 @@
 import { API_URI } from "../constant/api";
-console.log(API_URI)
+
 export const userLoginService= {
 
     postService: async (formData) => {

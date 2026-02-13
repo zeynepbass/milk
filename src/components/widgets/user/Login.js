@@ -1,14 +1,32 @@
-import { Link } from "react-router-dom";
 
+import { Link } from "react-router-dom";
+import useUserLogin from "../../../hooks/user/useUser"
+import { useState } from "react";
 export function Login() {
-  return (
+  const {handleSubmit}=useUserLogin()
+  const [formData,setFormData]=useState({
+    email:"",
+    password:""
+  })
+  const handleChange=(e)=>{
+    setFormData({
+      ...formData,
+      [e.target.name]:e.target.value
+    })
+  }
+  const onSubmit = (e) => {
+    console.log(formData)
+    e.preventDefault();
+    handleSubmit(formData);
+  };
+  return( 
     <div
       className="hidden md:block relative h-screen bg-cover bg-center"
       style={{ backgroundImage: "url('/images/wallpaper.png')" }}
     >
 
       <div className="absolute top-[40%] right-[14%] -translate-y-1/2">
-        <form className="w-[420px] rounded-xl backdrop-blur-md p-8 shadow-xl">
+      <form className="w-[420px] rounded-xl  backdrop-blur-md p-8 shadow-xl" onSubmit={onSubmit}>
 
           <div className="border-b border-gray-900/10 pb-4 mb-6">
             <h2 className="text-lg font-semibold text-[rgb(71,92,120)]">
@@ -27,6 +45,8 @@ export function Login() {
               </label>
               <input
                 type="email"
+                name="email"
+                onChange={handleChange}
                 placeholder="ornek@mail.com"
                 className="mt-1 w-full rounded-md border border-gray-200 px-3 py-2 text-sm
                 focus:outline-none focus:ring-2 focus:ring-[rgb(82,144,246)]"
@@ -39,6 +59,8 @@ export function Login() {
               </label>
               <input
                 type="password"
+                name="password"
+                onChange={handleChange}
                 placeholder="••••••••"
                 className="mt-1 w-full rounded-md border border-gray-200 px-3 py-2 text-sm
                 focus:outline-none focus:ring-2 focus:ring-[rgb(82,144,246)]"

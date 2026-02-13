@@ -1,0 +1,18 @@
+import { API_URI } from "constant/api";
+
+export const postService = {
+  getPosts: async () => {
+    const res = await fetch(`${API_URI}/posts`, {
+      method:"GET",
+      headers: {
+        "Content-Type": "application/json"
+      },
+    });
+
+    if (!res.ok) {
+      throw new Error("API error");
+    }
+
+    return await res.json();
+  },
+};

@@ -20,6 +20,7 @@ export default function useUserLogin() {
       setUser(res);
       toast.success(res.message || "Giriş başarılı ");
       navigate("/");
+      localStorage.setItem("userID",JSON.stringify(res))
 
     } catch (err) {
       toast.error(

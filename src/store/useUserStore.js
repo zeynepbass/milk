@@ -1,5 +1,14 @@
 import { create } from "zustand";
+
 export const useUserStore = create((set) => ({
   user: null,
-  setUser: (user) => set({ user }),
+  setUser: (data) =>
+    set({
+      user: data.user
+    }),
+
+  logout: () =>
+    set({
+      user: null
+    }),
 }));
