@@ -13,22 +13,23 @@ import { Link } from "react-router-dom";
 import usePostAll from "../../../../hooks/post/usePost";
 import useCommentAll from "../../../../hooks/post/comments/useComments";
 export default function Card() {
-  const { data = [], loading, user } = usePostAll();
+  const { data = [], loading, user,handlePostLike } = usePostAll();
 
   return (
     <div className="h-[800px] px-4 py-6">
       {loading && <p className="text-center text-gray-500">Loading...</p>}
 
       {data.map((item) => (
-        <PostItem key={item._id} item={item} currentUser={user} />
+        <PostItem key={item._id} item={item} currentUser={user}  handlePostLike={handlePostLike}/>
       ))}
     </div>
   );
 }
-function PostItem({ item, currentUser }) {
+function PostItem({ item, currentUser,handlePostLike }) {
   const { handleComment, handleDelete, handleLike, comments } = useCommentAll(
     item._id
   );
+
   const [showComments, setShowComments] = useState(false);
   const [newComment, setNewComment] = useState("");
 
@@ -38,10 +39,7 @@ function PostItem({ item, currentUser }) {
     handleComment(newComment);
     setNewComment("");
   };
-  const handleDeleteComment = (id) => {
-    console.log(id);
-    handleDelete(id);
-  };
+
   return (
     <div className="max-w-md bg-white rounded-2xl shadow-md hover:shadow-xl transition duration-300 mb-8">
       <Link to={`/detay/${item._id}`}>
@@ -84,8 +82,14 @@ function PostItem({ item, currentUser }) {
               <ChatBubbleBottomCenterIcon className="w-5 h-5" />
             </button>
 
-            <button className="flex items-center space-x-1 hover:text-red-500 transition">
-              <HeartIcon className="w-5 h-5" />
+            <button
+              className="flex items-center space-x-1 hover:text-red-500 transition"
+              onClick={() => handlePostLike(item._id)}
+            >
+              <HeartIcon
+                className={`w-5 h-5 ${item.liked ? "text-red-500" : ""}`}
+              />
+
               <span className="text-sm">{item.likes?.length || 0}</span>
             </button>
 
@@ -128,9 +132,7 @@ function PostItem({ item, currentUser }) {
                           </p>
                           <p className="text-right text-sm">
                             {currentUser?.id === comment?.user?._id && (
-                              <button
-                                onClick={() => handleDeleteComment(comment._id)}
-                              >
+                              <button onClick={() => handleDelete(comment._id)}>
                                 <XMarkIcon className="w-4 h-4 text-gray-400 hover:text-red-500 cursor-pointer transition" />
                               </button>
                             )}
@@ -140,27 +142,29 @@ function PostItem({ item, currentUser }) {
                         <p className="text-sm text-gray-600">{comment.text}</p>
                         <div className="flex gap-2">
                           {comment.likes?.length > 0 && (
-                        <div className="flex items-center mt-2">
-                        <div className="flex -space-x-2">
-                          {comment.likes.slice(0, 10).map((user) => (
-                            <img
-                              key={user._id}
-                              src={user.profileImage || "https://i.pravatar.cc/150"}
-                              className="w-6 h-6 rounded-full object-cover border-2 border-white"
-                              alt="like-user"
-                            />
-                          ))}
-                      
-                          {comment.likes.length > 10 && (
-                            <div className="w-6 h-6 rounded-full bg-gray-300 text-xs flex items-center justify-center border-2 border-white">
-                              +{comment.likes.length - 10}
+                            <div className="flex items-center mt-2">
+                              <div className="flex -space-x-2">
+                                {comment.likes.slice(0, 10).map((user) => (
+                                  <img
+                                    key={user._id}
+                                    src={
+                                      user.profileImage ||
+                                      "https://i.pravatar.cc/150"
+                                    }
+                                    className="w-6 h-6 rounded-full object-cover border-2 border-white"
+                                    alt="like-user"
+                                  />
+                                ))}
+
+                                {comment.likes.length > 10 && (
+                                  <div className="w-6 h-6 rounded-full bg-gray-300 text-xs flex items-center justify-center border-2 border-white">
+                                    +{comment.likes.length - 10}
+                                  </div>
+                                )}
+                              </div>
                             </div>
                           )}
-                        </div>
-                      </div>
-                      
-                          )}
-                          
+
                           <button
                             onClick={() => handleLike(comment._id)}
                             className="text-left"

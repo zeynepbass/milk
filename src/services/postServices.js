@@ -15,4 +15,19 @@ export const postService = {
 
     return await res.json();
   },
+  postLike:async(id,token)=>{
+    const res=await fetch(`${API_URI}/posts/${id}/like/post`, {
+      method:"POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    if (!res.ok) {
+      throw new Error("API error");
+    }
+
+    return await res.json();
+  },
 };

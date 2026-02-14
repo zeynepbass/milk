@@ -39,12 +39,12 @@ export default function usePostComment(postId) {
       console.log(error);
     }
   };
-  const handleDelete = async (id) => {
+  const handleDelete = async (postId) => {
     try {
-      await commentService.deleteComment(id, token);
+      await commentService.deleteComment(postId, token);
   
       setComments((prev) =>
-        prev.filter((item) => item._id !== id)
+        prev.filter((item) => item._id !== postId)
       );
   
     } catch (error) {
