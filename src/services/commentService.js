@@ -35,4 +35,33 @@ export const commentService = {
 
     return await res.json();
   },
+
+  deleteComment:async(id,token)=>{
+    const res = await fetch(`${API_URI}/comments/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      }
+    });
+  if (!res.ok) {
+    throw new Error("Yorumlar alınamadı");
+  }
+
+  return await res.json();
+},
+likeComment:async(id,token)=>{
+  const res = await fetch(`${API_URI}/comments/${id}/like`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    }
+  });
+if (!res.ok) {
+  throw new Error("Yorumlar alınamadı");
+}
+
+return await res.json();
+},
 };
