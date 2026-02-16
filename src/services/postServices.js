@@ -15,6 +15,22 @@ export const postService = {
 
     return await res.json();
   },
+  postDetails:async(id,token)=>{
+    const res=await fetch(`${API_URI}/posts/${id}`, {
+      method:"GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      }
+    });
+
+    if (!res.ok) {
+      throw new Error("API error");
+    }
+
+    return await res.json();
+  },
+
   postLike:async(id,token)=>{
     const res=await fetch(`${API_URI}/posts/${id}/like/post`, {
       method:"POST",
@@ -30,4 +46,18 @@ export const postService = {
 
     return await res.json();
   },
-};
+  userPostMe:async(token)=>{
+    const res=await fetch(`${API_URI}/posts/user/me`, {
+      method:"GET",
+      headers:{
+        "Content-Type": "application/json",
+        Authorization:`Bearer ${token}`,
+      }
+    });
+
+    if (!res.ok) {
+      throw new Error("API error");
+    }
+
+    return await res.json();
+  }}

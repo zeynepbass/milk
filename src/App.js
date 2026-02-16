@@ -77,7 +77,7 @@ function App() {
   }
 />
 <Route
-  path="/detay"
+  path="/detay/:id"
   element={
 
     <Container> <Details /></Container>

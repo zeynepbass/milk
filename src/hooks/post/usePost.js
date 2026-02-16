@@ -4,6 +4,7 @@ import { useUserStore } from "../../store";
 export default function usePost() {
 
   const [loading, setLoading] = useState(false);
+
   const [data, setData] = useState([]);
   const user = useUserStore((state) => state.user);
   const token = useUserStore((state) => state.token);
@@ -42,5 +43,5 @@ export default function usePost() {
     }
   };
   
-  return { data, loading, user, handlePostLike };
+  return {data, loading, user, handlePostLike };
 }

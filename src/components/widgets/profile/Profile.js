@@ -2,6 +2,7 @@ import { PencilIcon, UserIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Card from "../section/card/index"
+import usePost from "hooks/post/user/usePost";
 export function Profile() {
   const profile = {
     name: "Ahmet Yılmaz",
@@ -14,7 +15,7 @@ export function Profile() {
   };
   const [activeTab, setActiveTab] = useState("posts");
   const [showFreezeModal, setShowFreezeModal] = useState(false);
-
+const {details,loading}=usePost();
   const navigate = useNavigate();
 
   return (
@@ -116,7 +117,8 @@ hover:bg-gray-200
         <div className="mt-4">
           {activeTab === "posts" && (
             <div className="space-y-3">
-             <Card/>
+
+             <Card data={details} loading={loading}/>
               
             </div>
           )}

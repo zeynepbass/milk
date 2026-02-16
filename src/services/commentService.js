@@ -3,8 +3,8 @@ import { API_URI } from "constant/api";
 export const commentService = {
 
 
-  postComment: async (id, text, token) => {
-    const res = await fetch(`${API_URI}/comments/${id}`, {
+  postComment: async (postId, text, token) => {
+    const res = await fetch(`${API_URI}/comments/${postId}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -21,8 +21,8 @@ export const commentService = {
   },
 
 
-  getComments: async (id,token) => {
-    const res = await fetch(`${API_URI}/comments/${id}`, {
+  getComments: async (postId,token) => {
+    const res = await fetch(`${API_URI}/comments/${postId}`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -36,8 +36,8 @@ export const commentService = {
     return await res.json();
   },
 
-  deleteComment:async(id,token)=>{
-    const res = await fetch(`${API_URI}/comments/${id}`, {
+  deleteComment:async(postId,token)=>{
+    const res = await fetch(`${API_URI}/comments/${postId}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -50,8 +50,8 @@ export const commentService = {
 
   return await res.json();
 },
-likeComment:async(id,token)=>{
-  const res = await fetch(`${API_URI}/comments/${id}/like`, {
+likeComment:async(postId,token)=>{
+  const res = await fetch(`${API_URI}/comments/${postId}/like`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",

@@ -2,35 +2,35 @@ import { useEffect, useState, useCallback } from "react";
 import { commentService } from "services/commentService";
 import { useUserStore } from "../../../store/useUserStore";
 
-export default function usePostComment(postId) {
+export default function usePostComment(id) {
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(false);
   const token = useUserStore((state) => state.token);
   const fetchComments = useCallback(async () => {
     try {
       setLoading(true);
-      const res = await commentService.getComments(postId,token);
+      const res = await commentService.getComments(id,token);
       setComments(res);
     } catch (error) {
       console.log(error);
     } finally {
       setLoading(false);
     }
-  }, [postId]);
+  }, [id]);
 
 
   useEffect(() => {
-    if (postId) {
+    if (id) {
       fetchComments();
     }
-  }, [postId, fetchComments]);
+  }, [id, fetchComments]);
 
 
-  const handleComment = async (text) => {
+  const handleComment = async (id, text) => {
     if (!text.trim()) return;
 
     try {
-      const res = await commentService.postComment(postId, text, token);
+      const res = await commentService.postComment(id, text, token);
 
 
       setComments((prev) => [res, ...prev]);
@@ -39,12 +39,12 @@ export default function usePostComment(postId) {
       console.log(error);
     }
   };
-  const handleDelete = async (postId) => {
+  const handleDelete = async (id) => {
     try {
-      await commentService.deleteComment(postId, token);
+      await commentService.deleteComment(id, token);
   
       setComments((prev) =>
-        prev.filter((item) => item._id !== postId)
+        prev.filter((item) => item._id !== id)
       );
   
     } catch (error) {
