@@ -9,7 +9,7 @@ export function Section(){
       setSelected(id)
       setShowComments(!showComments)
     }
-      const { data = [], loading, user, handlePostLike } = usePostAll();
+      const { data = [], loading, user, handlePostLike,handlePostSave } = usePostAll();
       const { handleComment, handleDelete, handleLike, comments } = useCommentAll(selected);
 
 
@@ -21,6 +21,7 @@ export function Section(){
         showComments={showComments}
         handleShowed={handleShowed}
         user={user} 
+        handlePostSave={handlePostSave}
         handlePostLike={handlePostLike}
         handleComment={handleComment}
         handleDelete={handleDelete}

@@ -42,6 +42,28 @@ export default function usePost() {
       console.log(error);
     }
   };
+  const handlePostSave = async (id) => {
+    try {
+      const res = await postService.postsavedBy(id, token);
   
-  return {data, loading, user, handlePostLike };
+      setData((prev) =>
+        prev.map((post) => {
+          if (post._id !== id) return post;
+  
+          const alreadySaved = post.savedBy.includes(user.id);
+  
+          return {
+            ...post,
+            savedBy: alreadySaved
+              ? post.savedBy.filter((u) => u !== user.id)
+              : [...post.savedBy, user.id],
+          };
+        })
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
+  return {data, loading, user, handlePostLike,handlePostSave };
 }

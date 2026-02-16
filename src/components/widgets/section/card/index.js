@@ -20,6 +20,7 @@ export default function Card({data,
   handlePostLike,
   handleComment,
   handleDelete,
+  handlePostSave,
   handleLike,
   comments}) {
 
@@ -93,8 +94,8 @@ export default function Card({data,
                     <span className="text-sm">{item.likes.length || 0}</span>
                   </button>
 
-                  <button className=" flex items-center hover:text-green-600 transition">
-                    <BookmarkIcon className="w-5 h-5" />
+                  <button className=" flex items-center hover:text-green-600 transition"     onClick={() => handlePostSave(item._id)}>
+                    <BookmarkIcon className="w-5 h-5"        />
                     <span className="text-sm">{item.savedBy.length || 0}</span>
                   </button>
                 </div>

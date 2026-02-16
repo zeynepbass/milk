@@ -7,14 +7,13 @@ import {
   XMarkIcon
 } from "@heroicons/react/24/outline";
 import { useParams } from "react-router-dom";
-import useUserPost from "../../../../hooks/post/usePostDetails";
+import useCommentAll from "../../../../hooks/post/usePostDetails";
 
-import useCommentAll from "../../../../hooks/post/comments/useComments";
 export function Detail() {
   const { id } = useParams();
    
-const { handleDelete, handleLike,handleComment } = useCommentAll();
-  const { details, loading,handlePostLike,user } = useUserPost(id);
+const { handleDelete,handleComment,details, loading,handleLike,user,comments,handlePostLike,handlePostSave } = useCommentAll(id);
+
   const [currentImage, setCurrentImage] = useState(0);
 
   const [newComment, setNewComment] = useState("");
@@ -30,7 +29,7 @@ const { handleDelete, handleLike,handleComment } = useCommentAll();
     return <p className="text-center mt-10">Gönderi bulunamadı</p>;
   }
 
-  const images = details.post.images || [];
+  const images = details.images || [];
 
   const nextImage = () =>
     setCurrentImage((prev) => (prev + 1) % images.length);
@@ -40,7 +39,7 @@ const { handleDelete, handleLike,handleComment } = useCommentAll();
 
 
   const handleAddComment = (postId) => {
-    console.log(postId)
+ 
     if (!newComment.trim()) return;
 
     handleComment(postId, newComment);
@@ -54,7 +53,7 @@ const { handleDelete, handleLike,handleComment } = useCommentAll();
         <div className="relative w-full h-96">
           <img
             src={images[currentImage]}
-            alt={details.post.title}
+            alt={details.title}
             className="w-full h-full object-cover rounded-xl"
           />
 
@@ -82,37 +81,37 @@ const { handleDelete, handleLike,handleComment } = useCommentAll();
 
         <div className="flex items-center space-x-4">
           <div className="bg-gray-200 w-14 h-14 rounded-full flex items-center justify-center font-semibold">
-            {details.post.ownerName?.[0]}
-            {details.post.ownerSurname?.[0]}
+            {details.ownerName?.[0]}
+            {details.ownerSurname?.[0]}
           </div>
 
           <div>
             <p className="font-bold">
-              {details.post.ownerName} {details.post.ownerSurname}
+              {details.ownerName} {details.ownerSurname}
             </p>
             <p className="text-sm text-gray-400">
-              {details.post.ownerRole}
+              {details.ownerRole}
             </p>
           </div>
         </div>
 
 
         <div>
-          <h1 className="text-3xl font-bold">{details.post.title}</h1>
-          <p className="text-gray-500 mt-2">{details.post.description}</p>
+          <h1 className="text-3xl font-bold">{details.title}</h1>
+          <p className="text-gray-500 mt-2">{details.description}</p>
         </div>
 
 
         <div className="flex gap-3">
-          {details.post.category && (
+          {details.category && (
             <span className="px-4 py-1 bg-[#B38471] text-white rounded-full text-sm capitalize">
-              {details.post.category.replace("_", " ")}
+              {details.category.replace("_", " ")}
             </span>
           )}
 
-          {details.post.district && (
+          {details.district && (
             <span className="px-4 py-1 bg-gray-100 rounded-full text-sm">
-              {details.post.district}
+              {details.district}
             </span>
           )}
         </div>
@@ -129,26 +128,26 @@ const { handleDelete, handleLike,handleComment } = useCommentAll();
           <button className=" flex items-center p-3 rounded-full bg-pink-100">
           <HeartIcon
                       className="w-5 h-5 text-red-500"      
-                         onClick={() => handlePostLike(details.post._id)}
+                         onClick={() => handlePostLike(details._id)}
                     />
-                                <span className="text-sm text-red-500"> {details.post.likes.length}</span>
+                                <span className="text-sm text-red-500"> {details.likes.length}</span>
           </button>
+          <button className="  flex items-center p-3 rounded-full bg-yellow-100" onClick={() => handlePostSave(details._id)}>
+          <BookmarkIcon className="w-5 h-5 text-yellow-500" />
+                    <span className="text-sm text-yellow-500"> {details.savedBy.length || 0}</span>
+                  </button>
 
-          <button className="  flex items-center p-3 rounded-full bg-yellow-100">
-            <BookmarkIcon className="w-5 h-5 text-yellow-500" />
-            <span className="text-sm text-yellow-500"> {details.post.savedBy.length || 0}</span>
-          </button>
         </div>
 
         {showComments && (
                 <div className="mt-4">
                   <div className="space-y-2 max-h-40 overflow-y-auto mb-3">
-                    {details.comments.length === 0 ? (
+                    {comments.length === 0 ? (
                       <p className="text-gray-400 text-sm italic">
                         Henüz yorum yok
                       </p>
                     ) : (
-                      details.comments.map((comment) => (
+                      comments.map((comment) => (
                         <div key={comment._id} className="mb-3">
                           <div className="flex items-start gap-3">
                             <img
@@ -211,7 +210,7 @@ const { handleDelete, handleLike,handleComment } = useCommentAll();
                                   className="text-left"
                                 >
                                   <span className="underline text-xs">
-                                    {comment?.likes
+                                  {comment?.liked
                                       ? "Beğenmekten Vazgeç"
                                       : "Beğen"}
                                   </span>
@@ -234,7 +233,7 @@ const { handleDelete, handleLike,handleComment } = useCommentAll();
                     />
 
                     <button
-                      onClick={() => handleAddComment(details.post._id)}
+                      onClick={() => handleAddComment(details._id)}
                       className="bg-[rgb(137,205,251)] text-white p-2 rounded-full"
                     >
                       <ArrowRightIcon className="w-4 h-4" />
