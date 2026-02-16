@@ -1,2 +1,2 @@
-export {Section} from "./Section"
-export {Detail} from "./Details"
+export { Section } from "./Section";
+export { Detail } from "./Details";

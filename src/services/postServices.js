@@ -3,9 +3,9 @@ import { API_URI } from "constant/api";
 export const postService = {
   getPosts: async () => {
     const res = await fetch(`${API_URI}/posts`, {
-      method:"GET",
+      method: "GET",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
       },
     });
 
@@ -15,13 +15,13 @@ export const postService = {
 
     return await res.json();
   },
-  postDetails:async(id,token)=>{
-    const res=await fetch(`${API_URI}/posts/${id}`, {
-      method:"GET",
+  postDetails: async (id, token) => {
+    const res = await fetch(`${API_URI}/posts/${id}`, {
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     });
 
     if (!res.ok) {
@@ -30,13 +30,13 @@ export const postService = {
 
     return await res.json();
   },
-  postsavedBy:async(id,token)=>{
-    const res=await fetch(`${API_URI}/posts/${id}/save`, {
-      method:"POST",
+  postsavedBy: async (id, token) => {
+    const res = await fetch(`${API_URI}/posts/${id}/save`, {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     });
 
     if (!res.ok) {
@@ -45,13 +45,13 @@ export const postService = {
 
     return await res.json();
   },
-  postLike:async(id,token)=>{
-    const res=await fetch(`${API_URI}/posts/${id}/like/post`, {
-      method:"POST",
+  postLike: async (id, token) => {
+    const res = await fetch(`${API_URI}/posts/${id}/like/post`, {
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`
-      }
+        Authorization: `Bearer ${token}`,
+      },
     });
 
     if (!res.ok) {
@@ -60,13 +60,13 @@ export const postService = {
 
     return await res.json();
   },
-  userPostMe:async(token)=>{
-    const res=await fetch(`${API_URI}/posts/user/me`, {
-      method:"GET",
-      headers:{
+  userPostMe: async (token) => {
+    const res = await fetch(`${API_URI}/posts/user/me`, {
+      method: "GET",
+      headers: {
         "Content-Type": "application/json",
-        Authorization:`Bearer ${token}`,
-      }
+        Authorization: `Bearer ${token}`,
+      },
     });
 
     if (!res.ok) {
@@ -74,4 +74,5 @@ export const postService = {
     }
 
     return await res.json();
-  }}
+  },
+};

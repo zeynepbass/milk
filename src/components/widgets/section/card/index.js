@@ -11,7 +11,8 @@ import {
 
 import { Link } from "react-router-dom";
 
-export default function Card({data,
+export default function Card({
+  data,
   loading,
   user,
   selected,
@@ -22,14 +23,11 @@ export default function Card({data,
   handleDelete,
   handlePostSave,
   handleLike,
-  comments}) {
-
-
+  comments,
+}) {
   const [newComment, setNewComment] = useState("");
 
   const handleAddComment = (id) => {
-
-
     handleComment(id, newComment);
     setNewComment("");
   };
@@ -38,11 +36,9 @@ export default function Card({data,
     <div className="h-[800px] px-4 py-6">
       {loading && <p className="text-center text-gray-500">Loading...</p>}
       {!data || data.length === 0 ? (
-  <p className="text-center text-gray-400 mt-10">
-    Gönderi bulunamadı
-  </p>
-) : (
-  data.map((item) => (
+        <p className="text-center text-gray-400 mt-10">Gönderi bulunamadı</p>
+      ) : (
+        data.map((item) => (
           <div className="max-w-md bg-white rounded-2xl shadow-md hover:shadow-xl transition duration-300 mb-8">
             <Link to={`/detay/${item._id}`}>
               <img
@@ -78,7 +74,7 @@ export default function Card({data,
               <div className="flex justify-between items-center border-t pt-3 text-gray-600">
                 <div className="flex space-x-4">
                   <button
-                    onClick={() =>handleShowed(item._id)}
+                    onClick={() => handleShowed(item._id)}
                     className="hover:text-blue-500 transition"
                   >
                     <ChatBubbleBottomCenterIcon className="w-5 h-5" />
@@ -88,14 +84,16 @@ export default function Card({data,
                     className="flex items-center space-x-1 hover:text-red-600 transition"
                     onClick={() => handlePostLike(item._id)}
                   >
-                    <HeartIcon
-                      className="w-5 h-5"                    />
+                    <HeartIcon className="w-5 h-5" />
 
                     <span className="text-sm">{item.likes.length || 0}</span>
                   </button>
 
-                  <button className=" flex items-center hover:text-green-600 transition"     onClick={() => handlePostSave(item._id)}>
-                    <BookmarkIcon className="w-5 h-5"        />
+                  <button
+                    className=" flex items-center hover:text-green-600 transition"
+                    onClick={() => handlePostSave(item._id)}
+                  >
+                    <BookmarkIcon className="w-5 h-5" />
                     <span className="text-sm">{item.savedBy.length || 0}</span>
                   </button>
                 </div>
@@ -213,8 +211,8 @@ export default function Card({data,
               )}
             </div>
           </div>
-    ))
-  )}
+        ))
+      )}
     </div>
   );
 }

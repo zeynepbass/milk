@@ -17,7 +17,7 @@ export default function usePostDetail(id) {
         setLoading(true);
         const res = await postService.postDetails(id, token);
         setDetails(res.post);
-setComments(res.comments);
+        setComments(res.comments);
       } catch (error) {
         console.log(error);
       } finally {
@@ -31,27 +31,26 @@ setComments(res.comments);
   const handleLike = async (commentId) => {
     try {
       const res = await commentService.likeComment(commentId, token);
-  
-      setComments(prev =>
-        prev.map(comment =>
+
+      setComments((prev) =>
+        prev.map((comment) =>
           comment._id === commentId
             ? {
                 ...comment,
                 likes: res.likes,
                 likesCount: res.likesCount,
-                liked: res.liked
+                liked: res.liked,
               }
             : comment
         )
       );
-  
     } catch (error) {
       console.log(error);
     }
   };
   const handleComment = async (postId, text) => {
     if (!text.trim()) return;
-  
+
     try {
       const res = await commentService.postComment(postId, text, token);
       setComments((prev) => [res, ...prev]);
@@ -59,14 +58,12 @@ setComments(res.comments);
       console.log(error);
     }
   };
-  
+
   const handleDelete = async (commentId) => {
     try {
       await commentService.deleteComment(commentId, token);
-  
-      setComments((prev) =>
-        prev.filter((item) => item._id !== commentId)
-      );
+
+      setComments((prev) => prev.filter((item) => item._id !== commentId));
     } catch (error) {
       console.log(error);
     }
@@ -74,17 +71,16 @@ setComments(res.comments);
   const handlePostLike = async (postId) => {
     try {
       const res = await postService.postLike(postId, token);
-  
+
       setDetails((prev) => {
         if (!prev) return prev;
-  
+
         return {
           ...prev,
           likes: res.likes,
           liked: res.liked,
         };
       });
-  
     } catch (error) {
       console.log(error);
     }
@@ -92,12 +88,12 @@ setComments(res.comments);
   const handlePostSave = async (postId) => {
     try {
       const res = await postService.postsavedBy(postId, token);
-  
+
       setDetails((prev) => {
         if (!prev) return prev;
-  
+
         const alreadySaved = prev.savedBy.includes(user.id);
-  
+
         return {
           ...prev,
           savedBy: alreadySaved
@@ -105,13 +101,20 @@ setComments(res.comments);
             : [...prev.savedBy, user.id],
         };
       });
-  
     } catch (error) {
       console.log(error);
     }
   };
-  
 
-  return { details, loading, handleLike,handleDelete,handleComment,comments,user,handlePostLike,handlePostSave };
+  return {
+    details,
+    loading,
+    handleLike,
+    handleDelete,
+    handleComment,
+    comments,
+    user,
+    handlePostLike,
+    handlePostSave,
+  };
 }
-
