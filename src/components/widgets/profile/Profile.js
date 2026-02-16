@@ -1,8 +1,11 @@
 import { PencilIcon, UserIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Card from "../section/card/index"
+import Card from "../section/card/index";
 import usePost from "hooks/post/user/usePost";
+import { CreatePostForm } from "../../widgets/profile";
+
+import useCommentAll from "../../../hooks/post/comments/useComments";
 export function Profile() {
   const profile = {
     name: "Ahmet Yılmaz",
@@ -15,9 +18,29 @@ export function Profile() {
   };
   const [activeTab, setActiveTab] = useState("posts");
   const [showFreezeModal, setShowFreezeModal] = useState(false);
-const {details,loading}=usePost();
+  const {
+    details,
+    loading,
+    onSubmit,
+    form,
+    setForm,
+    deleted,
+    handlePostLike,
+    handlePostSave,
+    user,
+  } = usePost();
   const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const [showComments, setShowComments] = useState(false);
+  const [selected, setSelected] = useState(null);
+  const handleShowed = (id) => {
+    setSelected(id);
+    setShowComments(!showComments);
+  };
 
+  const { handleComment, handleDelete, handleC0mmentLike, comments } =
+    useCommentAll(selected);
+    console.log("user",user)
   return (
     <div className="grid grid-cols-12 h-[100vh]">
       <div className="col-span-4 overflow-hidden relative p-6 border-r border-gray-100">
@@ -90,7 +113,7 @@ hover:bg-gray-200
         </div>
       </div>
 
-      <div className="col-span-8 p-6" >
+      <div className="col-span-8 p-6">
         <div className="flex border-b border-gray-200">
           <button
             className={`px-4 py-2 font-semibold ${
@@ -112,14 +135,45 @@ hover:bg-gray-200
           >
             Hesap Ayarları
           </button>
+
+            <button
+              type="submit"
+              onClick={() => setOpen(true)}
+              className="mb-2 w-1/4 ml-auto rounded-md py-2.5 text-sm font-semibold text-white transition bg-[rgb(137,205,251)] hover:bg-gray-200"
+            >
+              Gönderi Paylaş
+            </button>
+
         </div>
 
         <div className="mt-4">
+
+          {open && (
+            <CreatePostForm
+              onSubmit={onSubmit}
+              form={form}
+              setForm={setForm}
+              setOpen={setOpen}
+            />
+          )}
+
           {activeTab === "posts" && (
             <div className="space-y-3">
-
-             <Card data={details} loading={loading}/>
-              
+              <Card
+                data={details}
+                loading={loading}
+                selected={selected}
+                showComments={showComments}
+                handleShowed={handleShowed}
+                user={user}
+                handlePostSave={handlePostSave}
+                handlePostLike={handlePostLike}
+                handleComment={handleComment}
+                handleDelete={handleDelete}
+                handleC0mmentLike={handleC0mmentLike}
+                comments={comments}
+                deleted={deleted}
+              />
             </div>
           )}
 
@@ -142,7 +196,6 @@ hover:bg-gray-200
               </div>
 
               <div className="p-4 border rounded-lg bg-[rgb(246,246,246)]">
-                
                 <h3 className="font-semibold text-gray-700 border-b border-gray-300 pb-1 mb-2">
                   Hesabı Sil
                 </h3>
@@ -151,9 +204,8 @@ hover:bg-gray-200
                   silinecektir. Bu işlemi geri alamazsınız.
                 </p>
                 <button
-  onClick={() => navigate("/uye-ol")}
-                                    className=" text-red-500 underline transition font-medium"
-
+                  onClick={() => navigate("/uye-ol")}
+                  className=" text-red-500 underline transition font-medium"
                 >
                   Hesabı Sil
                 </button>

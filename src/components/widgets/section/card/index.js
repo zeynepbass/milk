@@ -21,8 +21,9 @@ export default function Card({
   handlePostLike,
   handleComment,
   handleDelete,
+  deleted,
   handlePostSave,
-  handleLike,
+  handleC0mmentLike,
   comments,
 }) {
   const [newComment, setNewComment] = useState("");
@@ -33,7 +34,8 @@ export default function Card({
   };
 
   return (
-    <div className="h-[800px] px-4 py-6">
+    <>
+
       {loading && <p className="text-center text-gray-500">Loading...</p>}
       {!data || data.length === 0 ? (
         <p className="text-center text-gray-400 mt-10">Gönderi bulunamadı</p>
@@ -99,10 +101,19 @@ export default function Card({
                 </div>
 
                 <div className="flex space-x-3">
-                  <UserPlusIcon className="w-5 h-5 hover:text-green-500 cursor-pointer" />
-
+                {user?.id !== item.user._id && (
+                       <button
+                       onClick={() => deleted(item._id)}
+                     >
+                  <UserPlusIcon className="w-5 h-5 hover:text-green-500 cursor-pointer" /></button>
+          )}
                   {user?.id === item.user._id && (
-                    <TrashIcon className="w-5 h-5 hover:text-yellow-500 cursor-pointer" />
+                       <button
+                       onClick={() => deleted(item._id)}
+                     >
+                
+
+                    <TrashIcon className="w-5 h-5 hover:text-yellow-500 cursor-pointer" /></button>
                   )}
                 </div>
               </div>
@@ -174,7 +185,7 @@ export default function Card({
                                 )}
 
                                 <button
-                                  onClick={() => handleLike(comment._id)}
+                                  onClick={() => handleC0mmentLike(comment._id)}
                                   className="text-left"
                                 >
                                   <span className="underline text-xs">
@@ -213,6 +224,8 @@ export default function Card({
           </div>
         ))
       )}
-    </div>
+
+
+    </>
   );
 }

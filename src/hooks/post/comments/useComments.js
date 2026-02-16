@@ -51,7 +51,7 @@ export default function usePostComment(id) {
       console.log(error);
     }
   };
-  const handlePostLike = async (commentId) => {
+  const handleC0mmentLike = async (commentId) => {
     try {
       const res = await commentService.likeComment(commentId, token);
   
@@ -76,7 +76,7 @@ export default function usePostComment(id) {
   return {
     comments,
     handleDelete,
-    handlePostLike,
+    handleC0mmentLike,
     loading,
     handleComment,
     refetch: fetchComments

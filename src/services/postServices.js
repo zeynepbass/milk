@@ -15,6 +15,23 @@ export const postService = {
 
     return await res.json();
   },
+  onSubmit:async (form,token)=>{
+    const res = await fetch(`${API_URI}/posts`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(form),
+    });
+
+    if (!res.ok) {
+      throw new Error("API error");
+    }
+
+    return await res.json();
+
+  },
   postDetails: async (id, token) => {
     const res = await fetch(`${API_URI}/posts/${id}`, {
       method: "GET",
@@ -63,6 +80,21 @@ export const postService = {
   userPostMe: async (token) => {
     const res = await fetch(`${API_URI}/posts/user/me`, {
       method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!res.ok) {
+      throw new Error("API error");
+    }
+
+    return await res.json();
+  },
+  deleted:async(id,token)=> {
+    const res = await fetch(`${API_URI}/posts/${id}`, {
+      method: "DELETE",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,

@@ -16,10 +16,14 @@ export function Section() {
     handlePostLike,
     handlePostSave,
   } = usePostAll();
-  const { handleComment, handleDelete, handleLike, comments } =
+  const { handleComment, handleDelete, handleC0mmentLike, comments } =
     useCommentAll(selected);
 
   return (
+    <div className="h-[100vh] overflow-auto ">
+          <div className="grid grid-cols-3 gap-1">
+
+  
     <Card
       data={data}
       loading={loading}
@@ -31,8 +35,10 @@ export function Section() {
       handlePostLike={handlePostLike}
       handleComment={handleComment}
       handleDelete={handleDelete}
-      handleLike={handleLike}
+      handleC0mmentLike={handleC0mmentLike}
       comments={comments}
-    />
+    />        </div>
+    </div>
+
   );
 }

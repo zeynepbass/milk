@@ -2,9 +2,22 @@ import { useEffect, useState } from "react";
 import { postService } from "services/postServices";
 import { useUserStore } from "../../../store";
 export default function usePostDetail() {
-  const [details, setDetails] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [details, setDetails] = useState([]);
+  const user = useUserStore((state) => state.user);
+  console.log("user",user)
   const token = useUserStore((state) => state.token);
+  const [form, setForm] = useState({
+    ownerName: "",
+    ownerSurname: "",
+    ownerRole: "alici",
+    title: "",
+    description: "",
+    district: "",
+    category: "sut_urunleri",
+    images: [],
+  });
+  const [loading, setLoading] = useState(false);
+
   const fetchData = async () => {
     try {
       setLoading(true);
@@ -20,6 +33,68 @@ export default function usePostDetail() {
   useEffect(() => {
     fetchData();
   }, []);
+  const onSubmit = async () => {
+    try {
+      setLoading(true);
+      const res = await postService.onSubmit(form,token);
+      setDetails((prev) => [...prev, res]);
 
-  return { details, loading };
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const deleted=async (postId) => {
+      try {
+        await postService.deleted(postId, token);
+  
+        setDetails((prev) => prev.filter((item) => item._id !== postId));
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    const handlePostLike = async (id) => {
+      try {
+        const res = await postService.postLike(id, token);
+    
+        setDetails((prev) =>
+          prev.map((post) =>
+            post._id === id
+              ? {
+                  ...post,
+                  likes: res.likes, 
+                  liked: res.liked,
+                }
+              : post
+          )
+        );
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    
+    const handlePostSave = async (id) => {
+      try {
+        const res = await postService.postsavedBy(id, token);
+    
+        setDetails((prev) =>
+          prev.map((post) => {
+            if (post._id !== id) return post;
+    
+            const alreadySaved = post.savedBy.includes(user.id);
+    
+            return {
+              ...post,
+              savedBy: alreadySaved
+                ? post.savedBy.filter((u) => u !== user.id)
+                : [...post.savedBy, user.id],
+            };
+          })
+        );
+      } catch (error) {
+        console.log(error);
+      }
+    };
+  return { details, loading,onSubmit,setForm,form,deleted,handlePostLike,handlePostSave,user};
 }
