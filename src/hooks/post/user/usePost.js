@@ -3,6 +3,7 @@ import { postService } from "services/postServices";
 import { useUserStore } from "../../../store";
 export default function usePostDetail() {
   const [details, setDetails] = useState([]);
+
   const user = useUserStore((state) => state.user);
   console.log("user",user)
   const token = useUserStore((state) => state.token);
@@ -96,5 +97,7 @@ export default function usePostDetail() {
         console.log(error);
       }
     };
+
+
   return { details, loading,onSubmit,setForm,form,deleted,handlePostLike,handlePostSave,user};
 }

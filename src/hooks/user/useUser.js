@@ -1,7 +1,8 @@
 import { useState } from "react";
 import {
   userLoginService,
-  userRegisterService
+  userRegisterService,
+  userProfile
 } from "../../services/userServices";
 import { useUserStore } from "../../store";
 import { toast } from "react-toastify";
@@ -9,7 +10,10 @@ import { useNavigate } from "react-router-dom";
 
 export default function useUserLogin() {
   const [loading, setLoading] = useState(false);
+  const [profile,setProfile]=useState("")
   const setUser = useUserStore((state) => state.setUser);
+  const token = useUserStore((state) => state.token);
+
   const navigate = useNavigate();
 
   const handleSubmit = async (formData) => {
@@ -56,10 +60,20 @@ export default function useUserLogin() {
       setLoading(false);
     }
   };
-
+  const getProfile = async () => {
+    try {
+      const res = await userProfile.getService(token);
+      setProfile(res);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  
   return {
     handleSubmit,
     handleSubmitRegister,
-    loading
+    loading,
+    getProfile,
+    profile
   };
 }

@@ -10,15 +10,16 @@ export function Section() {
     setShowComments(!showComments);
   };
   const {
-    data = [],
+    data,
     loading,
     user,
+    followId,
     handlePostLike,
     handlePostSave,
   } = usePostAll();
   const { handleComment, handleDelete, handleC0mmentLike, comments } =
     useCommentAll(selected);
-
+  console.log("data",data)
   return (
     <div className="h-[100vh] overflow-auto ">
           <div className="grid grid-cols-3 gap-1">
@@ -28,6 +29,7 @@ export function Section() {
       data={data}
       loading={loading}
       selected={selected}
+      followId={followId}
       showComments={showComments}
       handleShowed={handleShowed}
       user={user}

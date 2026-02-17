@@ -1,28 +1,32 @@
 import { useEffect, useState } from "react";
 import { postService } from "services/postServices";
-import { useUserStore } from "../../store";
+import { useUserStore,useSearchStore } from "../../store";
 export default function usePost() {
-
+  const [openList, setOpenList] = useState(null); 
   const [loading, setLoading] = useState(false);
-
+  const [refresh, setRefresh] = useState(false);
   const [data, setData] = useState([]);
+  const search = useSearchStore((state) => state.search);
   const user = useUserStore((state) => state.user);
   const token = useUserStore((state) => state.token);
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const res = await postService.getPosts();
-
-        setData(res);
+        const res = await postService.getPosts(search);
+        setData([...res]); 
       } catch (error) {
         console.log(error);
       } finally {
         setLoading(false);
       }
     };
+  
     fetchData();
-  }, []);
+  }, [search]); 
+  
+  
+
   const handlePostLike = async (id) => {
     try {
       const res = await postService.postLike(id, token);
@@ -64,6 +68,16 @@ export default function usePost() {
       console.log(error);
     }
   };
-  
-  return {data, loading, user, handlePostLike,handlePostSave };
+
+
+  const followId=async(id)=>{
+    try {
+ await postService.followById(id, token);
+      setRefresh(prev => !prev);
+      setOpenList(false)
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  return {data, loading, user, handlePostLike,handlePostSave,followId,refresh,openList, setOpenList};
 }

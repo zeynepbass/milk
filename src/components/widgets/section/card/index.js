@@ -15,6 +15,7 @@ export default function Card({
   data,
   loading,
   user,
+  followId,
   selected,
   showComments,
   handleShowed,
@@ -35,13 +36,13 @@ export default function Card({
 
   return (
     <>
-
       {loading && <p className="text-center text-gray-500">Loading...</p>}
       {!data || data.length === 0 ? (
         <p className="text-center text-gray-400 mt-10">Gönderi bulunamadı</p>
       ) : (
-        data.map((item) => (
-          <div className="max-w-md bg-white rounded-2xl shadow-md hover:shadow-xl transition duration-300 mb-8">
+        data?.map((item) => (
+
+          <div key={item._id} className="max-w-md bg-white rounded-2xl shadow-md hover:shadow-xl transition duration-300 mb-8">
             <Link to={`/detay/${item._id}`}>
               <img
                 className="w-full h-60 rounded-sm object-cover"
@@ -101,19 +102,16 @@ export default function Card({
                 </div>
 
                 <div className="flex space-x-3">
-                {user?.id !== item.user._id && (
-                       <button
-                       onClick={() => deleted(item._id)}
-                     >
-                  <UserPlusIcon className="w-5 h-5 hover:text-green-500 cursor-pointer" /></button>
-          )}
-                  {user?.id === item.user._id && (
-                       <button
-                       onClick={() => deleted(item._id)}
-                     >
-                
+                  {user?.id !== item?.user?._id  || item.user && (
+                    <button onClick={() => followId(item?.user._id)}>
+                      <UserPlusIcon className="w-5 h-5 hover:text-green-500 cursor-pointer" />
+                    </button>
+                  )}
 
-                    <TrashIcon className="w-5 h-5 hover:text-yellow-500 cursor-pointer" /></button>
+                  {user?.id === item.user._id || item.user && (
+                    <button onClick={() => deleted(item._id)}>
+                      <TrashIcon className="w-5 h-5 hover:text-yellow-500 cursor-pointer" />
+                    </button>
                   )}
                 </div>
               </div>
@@ -224,8 +222,6 @@ export default function Card({
           </div>
         ))
       )}
-
-
     </>
   );
 }

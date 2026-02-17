@@ -29,3 +29,19 @@ export const userRegisterService = {
   },
 };
 
+export const userProfile = {
+  getService: async (token) => {
+    const res = await fetch(`${API_URI}/users/profile`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!res.ok) throw new Error("API error");
+    return res.json();
+  },
+};
+
+

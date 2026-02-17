@@ -20,11 +20,10 @@ import {
   SquaresPlusIcon,
   XMarkIcon,
   MoonIcon,
-  SunIcon,
   HeartIcon,
   ChatBubbleLeftRightIcon,
 } from "@heroicons/react/24/outline";
-
+import {useSearchStore} from "../../store"
 import {
   ChevronDownIcon,
   PhoneIcon,
@@ -70,6 +69,8 @@ const callsToAction = [
 
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const setSearch = useSearchStore((state) => state.setSearch);
+  const [input, setInput] = useState("");
 
   return (
     <header className="bg-white">
@@ -100,15 +101,23 @@ export function Header() {
         <PopoverGroup className="hidden lg:flex flex-1">
   <div className="flex w-full max-w-2xl mx-auto rounded-full border-2 border-[rgb(137,205,251)]
  overflow-hidden">
-    <input
-      type="text"
-      placeholder="Ürün, kategori veya marka ara…"
-      className="w-full bg-white px-5 py-3 text-sm outline-none"
-    />
+<input
+  type="text"
+  value={input}
+  onChange={(e) => setInput(e.target.value)}
+  onKeyDown={(e) => {
+    if (e.key === "Enter") {
+      setSearch(input);
+    }
+  }}
+  
+  className="w-full bg-white px-5 py-3 text-sm outline-none"
+/>
 
     <button
       type="button"
-      className="flex items-center justify-center bg-[rgb(137,205,251)]
+      onClick={() => setSearch(input)}
+      className="flex items-center justify-center ml-auto bg-[rgb(137,205,251)]
 hover:bg-gray-100  px-6 transition"
     >
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192.904 192.904" width="18px" className="fill-white ">
