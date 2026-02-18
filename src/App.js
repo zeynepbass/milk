@@ -19,61 +19,17 @@ function App() {
       />
 
       <Routes>
-        <Route
-          path="/"
-          element={
-            <Container>
-              <Section />
-            </Container>
-          }
-        />
+        <Route element={<Container />}>
+          <Route path="/" element={<Section />} />
+          <Route path="/profil" element={<Profile />} />
+          <Route path="/ayarlar" element={<Profile />} />
+          <Route path="/favoriler" element={<Favorite />} />
+          <Route path="/mesajlar" element={<Dialog />} />
+          <Route path="/detay/:id" element={<Details />} />
+        </Route>
+
         <Route path="/giris-yap" element={<Login />} />
         <Route path="/uye-ol" element={<Register />} />
-        <Route
-          path="/profil"
-          element={
-            <Container>
-              {" "}
-              <Profile />
-            </Container>
-          }
-        />
-        <Route
-          path="/ayarlar"
-          element={
-            <Container>
-              {" "}
-              <Profile />
-            </Container>
-          }
-        />
-        <Route
-          path="/favoriler"
-          element={
-            <Container>
-              {" "}
-              <Favorite />
-            </Container>
-          }
-        />
-        <Route
-          path="/mesajlar"
-          element={
-            <Container>
-              {" "}
-              <Dialog />
-            </Container>
-          }
-        />
-        <Route
-          path="/detay/:id"
-          element={
-            <Container>
-              {" "}
-              <Details />
-            </Container>
-          }
-        />
       </Routes>
     </>
   );
