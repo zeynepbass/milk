@@ -1,14 +1,8 @@
 import { useState } from "react";
 import Card from "./card";
-import usePostAll from "../../../hooks/post/usePost";
-import useCommentAll from "../../../hooks/post/comments/useComments";
+import usePostAll from "../../../hooks/feed/posts/usePost";
+import useCommentAll from "../../../hooks/feed/comments/useComments";
 export function Section() {
-  const [showComments, setShowComments] = useState(false);
-  const [selected, setSelected] = useState(null);
-  const handleShowed = (id) => {
-    setSelected(id);
-    setShowComments(!showComments);
-  };
   const {
     data,
     loading,
@@ -16,10 +10,17 @@ export function Section() {
     followId,
     handlePostLike,
     handlePostSave,
+    showComments,
   } = usePostAll();
-  const { handleComment, handleDelete, handleC0mmentLike, comments } =
+  const { handleComment, handleDelete, handleC0mmentLike, comments,handleShowed,selected } =
     useCommentAll(selected);
-  console.log("data",data)
+    const [newComment, setNewComment] = useState("");
+
+    const handleAddComment = (id) => {
+      handleComment(id, newComment);
+      setNewComment("");
+    };
+  
   return (
     <div className="h-[100vh] overflow-auto ">
           <div className="grid grid-cols-3 gap-1">
@@ -27,6 +28,9 @@ export function Section() {
   
     <Card
       data={data}
+      newComment={newComment}
+      setNewComment={setNewComment}
+      handleAddComment={handleAddComment}
       loading={loading}
       selected={selected}
       followId={followId}

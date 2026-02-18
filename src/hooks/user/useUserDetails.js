@@ -1,1 +1,0 @@
-//hooks alanı saved yazdıgın dizileri kontrol et

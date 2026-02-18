@@ -6,6 +6,12 @@ export default function usePostComment(id) {
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(false);
   const token = useUserStore((state) => state.token);
+  const [showComments, setShowComments] = useState(false);
+  const [selected, setSelected] = useState(null);
+  const handleShowed = (id) => {
+    setSelected(id);
+    setShowComments(!showComments);
+  };
   const fetchComments = useCallback(async () => {
     try {
       setLoading(true);
@@ -79,6 +85,9 @@ export default function usePostComment(id) {
     handleC0mmentLike,
     loading,
     handleComment,
-    refetch: fetchComments
+    refetch: fetchComments,
+    selected,
+    setShowComments,
+    handleShowed
   };
 }

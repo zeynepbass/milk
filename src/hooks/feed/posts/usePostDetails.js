@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { postService } from "services/postServices";
-import { useUserStore } from "../../store";
+import { useUserStore } from "../../../store";
 import { commentService } from "services/commentService";
 
 export default function usePostDetail(id) {

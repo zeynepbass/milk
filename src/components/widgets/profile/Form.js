@@ -16,7 +16,6 @@ export function CreatePostForm({ onSubmit, loading,form,setForm,setOpen}) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log(form)
     onSubmit(form);
     setOpen(false)
   };

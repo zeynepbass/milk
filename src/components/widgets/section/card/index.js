@@ -20,19 +20,15 @@ export default function Card({
   showComments,
   handleShowed,
   handlePostLike,
-  handleComment,
   handleDelete,
   deleted,
   handlePostSave,
   handleC0mmentLike,
   comments,
+  newComment,
+  setNewComment,
+  handleAddComment
 }) {
-  const [newComment, setNewComment] = useState("");
-
-  const handleAddComment = (id) => {
-    handleComment(id, newComment);
-    setNewComment("");
-  };
 
   return (
     <>

@@ -3,9 +3,13 @@ import { postService } from "services/postServices";
 import { useUserStore } from "../../../store";
 export default function usePostDetail() {
   const [details, setDetails] = useState([]);
-
+      const [button,setButton]=useState(false)
+    const handleUpdated=()=>{
+      console.log(button)
+      setButton(true)
+    }
   const user = useUserStore((state) => state.user);
-  console.log("user",user)
+
   const token = useUserStore((state) => state.token);
   const [form, setForm] = useState({
     ownerName: "",
@@ -99,5 +103,5 @@ export default function usePostDetail() {
     };
 
 
-  return { details, loading,onSubmit,setForm,form,deleted,handlePostLike,handlePostSave,user};
+  return { details, loading,onSubmit,setForm,form,deleted,handlePostLike,handlePostSave,user,handleUpdated,button,setButton};
 }
