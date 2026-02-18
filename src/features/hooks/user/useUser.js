@@ -4,7 +4,7 @@ import {
   userRegisterService,
   userProfile
 } from "../../services/userServices";
-import { useUserStore } from "../../store";
+import { useUserStore } from "../../../store";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 

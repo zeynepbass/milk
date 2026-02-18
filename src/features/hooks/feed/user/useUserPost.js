@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { postService } from "services/postServices";
-import { useUserStore } from "../../../store";
+import { postService } from "features/services/postServices";
+import { useUserStore } from "../../../../store";
 export default function usePostDetail() {
   const [details, setDetails] = useState([]);
       const [button,setButton]=useState(false)

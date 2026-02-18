@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { postService } from "services/postServices";
-import { useUserStore } from "../../../store";
-import { commentService } from "services/commentService";
+import { postService } from "features/services/postServices";
+import { useUserStore } from "../../../../store";
+import { commentService } from "features/services/commentService";
 
 export default function usePostDetail(id) {
   const [details, setDetails] = useState("");
@@ -9,6 +9,7 @@ export default function usePostDetail(id) {
   const [loading, setLoading] = useState(false);
   const token = useUserStore((state) => state.token);
   const user = useUserStore((state) => state.user);
+  const [showComments, setShowComments] = useState(false);
   useEffect(() => {
     if (!id) return;
 
@@ -115,6 +116,7 @@ export default function usePostDetail(id) {
     comments,
     user,
     handlePostLike,
+    showComments, setShowComments,
     handlePostSave,
   };
 }

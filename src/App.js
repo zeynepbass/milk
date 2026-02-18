@@ -1,10 +1,10 @@
-import { Container } from "./components/shared/Container";
+import { Container } from "./shared/Container";
 import Section from "./pages/section";
 import Login from "./pages/login/index";
 import Register from "./pages/register/index";
 import Profile from "./pages/profile/index";
 import Favorite from "./pages/favorite/index";
-import Dialog from "./pages/dialog/index";
+
 import Details from "./pages/section/details/index";
 import { Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
@@ -24,7 +24,7 @@ function App() {
           <Route path="/profil" element={<Profile />} />
           <Route path="/ayarlar" element={<Profile />} />
           <Route path="/favoriler" element={<Favorite />} />
-          <Route path="/mesajlar" element={<Dialog />} />
+
           <Route path="/detay/:id" element={<Details />} />
         </Route>
 

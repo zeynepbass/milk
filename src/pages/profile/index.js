@@ -1,4 +1,4 @@
-import { Profile } from "../../components/widgets/profile";
+import { Profile } from "../../features/components/widgets/profile";
 export default function ProfilePost() {
   return <Profile />;
 }
