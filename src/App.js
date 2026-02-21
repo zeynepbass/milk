@@ -10,6 +10,13 @@ import { Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 function App() {
+  let x=10;
+  function test(){
+    let y=20
+    console.log(y)
+  }
+
+  test()
   return (
     <>
       <ToastContainer
