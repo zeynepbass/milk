@@ -19,6 +19,7 @@ export function Login() {
     e.preventDefault();
     handleSubmit(formData);
   };
+  //login arka planı değiştirildi
   return( 
     <div
       className="hidden md:block relative h-screen bg-cover bg-center"
