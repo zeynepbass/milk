@@ -1,4 +1,4 @@
-import { Detail } from "../../../components/widgets/section/Details";
+import { Detail } from "../../../features/components/widgets/section";
 export default function DetailsPost() {
   return <Detail />;
 }

@@ -1,4 +1,4 @@
-import { API_URI } from "../constant/api";
+import { API_URI } from "../../constant/api";
 
 export const userLoginService= {
 

@@ -2,80 +2,74 @@ import { PencilIcon, UserIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Card from "../section/card/index";
-import usePost from "hooks/post/user/usePost";
-import useUserLogin from "hooks/user/useUser"
-import { CreatePostForm } from "../../widgets/profile";
-import useCommentAll from "../../../hooks/post/comments/useComments";
-import usePostAll from "../../../hooks/post/usePost";
+import usePost from "features/hooks/feed/user/useUserPost";
+import useUserLogin from "features/hooks/user/useUser";
+import { CreatePostForm } from ".";
+import useCommentAll from "../../../hooks/feed/comments/useComments";
+import usePostAll from "../../../hooks/feed/posts/usePost";
 export function Profile() {
-const {getProfile,profile}=useUserLogin();
-const {followId,refresh,openList,setOpenList} = usePostAll();
-const {
-  details,
-  loading,
-  onSubmit,
-  form,
-  setForm,
-  deleted,
-  handlePostLike,
-  handlePostSave,
-  user
-} = usePost();
-const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState("posts");
-  const [showFreezeModal, setShowFreezeModal] = useState(false);
-  const [open, setOpen] = useState(false);
-
-  const [showComments, setShowComments] = useState(false);
+  const navigate = useNavigate();
   const [selected, setSelected] = useState(null);
   const handleShowed = (id) => {
-    setSelected(id);
-    setShowComments(!showComments);
-  };
-useEffect(()=>{
+    setSelected((prev) => (prev === id ? null : id));
 
-  getProfile()}
-  
-  ,[refresh])
-  const { handleComment, handleDelete, handleC0mmentLike, comments } =
-    useCommentAll(selected);
-    console.log("profile",profile)
-    const isFollowing = (id) => {
-      return profile?.following?.some(
-        (user) => user._id === id
-      );
-    };
-    const [button,setButton]=useState(false)
-    const handleUpdated=()=>{
-      console.log(button)
-      setButton(true)
-    }
+  };
+
+  const {
+    getProfile,
+    profile,
+    showFreezeModal,
+    setShowFreezeModal,
+    open,
+    setOpen,
+  } = useUserLogin();
+  const { followId, refresh, openList, setOpenList } = usePostAll();
+  const {
+    details,
+    loading,
+    onSubmit,
+    form,
+    setForm,
+    deleted,
+    handlePostLike,
+    handlePostSave,
+    handleUpdated,
+    button,
+    user,
+  } = usePost();
+  const {
+    handleComment,
+    handleDelete,
+    handleC0mmentLike,
+    comments
+  } = useCommentAll(selected);
+  const [activeTab, setActiveTab] = useState("posts");
+
+  useEffect(() => {
+    getProfile();
+  }, [refresh]);
   return (
+
     <div className="grid grid-cols-12 h-[100vh]">
       <div className="col-span-4 overflow-hidden relative p-6 border-r border-gray-100">
-        <button className="absolute top-4 right-4 bg-gray-100 p-2 rounded-full hover:bg-gray-200 transition">
-        <button onClick={()=>handleUpdated()}>
-        <PencilIcon className="w-5 h-5 text-gray-500" />
-            </button>
-
-        </button>
-
+        //?düzenleme sayfası
+        <button onClick={() => handleUpdated()}  className="absolute top-4 right-4 bg-gray-100 p-2 rounded-full hover:bg-gray-200 transition">
+            <PencilIcon className="w-5 h-5 text-gray-500" />
+          </button>
         <div className="flex justify-center">
           <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center text-gray-700 text-4xl font-bold shadow">
-    
-            <UserIcon className="w-12 h-12"  />
-     
-
+            <UserIcon className="w-12 h-12" />
           </div>
         </div>
 
         <div className="flex justify-center space-x-2 mt-3">
           <h2 className="text-xl font-bold text-gray-700">{profile?.name}</h2>
-          <h2 className="text-xl font-bold text-gray-700">{profile?.surname}</h2>
+          <h2 className="text-xl font-bold text-gray-700">
+            {profile?.surname}
+          </h2>
         </div>
 
         <div className="mt-4 space-y-3">
-
           <input
             type="email"
             value={profile?.email}
@@ -93,86 +87,75 @@ useEffect(()=>{
         </div>
 
         <div className="flex justify-center mt-4 space-x-6 text-gray-700 font-medium">
+          <div
+            onClick={() => setOpenList("following")}
+            className="flex items-center space-x-1 cursor-pointer hover:text-blue-500"
+          >
+            <span>{profile?.following?.length}</span>
+            <span>Takip</span>
+          </div>
 
-<div 
-  onClick={() => setOpenList("following")}
-  className="flex items-center space-x-1 cursor-pointer hover:text-blue-500"
->
-  <span>{profile?.following?.length}</span>
-  <span>Takip</span>
-</div>
+          <div
+            onClick={() => setOpenList("followers")}
+            className="flex items-center space-x-1 cursor-pointer hover:text-blue-500"
+          >
+            <span>{profile?.followers?.length}</span>
+            <span>Takipçi</span>
+          </div>
+        </div>
+        {openList && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+            <div className="bg-white w-[400px] max-h-[500px] rounded-2xl shadow-2xl p-6 relative overflow-y-auto">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-lg font-semibold">
+                  {openList === "following" ? "Takip Ettiklerin" : "Takipçiler"}
+                </h2>
 
-<div 
-  onClick={() => setOpenList("followers")}
-  className="flex items-center space-x-1 cursor-pointer hover:text-blue-500"
->
-  <span>{profile?.followers?.length}</span>
-  <span>Takipçi</span>
-</div>
+                <button
+                  onClick={() => setOpenList(null)}
+                  className="text-gray-500 hover:text-red-500 text-xl"
+                >
+                  ×
+                </button>
+              </div>
 
-</div>
-{openList && (
-  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
+              {(openList === "followers"
+                ? profile?.followers
+                : profile?.following
+              )?.map((user) => (
+                <div
+                  key={user._id}
+                  className="flex justify-between items-center py-3 border-b"
+                >
+                  <span className="font-medium">
+                    {user.name} {user.surname}
+                  </span>
 
-    <div className="bg-white w-[400px] max-h-[500px] rounded-2xl shadow-2xl p-6 relative overflow-y-auto">
-
-
-      <div className="flex justify-between items-center mb-4">
-        <h2 className="text-lg font-semibold">
-          {openList === "following" ? "Takip Ettiklerin" : "Takipçiler"}
-        </h2>
-
-        <button
-          onClick={() => setOpenList(null)}
-          className="text-gray-500 hover:text-red-500 text-xl"
-        >
-          ×
-        </button>
-      </div>
-
-      {(openList === "followers"
-  ? profile?.followers
-  : profile?.following
-)?.map((user) => (
-  <div
-    key={user._id}
-    className="flex justify-between items-center py-3 border-b"
-  >
-    <span className="font-medium">
-      {user.name} {user.surname}
-    </span>
-
-
-    {(openList === "followers" || openList === "following") && (
-  <span
-    onClick={() => followId(user._id)}
-    className="text-sm cursor-pointer font-medium transition hover:underline text-blue-500"
-  >
-    {openList === "followers" ? "Takip Et" : "Takipten Çık"}
-  </span>
-)}
-
-
-  </div>
-))}
-
-
-    </div>
-  </div>
-)}
-
-
+                  {(openList === "followers" || openList === "following") && (
+                    <span
+                      onClick={() => followId(user._id)}
+                      className="text-sm cursor-pointer font-medium transition hover:underline text-blue-500"
+                    >
+                      {openList === "followers" ? "Takip Et" : "Takipten Çık"}
+                    </span>
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         <div className="mt-6 flex justify-center">
-          {button &&  <button
-            type="submit"
-            className="mt-1 w-full rounded-md bg-[rgb(137,205,251)]
+          {button && (
+            <button
+              type="submit"
+              className="mt-1 w-full rounded-md bg-[rgb(137,205,251)]
 hover:bg-gray-200
             py-2.5 text-sm font-semibold text-white  transition"
-          >
-            Kaydet
-          </button>}
-
+            >
+              Kaydet
+            </button>
+          )}
         </div>
       </div>
 
@@ -199,18 +182,16 @@ hover:bg-gray-200
             Hesap Ayarları
           </button>
 
-            <button
-              type="submit"
-              onClick={() => setOpen(true)}
-              className="mb-2 w-1/4 ml-auto rounded-md py-2.5 text-sm font-semibold text-white transition bg-[rgb(137,205,251)] hover:bg-gray-200"
-            >
-              Gönderi Paylaş
-            </button>
-
+          <button
+            type="submit"
+            onClick={() => setOpen(true)}
+            className="mb-2 w-1/4 ml-auto rounded-md py-2.5 text-sm font-semibold text-white transition bg-[rgb(137,205,251)] hover:bg-gray-200"
+          >
+            Gönderi Paylaş
+          </button>
         </div>
 
         <div className="mt-4">
-
           {open && (
             <CreatePostForm
               onSubmit={onSubmit}
@@ -226,7 +207,6 @@ hover:bg-gray-200
                 data={details}
                 loading={loading}
                 selected={selected}
-                showComments={showComments}
                 handleShowed={handleShowed}
                 user={user}
                 handlePostSave={handlePostSave}

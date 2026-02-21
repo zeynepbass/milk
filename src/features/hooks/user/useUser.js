@@ -4,11 +4,13 @@ import {
   userRegisterService,
   userProfile
 } from "../../services/userServices";
-import { useUserStore } from "../../store";
+import { useUserStore } from "../../../store";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
 export default function useUserLogin() {
+    const [showFreezeModal, setShowFreezeModal] = useState(false);
+    const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [profile,setProfile]=useState("")
   const setUser = useUserStore((state) => state.setUser);
@@ -74,6 +76,8 @@ export default function useUserLogin() {
     handleSubmitRegister,
     loading,
     getProfile,
-    profile
+    profile,
+    showFreezeModal, setShowFreezeModal,
+    open, setOpen
   };
 }

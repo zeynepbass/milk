@@ -1,4 +1,4 @@
-import { Favorite } from "../../components/widgets/favorite";
+import { Favorite } from "../../features/components/widgets/favorite";
 export default function FavoritePost() {
   return <Favorite />;
 }
