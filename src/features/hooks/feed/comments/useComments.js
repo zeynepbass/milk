@@ -1,11 +1,19 @@
 import { useEffect, useState, useCallback } from "react";
-import { commentService } from "services/commentService";
-import { useUserStore } from "../../../store/useUserStore";
+import { commentService } from "features/services/commentService";
+import { useUserStore } from "../../../../store/useUserStore";
 
 export default function usePostComment(id) {
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(false);
   const token = useUserStore((state) => state.token);
+    const [newComment, setNewComment] = useState("");
+
+
+  const handleAddComment = (id) => {
+    handleComment(id, newComment);
+    setNewComment("");
+  };
+
   const fetchComments = useCallback(async () => {
     try {
       setLoading(true);
@@ -78,7 +86,10 @@ export default function usePostComment(id) {
     handleDelete,
     handleC0mmentLike,
     loading,
+    newComment,
+    setNewComment,
+    handleAddComment,
     handleComment,
-    refetch: fetchComments
+    refetch: fetchComments,
   };
 }

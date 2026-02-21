@@ -7,7 +7,7 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 import { useParams } from "react-router-dom";
-import useCommentAll from "../../../../hooks/post/usePostDetails";
+import useCommentAll from "../../../../hooks/feed/posts/usePostDetails";
 
 export function Detail() {
   const { id } = useParams();
@@ -22,12 +22,13 @@ export function Detail() {
     comments,
     handlePostLike,
     handlePostSave,
+    showComments, setShowComments
   } = useCommentAll(id);
 
   const [currentImage, setCurrentImage] = useState(0);
 
   const [newComment, setNewComment] = useState("");
-  const [showComments, setShowComments] = useState(false);
+
 
   if (loading) {
     return <p className="text-center mt-10">Yükleniyor...</p>;

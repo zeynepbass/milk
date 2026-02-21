@@ -1,12 +1,13 @@
 import { Header } from "./Header";
 import { Footer } from "./Footer";
-export function Container({ children }) {
+import { Outlet } from "react-router-dom";
+export function Container() {
   
   return (
     <div className="container mx-auto">
       <Header />
 
-      {children}
+      <Outlet />
       <Footer />
     </div>
   );
