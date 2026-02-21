@@ -1,1 +1,3 @@
-
+login ve register arka plan değişcek
+profile rest api yazılcak
+profile front alanı güncellenicek
