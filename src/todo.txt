@@ -1,3 +1,0 @@
-//login register arka planlar değişicek
-//profile updated rest api yazılıcak
-//profile front alanı apiye göre düzenlenicek
