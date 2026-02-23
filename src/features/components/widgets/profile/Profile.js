@@ -1,4 +1,4 @@
-import { PencilIcon, UserIcon } from "@heroicons/react/24/outline";
+import { PencilIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Card from "../section/card/index";
@@ -12,16 +12,19 @@ export function Profile() {
   const [selected, setSelected] = useState(null);
   const handleShowed = (id) => {
     setSelected((prev) => (prev === id ? null : id));
-
   };
 
   const {
     getProfile,
-    profile,
+    profileForm,
+    button,
+    handleUpdated,
     showFreezeModal,
     setShowFreezeModal,
     open,
+    setProfileForm,
     setOpen,
+    setButton,
   } = useUserLogin();
   const { followId, refresh, openList, setOpenList } = usePostAll();
   const {
@@ -33,22 +36,27 @@ export function Profile() {
     deleted,
     handlePostLike,
     handlePostSave,
-    handleUpdated,
-    button,
     user,
   } = usePost();
-  const {
-    handleComment,
-    handleDelete,
-    handleC0mmentLike,
-    comments
-  } = useCommentAll(selected);
+  const { handleComment, handleDelete, handleC0mmentLike, comments } =
+    useCommentAll(selected);
   const [activeTab, setActiveTab] = useState("posts");
 
   useEffect(() => {
     getProfile();
   }, [refresh]);
+  const handleImages = (e) => {
+    const files = Array.from(e.target.files);
+    const imageUrls = files.map((file) => URL.createObjectURL(file));
+    setForm((prev) => ({ ...prev, images: imageUrls }));
+  };
+  const handleChange=(e)=>{
+    setProfileForm((prev)=>({
+      ...prev, [e.target.name]:e.target.value
+    }))
+  }
   return (
+<<<<<<< Updated upstream
 //düzenleme kısmı
     <div className="grid grid-cols-12 h-[100vh]">
       <div className="col-span-4 overflow-hidden relative p-6 border-r border-gray-100">
@@ -58,42 +66,80 @@ export function Profile() {
           </button>
         </button>
 
+=======
+    <div className="grid grid-cols-12 h-[100vh]">
+      <div className="col-span-4 overflow-hidden relative p-6 border-r border-gray-100">
+        <button
+          onClick={() => setButton(true)}
+          className="absolute top-4 right-4 bg-gray-100 p-2 rounded-full hover:bg-gray-200 transition"
+        >
+          <PencilIcon className="w-5 h-5 text-gray-500" />
+        </button>
+>>>>>>> Stashed changes
         <div className="flex justify-center">
-          <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center text-gray-700 text-4xl font-bold shadow">
-            <UserIcon className="w-12 h-12" />
+          <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden shadow">
+            <img
+              src={profileForm?.avatar}
+              alt="profile"
+              className="w-full h-full object-cover"
+            />
           </div>
-        </div>
-
+        </div>{" "}
+        <br/>
+        {button && (
+          <input
+            type="file"
+            multiple
+            onChange={handleImages}
+            className="w-full"
+          />
+        )}
         <div className="flex justify-center space-x-2 mt-3">
-          <h2 className="text-xl font-bold text-gray-700">{profile?.name}</h2>
-          <h2 className="text-xl font-bold text-gray-700">
-            {profile?.surname}
-          </h2>
+          <input
+            type="name"
+            name="name"
+            value={profileForm?.name}
+            onChange={handleChange}
+            placeholder="Adı"
+            className="mt-1 w-full rounded-md border border-gray-200 px-3 py-2 text-sm
+                focus:outline-none focus:ring-2 focus:ring-[rgb(82,144,246)]"
+          />
+          <input
+            type="surname"
+               name="surname"
+            value={profileForm?.surname}
+            onChange={handleChange}
+            placeholder="Soyadı"
+            className="mt-1 w-full rounded-md border border-gray-200 px-3 py-2 text-sm
+                focus:outline-none focus:ring-2 focus:ring-[rgb(82,144,246)]"
+          />
         </div>
-
         <div className="mt-4 space-y-3">
           <input
             type="email"
-            value={profile?.email}
+                      name="email"
+            value={profileForm?.email}
+            onChange={handleChange}
             placeholder="Email"
             className="mt-1 w-full rounded-md border border-gray-200 px-3 py-2 text-sm
                 focus:outline-none focus:ring-2 focus:ring-[rgb(82,144,246)]"
           />
           <input
             type="text"
-            value={profile?.role}
+                         name="role"
+            value={profileForm?.role}
+            onChange={handleChange}
             placeholder="Role"
             className="mt-1 w-full rounded-md border border-gray-200 px-3 py-2 text-sm
                 focus:outline-none focus:ring-2 focus:ring-[rgb(82,144,246)]"
           />
         </div>
-
         <div className="flex justify-center mt-4 space-x-6 text-gray-700 font-medium">
           <div
             onClick={() => setOpenList("following")}
             className="flex items-center space-x-1 cursor-pointer hover:text-blue-500"
           >
-            <span>{profile?.following?.length}</span>
+            <span>{profileForm?.following?.length}</span>
             <span>Takip</span>
           </div>
 
@@ -101,7 +147,7 @@ export function Profile() {
             onClick={() => setOpenList("followers")}
             className="flex items-center space-x-1 cursor-pointer hover:text-blue-500"
           >
-            <span>{profile?.followers?.length}</span>
+            <span>{profileForm?.followers?.length}</span>
             <span>Takipçi</span>
           </div>
         </div>
@@ -122,8 +168,8 @@ export function Profile() {
               </div>
 
               {(openList === "followers"
-                ? profile?.followers
-                : profile?.following
+                ? profileForm?.followers
+                : profileForm?.following
               )?.map((user) => (
                 <div
                   key={user._id}
@@ -146,10 +192,10 @@ export function Profile() {
             </div>
           </div>
         )}
-
         <div className="mt-6 flex justify-center">
           {button && (
             <button
+            onClick={handleUpdated}
               type="submit"
               className="mt-1 w-full rounded-md bg-[rgb(137,205,251)]
 hover:bg-gray-200

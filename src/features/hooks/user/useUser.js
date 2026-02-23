@@ -1,18 +1,42 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import {
   userLoginService,
   userRegisterService,
-  userProfile
+  userProfile,
 } from "../../services/userServices";
 import { useUserStore } from "../../../store";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
 export default function useUserLogin() {
-    const [showFreezeModal, setShowFreezeModal] = useState(false);
-    const [open, setOpen] = useState(false);
+  const [showFreezeModal, setShowFreezeModal] = useState(false);
+  const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [profile,setProfile]=useState("")
+  const [profile, setProfile] = useState("");
+  const [button, setButton] = useState(false);
+
+  const [profileForm, setProfileForm] = useState({
+    avatar: "",
+    name: "",
+    surname: "",
+    email: "",
+    role: "",
+  });
+  useEffect(() => {
+    if (profile) {
+      setProfileForm({
+        avatar: profile.avatar || "",
+        name: profile.name || "",
+        surname: profile.surname || "",
+        email: profile.email || "",
+        role: profile.role || "",
+      });
+    }
+  }, [profile]);
+  const handleUpdated = () => {
+    console.log(profileForm);
+    //api alanı
+  };
   const setUser = useUserStore((state) => state.setUser);
   const token = useUserStore((state) => state.token);
 
@@ -25,21 +49,20 @@ export default function useUserLogin() {
       const res = await userLoginService.postService(formData);
       setUser(res);
 
-
-      localStorage.setItem("auth-storage", JSON.stringify({
-        state: {
-          user: res.user,
-          token: res.token
-        }
-      }));
+      localStorage.setItem(
+        "auth-storage",
+        JSON.stringify({
+          state: {
+            user: res.user,
+            token: res.token,
+          },
+        })
+      );
 
       toast.success(res.message || "Giriş başarılı");
       navigate("/");
-
     } catch (err) {
-      toast.error(
-        err?.response?.data?.message || "Giriş yapılamadı"
-      );
+      toast.error(err?.response?.data?.message || "Giriş yapılamadı");
     } finally {
       setLoading(false);
     }
@@ -53,7 +76,6 @@ export default function useUserLogin() {
 
       toast.success(res.message || "Kayıt başarılı");
       navigate("/giris-yap");
-
     } catch (err) {
       toast.error(
         err?.response?.data?.message || "Kayıt sırasında hata oluştu"
@@ -70,14 +92,20 @@ export default function useUserLogin() {
       console.log(error);
     }
   };
-  
+
   return {
     handleSubmit,
     handleSubmitRegister,
     loading,
     getProfile,
-    profile,
-    showFreezeModal, setShowFreezeModal,
-    open, setOpen
+    profileForm,
+    showFreezeModal,
+    setProfileForm,
+    setShowFreezeModal,
+    open,
+    setOpen,
+    button,
+    setButton,
+    handleUpdated,
   };
 }
