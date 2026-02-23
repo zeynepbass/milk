@@ -56,17 +56,10 @@ export function Profile() {
     }))
   }
   return (
-<<<<<<< Updated upstream
-//düzenleme kısmı
-    <div className="grid grid-cols-12 h-[100vh]">
-      <div className="col-span-4 overflow-hidden relative p-6 border-r border-gray-100">
-        <button className="absolute top-4 right-4 bg-gray-100 p-2 rounded-full hover:bg-gray-200 transition">
-          <button onClick={() => handleUpdated()}>
-            <PencilIcon className="w-5 h-5 text-gray-500" />
-          </button>
-        </button>
 
-=======
+ 
+
+
     <div className="grid grid-cols-12 h-[100vh]">
       <div className="col-span-4 overflow-hidden relative p-6 border-r border-gray-100">
         <button
@@ -75,7 +68,7 @@ export function Profile() {
         >
           <PencilIcon className="w-5 h-5 text-gray-500" />
         </button>
->>>>>>> Stashed changes
+
         <div className="flex justify-center">
           <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden shadow">
             <img
