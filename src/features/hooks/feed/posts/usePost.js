@@ -23,7 +23,7 @@ export default function usePost() {
     };
   
     fetchData();
-  }, [search]); 
+  }, [search,token]); 
   
   
 
@@ -54,7 +54,7 @@ export default function usePost() {
         prev.map((post) => {
           if (post._id !== id) return post;
   
-          const alreadySaved = post.savedBy.includes(user.id);
+          const alreadySaved = Array.isArray(post.savedBy) && post.savedBy.includes(user.id);
   
           return {
             ...post,

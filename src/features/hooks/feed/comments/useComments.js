@@ -8,12 +8,15 @@ export default function usePostComment(id) {
   const token = useUserStore((state) => state.token);
     const [newComment, setNewComment] = useState("");
 
-
-  const handleAddComment = (id) => {
-    handleComment(id, newComment);
-    setNewComment("");
-  };
-
+    const handleAddComment = async (id) => {
+      if (!newComment.trim()) return;
+      try {
+        await handleComment(id, newComment);
+        setNewComment("");
+      } catch (err) {
+        console.log("Yorum ekleme hatası:", err);
+      }
+    };
   const fetchComments = useCallback(async () => {
     try {
       setLoading(true);
@@ -24,13 +27,17 @@ export default function usePostComment(id) {
     } finally {
       setLoading(false);
     }
-  }, [id]);
+  }, [id,token]);
 
 
   useEffect(() => {
+    let isMounted = true;
     if (id) {
-      fetchComments();
+      fetchComments().then(() => {
+        if (!isMounted) return;
+      });
     }
+    return () => { isMounted = false; }
   }, [id, fetchComments]);
 
 

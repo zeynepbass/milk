@@ -4,7 +4,7 @@ import { useUserStore } from "../../../../store";
 import { commentService } from "features/services/commentService";
 
 export default function usePostDetail(id) {
-  const [details, setDetails] = useState("");
+  const [details, setDetails] = useState(null);
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(false);
   const token = useUserStore((state) => state.token);
@@ -27,7 +27,7 @@ export default function usePostDetail(id) {
     };
 
     fetchData();
-  }, [id]);
+  }, [id,token]);
 
   const handleLike = async (commentId) => {
     try {
@@ -93,7 +93,7 @@ export default function usePostDetail(id) {
       setDetails((prev) => {
         if (!prev) return prev;
 
-        const alreadySaved = prev.savedBy.includes(user.id);
+        const alreadySaved = Array.isArray(prev.savedBy) && prev.savedBy.includes(user.id);
 
         return {
           ...prev,

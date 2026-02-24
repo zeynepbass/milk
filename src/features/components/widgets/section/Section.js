@@ -22,7 +22,7 @@ export function Section() {
     <div className="h-[100vh] overflow-auto ">
       <div className="grid grid-cols-3 gap-1">
         <Card
-          data={data}
+          data={data || []}
           selected={selected}
           newComment={newComment}
           setNewComment={setNewComment}
@@ -31,13 +31,13 @@ export function Section() {
           followId={followId}
 
           handleShowed={handleShowed}
-          user={user}
+          user={user || {}}
           handlePostSave={handlePostSave}
           handlePostLike={handlePostLike}
           handleComment={handleComment}
           handleDelete={handleDelete}
           handleC0mmentLike={handleC0mmentLike}
-          comments={comments}
+          comments={comments || []}
         />{" "}
       </div>
     </div>

@@ -47,7 +47,12 @@ export function Profile() {
   }, [refresh]);
   const handleImages = (e) => {
     const files = Array.from(e.target.files);
-    const imageUrls = files.map((file) => URL.createObjectURL(file));
+  
+    const imageUrls = files.map((file) => {
+      const url = URL.createObjectURL(file);
+      return url;
+    });
+  
     setForm((prev) => ({ ...prev, images: imageUrls }));
   };
   const handleChange=(e)=>{
@@ -72,7 +77,7 @@ export function Profile() {
         <div className="flex justify-center">
           <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden shadow">
             <img
-              src={profileForm?.avatar}
+              src={profileForm?.avatar || "https://pixabay.com/images/search/user%20icon/"}
               alt="profile"
               className="w-full h-full object-cover"
             />
@@ -91,7 +96,7 @@ export function Profile() {
           <input
             type="name"
             name="name"
-            value={profileForm?.name}
+            value={profileForm?.name || []}
             onChange={handleChange}
             placeholder="Adı"
             className="mt-1 w-full rounded-md border border-gray-200 px-3 py-2 text-sm
@@ -100,7 +105,7 @@ export function Profile() {
           <input
             type="surname"
                name="surname"
-            value={profileForm?.surname}
+            value={profileForm?.surname || []}
             onChange={handleChange}
             placeholder="Soyadı"
             className="mt-1 w-full rounded-md border border-gray-200 px-3 py-2 text-sm
@@ -111,7 +116,7 @@ export function Profile() {
           <input
             type="email"
                       name="email"
-            value={profileForm?.email}
+            value={profileForm?.email || []}
             onChange={handleChange}
             placeholder="Email"
             className="mt-1 w-full rounded-md border border-gray-200 px-3 py-2 text-sm
@@ -120,7 +125,7 @@ export function Profile() {
           <input
             type="text"
                          name="role"
-            value={profileForm?.role}
+            value={profileForm?.role || []}
             onChange={handleChange}
             placeholder="Role"
             className="mt-1 w-full rounded-md border border-gray-200 px-3 py-2 text-sm
@@ -132,7 +137,7 @@ export function Profile() {
             onClick={() => setOpenList("following")}
             className="flex items-center space-x-1 cursor-pointer hover:text-blue-500"
           >
-            <span>{profileForm?.following?.length}</span>
+            <span>{profileForm?.following?.length || 0}</span>
             <span>Takip</span>
           </div>
 
@@ -140,7 +145,7 @@ export function Profile() {
             onClick={() => setOpenList("followers")}
             className="flex items-center space-x-1 cursor-pointer hover:text-blue-500"
           >
-            <span>{profileForm?.followers?.length}</span>
+            <span>{profileForm?.followers?.length || 0}</span>
             <span>Takipçi</span>
           </div>
         </div>
@@ -245,7 +250,7 @@ hover:bg-gray-200
           {activeTab === "posts" && (
             <div className="space-y-3">
               <Card
-                data={details}
+                data={Array.isArray(details) ? details : []}
                 loading={loading}
                 selected={selected}
                 handleShowed={handleShowed}

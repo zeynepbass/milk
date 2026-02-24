@@ -131,7 +131,7 @@ export function Detail() {
             />
             <span className="text-sm text-red-500">
               {" "}
-              {details.likes.length}
+              {details.likes?.length || 0}
             </span>
           </button>
           <button
@@ -141,7 +141,7 @@ export function Detail() {
             <BookmarkIcon className="w-5 h-5 text-yellow-500" />
             <span className="text-sm text-yellow-500">
               {" "}
-              {details.savedBy.length || 0}
+              {details.savedBy?.length || 0}
             </span>
           </button>
         </div>

@@ -33,7 +33,7 @@ export default function usePostDetail() {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [token]);
   const onSubmit = async () => {
     try {
       setLoading(true);
@@ -83,7 +83,7 @@ export default function usePostDetail() {
           prev.map((post) => {
             if (post._id !== id) return post;
     
-            const alreadySaved = post.savedBy.includes(user.id);
+            const alreadySaved = Array.isArray(post.savedBy) && post.savedBy.includes(user.id);
     
             return {
               ...post,

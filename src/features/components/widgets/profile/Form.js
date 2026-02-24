@@ -10,8 +10,11 @@ export function CreatePostForm({ onSubmit, loading,form,setForm,setOpen}) {
 
   const handleImages = (e) => {
     const files = Array.from(e.target.files);
+  
     const imageUrls = files.map((file) => URL.createObjectURL(file));
     setForm((prev) => ({ ...prev, images: imageUrls }));
+
+    files.forEach(file => URL.revokeObjectURL(file));
   };
 
   const handleSubmit = (e) => {
@@ -27,14 +30,14 @@ export function CreatePostForm({ onSubmit, loading,form,setForm,setOpen}) {
     >
       <p className="flex justify-between">    
           <h2 className="text-2xl font-bold text-gray-500">Yeni Gönderi Oluştur</h2>
-    <button onClick={()=>setOpen(false)}> <XMarkIcon className="w-6 h-6 text-gray-700 hover:text-red-500 cursor-pointer transition" /></button> </p>
+    <button   type="button" onClick={()=>setOpen(false)}> <XMarkIcon className="w-6 h-6 text-gray-700 hover:text-red-500 cursor-pointer transition" /></button> </p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <input
           type="text"
           name="ownerName"
           placeholder="Ad"
-          value={form.ownerName}
+          value={form.ownerName || ""}
           onChange={handleChange}
           className="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-300 outline-none"
           required
@@ -43,7 +46,7 @@ export function CreatePostForm({ onSubmit, loading,form,setForm,setOpen}) {
           type="text"
           name="ownerSurname"
           placeholder="Soyad"
-          value={form.ownerSurname}
+          value={form.ownerSurname || ""}
           onChange={handleChange}
           className="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-300 outline-none"
           required
@@ -52,7 +55,7 @@ export function CreatePostForm({ onSubmit, loading,form,setForm,setOpen}) {
 
       <select
         name="ownerRole"
-        value={form.ownerRole}
+        value={form.ownerRole || ""}
         onChange={handleChange}
         className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-300 outline-none"
       >
@@ -64,7 +67,7 @@ export function CreatePostForm({ onSubmit, loading,form,setForm,setOpen}) {
         type="text"
         name="title"
         placeholder="Başlık"
-        value={form.title}
+        value={form.title || ""}
         onChange={handleChange}
         className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-300 outline-none"
         required
@@ -73,7 +76,7 @@ export function CreatePostForm({ onSubmit, loading,form,setForm,setOpen}) {
       <textarea
         name="description"
         placeholder="Açıklama"
-        value={form.description}
+        value={form.description || ""}
         onChange={handleChange}
         rows={4}
         className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-300 outline-none"
@@ -83,14 +86,14 @@ export function CreatePostForm({ onSubmit, loading,form,setForm,setOpen}) {
         type="text"
         name="district"
         placeholder="İlçe"
-        value={form.district}
+        value={form.district || ""}
         onChange={handleChange}
         className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-300 outline-none"
       />
 
       <select
         name="category"
-        value={form.category}
+        value={form.category || ""}
         onChange={handleChange}
         className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-300 outline-none"
         required
