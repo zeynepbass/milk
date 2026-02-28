@@ -1,17 +1,22 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-
 export const useUserStore = create(
   persist(
     (set) => ({
       user: null,
       token: null,
 
-      setUser: (data) =>
-        set({
-          user: data.user,
-          token: data.token
-        }),
+      setUser: (user) =>
+        set((state) => ({
+          ...state,
+          user
+        })),
+
+      setToken: (token) =>
+        set((state) => ({
+          ...state,
+          token
+        })),
 
       logout: () =>
         set({
@@ -24,3 +29,4 @@ export const useUserStore = create(
     }
   )
 );
+

@@ -27,7 +27,7 @@ export default function Card({
   setNewComment,
   handleAddComment,
 }) {
-  if (loading && !details) {
+  if (loading && !data) {
     return <p className="text-center text-gray-500">Loading...</p>;
   }
 

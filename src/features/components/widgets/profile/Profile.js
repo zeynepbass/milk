@@ -45,16 +45,21 @@ export function Profile() {
   useEffect(() => {
     getProfile();
   }, [refresh]);
+
   const handleImages = (e) => {
-    const files = Array.from(e.target.files);
+    const file = e.target.files[0];
+    if (!file) return;
   
-    const imageUrls = files.map((file) => {
-      const url = URL.createObjectURL(file);
-      return url;
-    });
+    const imageUrl = URL.createObjectURL(file);
   
-    setForm((prev) => ({ ...prev, images: imageUrls }));
+    setProfileForm((prev) => ({
+      ...prev,
+      avatar: imageUrl,
+    }));
   };
+  
+
+  
   const handleChange=(e)=>{
     setProfileForm((prev)=>({
       ...prev, [e.target.name]:e.target.value
@@ -67,6 +72,7 @@ export function Profile() {
 
     <div className="grid grid-cols-12 h-[100vh]">
       <div className="col-span-4 overflow-hidden relative p-6 border-r border-gray-100">
+
         <button
           onClick={() => setButton(true)}
           className="absolute top-4 right-4 bg-gray-100 p-2 rounded-full hover:bg-gray-200 transition"
@@ -77,7 +83,7 @@ export function Profile() {
         <div className="flex justify-center">
           <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden shadow">
             <img
-              src={profileForm?.avatar || "https://pixabay.com/images/search/user%20icon/"}
+              src={profileForm?.avatar || ""}
               alt="profile"
               className="w-full h-full object-cover"
             />
@@ -105,7 +111,7 @@ export function Profile() {
           <input
             type="surname"
                name="surname"
-            value={profileForm?.surname || []}
+            value={profileForm?.surname || [] }
             onChange={handleChange}
             placeholder="Soyadı"
             className="mt-1 w-full rounded-md border border-gray-200 px-3 py-2 text-sm
@@ -174,7 +180,7 @@ export function Profile() {
                   className="flex justify-between items-center py-3 border-b"
                 >
                   <span className="font-medium">
-                    {user.name} {user.surname}
+                    {user.name} {user.surname} 
                   </span>
 
                   {(openList === "followers" || openList === "following") && (
@@ -228,16 +234,20 @@ hover:bg-gray-200
             Hesap Ayarları
           </button>
 
-          <button
-            type="submit"
-            onClick={() => setOpen(true)}
-            className="mb-2 w-1/4 ml-auto rounded-md py-2.5 text-sm font-semibold text-white transition bg-[rgb(137,205,251)] hover:bg-gray-200"
-          >
-            Gönderi Paylaş
-          </button>
+  
         </div>
 
         <div className="mt-4">
+          <div className="flex justify-end">
+          <button
+            type="submit"
+            onClick={() => setOpen(true)}
+            className="mb-2 w-1/12  rounded-md py-2.5 text-sm font-semibold text-white transition bg-[rgb(137,205,251)] hover:bg-gray-200"
+          >
+           +
+          </button>
+          </div>
+  
           {open && (
             <CreatePostForm
               onSubmit={onSubmit}
@@ -268,11 +278,11 @@ hover:bg-gray-200
 
           {activeTab === "settings" && (
             <div className="space-y-6">
-              <div className="p-4 border rounded-lg bg-[rgb(246,246,246)]">
-                <h3 className="font-semibold text-gray-700 border-b border-gray-300 pb-1 mb-2">
+              <div className="p-4 border rounded-lg bg-[rgb(246,246,246,0.4)]">
+                <h3 className="font-semibold text-gray-500 border-b border-gray-300 pb-1 mb-2">
                   Hesabı Dondur
                 </h3>
-                <p className="text-gray-700 mb-2">
+                <p className="text-gray-500 mb-2">
                   Hesabınızı geçici olarak dondurabilirsiniz. Bu işlem sonrası
                   hesabınıza giriş yapılamaz.
                 </p>
@@ -284,11 +294,11 @@ hover:bg-gray-200
                 </button>
               </div>
 
-              <div className="p-4 border rounded-lg bg-[rgb(246,246,246)]">
-                <h3 className="font-semibold text-gray-700 border-b border-gray-300 pb-1 mb-2">
+              <div className="p-4 border rounded-lg bg-[rgb(246,246,246,0.4)]">
+                <h3 className="font-semibold text-gray-500 border-b border-gray-300 pb-1 mb-2">
                   Hesabı Sil
                 </h3>
-                <p className="text-gray-700 mb-2">
+                <p className="text-gray-500 mb-2">
                   Hesabınızı silerseniz tüm bilgileriniz kalıcı olarak
                   silinecektir. Bu işlemi geri alamazsınız.
                 </p>

@@ -1,4 +1,5 @@
 import { API_URI } from "../../constant/api";
+import { postService } from "./postServices";
 
 export const userLoginService= {
 
@@ -44,4 +45,23 @@ export const userProfile = {
   },
 };
 
+export const userProfileUpdated={
+
+  postService: async (formData, token) => {
+    console.log("Gelen token:", token);
+  
+    const res = await fetch(`${API_URI}/users/updateUser`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(formData),
+    });
+  
+    if (!res.ok) throw new Error("API error");
+    return res.json();
+  }
+  
+}
 

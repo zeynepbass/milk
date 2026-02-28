@@ -3,6 +3,7 @@ import {
   userLoginService,
   userRegisterService,
   userProfile,
+  userProfileUpdated
 } from "../../services/userServices";
 import { useUserStore } from "../../../store";
 import { toast } from "react-toastify";
@@ -22,6 +23,10 @@ export default function useUserLogin() {
     email: "",
     role: "",
   });
+  const setUser = useUserStore((state) => state.setUser);
+  const token = useUserStore((state) => state.token);
+
+  const navigate = useNavigate();
   useEffect(() => {
     if (profile) {
       setProfileForm({
@@ -33,14 +38,27 @@ export default function useUserLogin() {
       });
     }
   }, [profile]);
-  const handleUpdated = () => {
-    console.log(profileForm);
-    //api alanı
-  };
-  const setUser = useUserStore((state) => state.setUser);
-  const token = useUserStore((state) => state.token);
+  const handleUpdated = async () => {
+    console.log(profileForm)
+    try {
+      setLoading(true);
+  
 
-  const navigate = useNavigate();
+  
+      const res = await userProfileUpdated.postService(
+        profileForm,
+        token
+      );
+      setUser(res.user);
+      setButton(false)
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+
 
   const handleSubmit = async (formData) => {
     try {
@@ -60,6 +78,7 @@ export default function useUserLogin() {
       );
 
       toast.success(res.message || "Giriş başarılı");
+
       navigate("/");
     } catch (err) {
       toast.error(err?.response?.data?.message || "Giriş yapılamadı");
