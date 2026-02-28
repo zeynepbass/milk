@@ -64,4 +64,5 @@ export const userProfileUpdated={
   }
   
 }
+//hesabı sil hesabı dondur front alanı yapılcak
 
