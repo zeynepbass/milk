@@ -1,33 +1,41 @@
-
 import { Link } from "react-router-dom";
-import useUserLogin from "../../../hooks/user/useUser"
+import useUserLogin from "../../../hooks/user/useUser";
 import { useState } from "react";
 export function Login() {
-  const {handleSubmit}=useUserLogin()
-  const [formData,setFormData]=useState({
-    email:"",
-    password:""
-  })
-  const handleChange=(e)=>{
+  const { handleSubmit } = useUserLogin();
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+  });
+  const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]:e.target.value
-    })
-  }
+      [e.target.name]: e.target.value,
+    });
+  };
   const onSubmit = (e) => {
-    console.log(formData)
+    console.log(formData);
     e.preventDefault();
     handleSubmit(formData);
   };
-  return( 
+  return (
     <div
       className="hidden md:block relative h-screen bg-cover bg-center"
       style={{ backgroundImage: "url('/images/wallpaper.png')" }}
     >
+      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+
+      <img
+        src="/images/footer-logo.png"
+        alt="Milk Logo"
+        className="absolute bottom-6 left-6 w-24 opacity-90"
+      />
 
       <div className="absolute top-[40%] right-[14%] -translate-y-1/2">
-      <form className="w-[420px] rounded-xl  backdrop-blur-md p-8 shadow-xl" onSubmit={onSubmit}>
-
+        <form
+          className="w-[400px] rounded-xl  backdrop-blur-md p-8 shadow-xxl"
+          onSubmit={onSubmit}
+        >
           <div className="border-b border-gray-900/10 pb-4 mb-6">
             <h2 className="text-lg font-semibold text-[rgb(71,92,120)]">
               Giriş Yap
@@ -36,7 +44,6 @@ export function Login() {
               Seni tekrar görmek güzel! Devam etmek için giriş yap.
             </p>
           </div>
-
 
           <div className="space-y-4">
             <div>
@@ -68,7 +75,6 @@ export function Login() {
             </div>
           </div>
 
-
           <button
             type="submit"
             className="mt-6 w-full rounded-md  py-2.5
@@ -77,7 +83,6 @@ hover:bg-gray-200  transition"
           >
             Giriş Yap
           </button>
-
 
           <p className="mt-4 text-sm text-gray-500 text-center">
             Üye değil misin?{" "}
