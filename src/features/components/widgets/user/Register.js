@@ -1,24 +1,24 @@
 import { ChevronDownIcon } from "@heroicons/react/16/solid";
 import { Link } from "react-router-dom";
-import useUserLogin from "../../../hooks/user/useUser"
+import useUserLogin from "../../../hooks/user/useUser";
 import { useState } from "react";
 export function Register() {
-  const {handleSubmitRegister,loading}=useUserLogin()
-  const [formData,setFormData]=useState({
-    name:"",
-    surname:"",
-    email:"",
-    role:"",
-    password:""
-  })
-  const handleChange=(e)=>{
+  const { handleSubmitRegister, loading } = useUserLogin();
+  const [formData, setFormData] = useState({
+    name: "",
+    surname: "",
+    email: "",
+    role: "",
+    password: "",
+  });
+  const handleChange = (e) => {
     setFormData({
       ...formData,
-      [e.target.name]:e.target.value
-    })
-  }
+      [e.target.name]: e.target.value,
+    });
+  };
   const onSubmit = (e) => {
-    console.log(formData)
+    console.log(formData);
     e.preventDefault();
     handleSubmitRegister(formData);
   };
@@ -27,18 +27,19 @@ export function Register() {
       className="hidden md:block relative h-screen bg-cover bg-center"
       style={{ backgroundImage: "url('/images/wallpaper-register.png')" }}
     >
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
 
-
-<img
-  src="/images/footer-logo.png"
-  alt="Milk Logo"
-  className="absolute bottom-6 left-6 w-24 opacity-90"
-/>
+      <img
+        src="/images/footer-logo.png"
+        alt="Milk Logo"
+        className="absolute bottom-6 left-6 w-24 opacity-90"
+      />
 
       <div className="absolute top-[40%] right-[14%] -translate-y-1/3">
-      <form className="w-[400px] rounded-xl  backdrop-blur-md p-8 shadow-xxl" onSubmit={onSubmit}>
-
+        <form
+          className="w-[400px] rounded-xl  backdrop-blur-md p-8 shadow-xxl"
+          onSubmit={onSubmit}
+        >
           <div className="border-b border-gray-900/10 pb-4 mb-6">
             <h2 className="text-lg font-semibold text-[rgb(71,92,120)]">
               Kayıt Ol
@@ -47,7 +48,6 @@ export function Register() {
               Hesabınızı oluşturmak için bilgilerinizi giriniz.
             </p>
           </div>
-
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
@@ -111,16 +111,15 @@ export function Register() {
                 Üye Alanı
               </label>
               <select
-               name="role"
-               onChange={handleChange}
-         
+                name="role"
+                onChange={handleChange}
                 className="mt-1 w-full appearance-none rounded-md border border-gray-200
                 px-3 py-2 text-sm text-gray-500 focus:outline-none
                 focus:ring-2 focus:ring-[rgb(82,144,246)]"
               >
                 <option value="" disabled>
-  Rol seçiniz
-</option>
+                  Rol seçiniz
+                </option>
                 <option value="satici">satıcı</option>
                 <option value="alici">alıcı</option>
               </select>
@@ -128,20 +127,19 @@ export function Register() {
             </div>
           </div>
 
-
-
-
           <button
-  type="submit"
-  disabled={loading}
-  className={`mt-6 w-full rounded-md py-2.5 text-sm font-semibold text-white transition
-    ${loading
-      ? "bg-gray-300 cursor-not-allowed"
-      : "bg-[rgb(137,205,251)] hover:bg-gray-200"}
+            type="submit"
+            disabled={loading}
+            className={`mt-6 w-full rounded-md py-2.5 text-sm font-semibold text-white transition
+    ${
+      loading
+        ? "bg-gray-300 cursor-not-allowed"
+        : "bg-[rgb(137,205,251)] hover:bg-gray-200"
+    }
   `}
->
-  {loading ? "Gönderiliyor..." : "Üye Ol"}
-</button>
+          >
+            {loading ? "Gönderiliyor..." : "Üye Ol"}
+          </button>
 
           <p className="mt-4 text-sm text-gray-500 text-center">
             Üye misin?{" "}
@@ -157,4 +155,3 @@ export function Register() {
     </div>
   );
 }
-
