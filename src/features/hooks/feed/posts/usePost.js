@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { postService } from "features/services/postServices";
-import { useUserStore,useSearchStore } from "../../../../store";
+import { useUserStore, useSearchStore } from "../../../../store";
 export default function usePost() {
-  const [openList, setOpenList] = useState(null); 
+  const [openList, setOpenList] = useState(null);
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const [data, setData] = useState([]);
@@ -14,29 +14,27 @@ export default function usePost() {
       try {
         setLoading(true);
         const res = await postService.getPosts(search);
-        setData([...res]); 
+        setData([...res]);
       } catch (error) {
         console.log(error);
       } finally {
         setLoading(false);
       }
     };
-  
+
     fetchData();
-  }, [search,token]); 
-  
-  
+  }, [search, token]);
 
   const handlePostLike = async (id) => {
     try {
       const res = await postService.postLike(id, token);
-  
+
       setData((prev) =>
         prev.map((post) =>
           post._id === id
             ? {
                 ...post,
-                likes: res.likes, 
+                likes: res.likes,
                 liked: res.liked,
               }
             : post
@@ -49,13 +47,14 @@ export default function usePost() {
   const handlePostSave = async (id) => {
     try {
       const res = await postService.postsavedBy(id, token);
-  
+
       setData((prev) =>
         prev.map((post) => {
           if (post._id !== id) return post;
-  
-          const alreadySaved = Array.isArray(post.savedBy) && post.savedBy.includes(user.id);
-  
+
+          const alreadySaved =
+            Array.isArray(post.savedBy) && post.savedBy.includes(user.id);
+
           return {
             ...post,
             savedBy: alreadySaved
@@ -69,15 +68,25 @@ export default function usePost() {
     }
   };
 
-
-  const followId=async(id)=>{
+  const followId = async (id) => {
     try {
- await postService.followById(id, token);
-      setRefresh(prev => !prev);
-      setOpenList(false)
+      console.log(id)
+      await postService.followById(id, token);
+      setRefresh((prev) => !prev);
+      setOpenList(false);
     } catch (error) {
       console.log(error);
     }
-  }
-  return {data, loading, user, handlePostLike,handlePostSave,followId,refresh,openList, setOpenList};
+  };
+  return {
+    data,
+    loading,
+    user,
+    handlePostLike,
+    handlePostSave,
+    followId,
+    refresh,
+    openList,
+    setOpenList,
+  };
 }

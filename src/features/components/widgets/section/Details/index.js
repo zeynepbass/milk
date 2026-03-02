@@ -108,7 +108,11 @@ export function Detail() {
               {details.category.replace("_", " ")}
             </span>
           )}
-
+        {details.province && (
+            <span className="px-4 py-1 bg-gray-100 rounded-full text-sm">
+              {details.province}
+            </span>
+          )}
           {details.district && (
             <span className="px-4 py-1 bg-gray-100 rounded-full text-sm">
               {details.district}
@@ -176,6 +180,7 @@ export function Detail() {
                               </button>
                             )}
                           </p>
+                          
                         </div>
 
                         <p className="text-sm text-gray-600">{comment.text}</p>

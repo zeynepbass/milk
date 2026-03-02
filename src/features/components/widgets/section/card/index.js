@@ -6,6 +6,7 @@ import {
   UserPlusIcon,
   TrashIcon,
   XMarkIcon,
+  PencilIcon,
 } from "@heroicons/react/24/outline";
 
 import { Link } from "react-router-dom";
@@ -31,23 +32,20 @@ export default function Card({
     return <p className="text-center text-gray-500">Loading...</p>;
   }
 
-  if (!Array.isArray(data) || data.length===0) {
+  if (!Array.isArray(data) || data.length === 0) {
     return (
-      <p className="text-center text-gray-400 mt-10">
-        Gönderi bulunamadı
-      </p>
+      <p className="text-center text-gray-400 mt-10">Gönderi bulunamadı</p>
     );
   }
 
   return (
     <>
       {data.map((item) => {
-        const isOwner = user?.id !== item?.user?._id;
+        console.log(item.user._id);
+        const isOwner = user?.id == item?.user?._id;
         const hasUser = item?.user;
-
         return (
           <div key={item._id} className="mb-6">
-
             <div className="w-full max-w-md bg-white rounded-2xl shadow-md">
               <Link to={`/detay/${item._id}`}>
                 <img
@@ -58,14 +56,10 @@ export default function Card({
               </Link>
 
               <div className="p-5">
-           
                 <div className="flex items-center mb-4">
                   <img
                     className="w-12 h-12 rounded-full border object-cover"
-                    src={
-                      item.profileImage ||
-                      "https://i.pravatar.cc/150"
-                    }
+                    src={item.profileImage || "https://i.pravatar.cc/150"}
                     alt="Profile"
                   />
 
@@ -78,17 +72,12 @@ export default function Card({
                         {item.ownerRole}
                       </span>
                     </p>
-                    <p className="text-xs text-gray-400 mt-1">
-                      {item.title}
-                    </p>
+                    <p className="text-xs text-gray-400 mt-1">{item.title}</p>
                   </div>
                 </div>
 
-                <p className="text-sm text-gray-600 mb-4">
-                  {item.description}
-                </p>
+                <p className="text-sm text-gray-600 mb-4">{item.description}</p>
 
-     
                 <div className="flex justify-between items-center border-t pt-3 text-gray-600">
                   <div className="flex space-x-4">
                     <button
@@ -103,9 +92,7 @@ export default function Card({
                       onClick={() => handlePostLike(item._id)}
                     >
                       <HeartIcon className="w-5 h-5" />
-                      <span className="text-sm">
-                        {item.likes?.length || 0}
-                      </span>
+                      <span className="text-sm">{item.likes?.length || 0}</span>
                     </button>
 
                     <button
@@ -114,34 +101,32 @@ export default function Card({
                     >
                       <BookmarkIcon className="w-5 h-5" />
                       <span className="text-sm">
-                        {item.savedBy?.length || 0}
+                        {isOwner && (item.savedBy?.length || 0)}
                       </span>
                     </button>
                   </div>
 
                   <div className="flex space-x-3">
-
                     {!isOwner && hasUser && (
-                      <button
-                        onClick={() => followId(item?.user._id)}
-                      >
+                      <button onClick={() => followId(item?.user?._id)}>
                         <UserPlusIcon className="w-5 h-5 hover:text-green-500 cursor-pointer" />
                       </button>
                     )}
-
-        
                     {isOwner && (
-                      <button
-                        onClick={() => deleted(item._id)}
-                      >
+                      <button onClick={() => deleted(item._id)}>
                         <TrashIcon className="w-5 h-5 hover:text-yellow-500 cursor-pointer" />
+                      </button>
+                    )}
+                    // ? düzenleme sayfası yapılcak
+                    {isOwner && (
+                      <button>
+                        <PencilIcon className="w-5 h-5 hover:text-yellow-500 cursor-pointer" />
                       </button>
                     )}
                   </div>
                 </div>
               </div>
             </div>
-
 
             {selected === item._id && (
               <div className="mt-2 bg-white rounded-2xl shadow-md p-4 max-w-md">
@@ -152,8 +137,7 @@ export default function Card({
                     </p>
                   ) : (
                     comments.map((comment) => {
-                      const isCommentOwner =
-                        user?.id === comment?.user?._id;
+                      const isCommentOwner = user?.id === comment?.user?._id;
 
                       return (
                         <div key={comment._id}>
@@ -170,15 +154,12 @@ export default function Card({
                             <div className="flex flex-col w-full">
                               <div className="flex justify-between">
                                 <p className="text-sm font-semibold">
-                                  {comment?.user?.name}{" "}
-                                  {comment?.user?.surname}
+                                  {comment?.user?.name} {comment?.user?.surname}
                                 </p>
 
                                 {isCommentOwner && (
                                   <button
-                                    onClick={() =>
-                                      handleDelete(comment._id)
-                                    }
+                                    onClick={() => handleDelete(comment._id)}
                                   >
                                     <XMarkIcon className="w-4 h-4 text-gray-400 hover:text-red-500 cursor-pointer transition" />
                                   </button>
@@ -191,9 +172,7 @@ export default function Card({
 
                               <div className="flex gap-3 mt-1">
                                 <button
-                                  onClick={() =>
-                                    handleCommentLike(comment._id)
-                                  }
+                                  onClick={() => handleCommentLike(comment._id)}
                                   className="text-xs underline"
                                 >
                                   {comment?.liked
@@ -213,22 +192,17 @@ export default function Card({
                   )}
                 </div>
 
-
                 <div className="flex space-x-2">
                   <input
                     type="text"
                     placeholder="Yorum yap..."
                     value={newComment}
-                    onChange={(e) =>
-                      setNewComment(e.target.value)
-                    }
+                    onChange={(e) => setNewComment(e.target.value)}
                     className="flex-1 border rounded-full px-3 py-2 text-sm"
                   />
 
                   <button
-                    onClick={() =>
-                      handleAddComment(item._id)
-                    }
+                    onClick={() => handleAddComment(item._id)}
                     className="bg-[rgb(137,205,251)] text-white p-2 rounded-full"
                   >
                     <ArrowRightIcon className="w-4 h-4" />

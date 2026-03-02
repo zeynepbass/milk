@@ -1,9 +1,11 @@
-import { useState,useEffect } from "react";
+import { useState, useEffect } from "react";
 import {
   userLoginService,
   userRegisterService,
   userProfile,
-  userProfileUpdated
+  userProfileUpdated,
+  userProfilFreeze,
+  userProfileDeleted
 } from "../../services/userServices";
 import { useUserStore } from "../../../store";
 import { toast } from "react-toastify";
@@ -22,6 +24,8 @@ export default function useUserLogin() {
     surname: "",
     email: "",
     role: "",
+    province:"",
+    district:""
   });
   const setUser = useUserStore((state) => state.setUser);
   const token = useUserStore((state) => state.token);
@@ -35,31 +39,25 @@ export default function useUserLogin() {
         surname: profile.surname || "",
         email: profile.email || "",
         role: profile.role || "",
+        province: profile.province || "",
+        district: profile.district || "",
+        following: profile.following || "",
+        followers:profile.followers || ""
       });
     }
   }, [profile]);
   const handleUpdated = async () => {
-    console.log(profileForm)
     try {
       setLoading(true);
-  
-
-  
-      const res = await userProfileUpdated.postService(
-        profileForm,
-        token
-      );
+      const res = await userProfileUpdated.postService(profileForm, token);
       setUser(res.user);
-      setButton(false)
+      setButton(false);
     } catch (error) {
       console.log(error);
     } finally {
       setLoading(false);
     }
   };
-  
-
-
   const handleSubmit = async (formData) => {
     try {
       setLoading(true);
@@ -111,13 +109,37 @@ export default function useUserLogin() {
       console.log(error);
     }
   };
+  const freezeProfile = async () => {
+    try {
+      await userProfilFreeze.freezeServices(token);
+      navigate("/giris-yap");
+      toast.info("Tekrardan görüşmek üzere");
 
+      localStorage.clear();
+    } catch (error) {
+      console.log(error);
+      toast.error("Bir hata oluştu");
+    }
+  };
+const deleteProfile=async(id)=>{
+  try {
+    await userProfileDeleted.deletedServices(token,id);
+    navigate("/uye-ol")
+    toast.info("Aramızdan ayrılmana üzüldük :(");
+
+    localStorage.clear();
+  } catch (error) {
+    console.log(error);
+  }
+}
   return {
     handleSubmit,
     handleSubmitRegister,
     loading,
+    freezeProfile,
     getProfile,
     profileForm,
+    deleteProfile,
     showFreezeModal,
     setProfileForm,
     setShowFreezeModal,
