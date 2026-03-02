@@ -59,9 +59,10 @@ export function CreatePostForm({ onSubmit, loading,form,setForm,setOpen}) {
         onChange={handleChange}
         className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-300 outline-none"
       >
+ <option value="" disabled>Seçim yapınız</option>
         <option value="alici">Alıcı</option>
         <option value="satici">Satıcı</option>
-      </select>
+</select>
 
       <input
         type="text"
@@ -81,7 +82,15 @@ export function CreatePostForm({ onSubmit, loading,form,setForm,setOpen}) {
         rows={4}
         className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-300 outline-none"
       />
-
+      <div className="flex gap-4">
+      <input
+        type="text"
+        name="province"
+        placeholder="İl"
+        value={form.province || ""}
+        onChange={handleChange}
+        className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-300 outline-none"
+      />
       <input
         type="text"
         name="district"
@@ -91,13 +100,15 @@ export function CreatePostForm({ onSubmit, loading,form,setForm,setOpen}) {
         className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-300 outline-none"
       />
 
+      </div>
+ 
       <select
         name="category"
         value={form.category || ""}
         onChange={handleChange}
         className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-300 outline-none"
         required
-      >
+      > <option value="" disabled>Seçim yapınız</option>
         <option value="sut_urunleri">Süt Ürünleri</option>
         <option value="bal">Bal</option>
         <option value="zeytinyagi">Zeytinyağı</option>

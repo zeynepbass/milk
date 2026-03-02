@@ -143,17 +143,7 @@ hover:bg-gray-100  px-6 transition"
         <div className="fixed inset-0 z-50" />
         <DialogPanel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white p-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
           <div className="flex items-center justify-between">
-            <a href="#" className="-m-1.5 p-1.5">
-              <div className="flex shrink-0">
-                <Link to="/" className="-m-1.5 p-1.5">
-                  <img
-                    alt="Logo"
-                    src="/images/logo.png"
-                    className="h-16 w-auto"
-                  />
-                </Link>
-              </div>
-            </a>
+     
             <button
               type="button"
               onClick={() => setMobileMenuOpen(false)}
@@ -164,44 +154,9 @@ hover:bg-gray-100  px-6 transition"
             </button>
           </div>
           <div className="mt-6 flow-root">
+            
             <div className="-my-6 divide-y divide-gray-500/10">
-              <div className="space-y-2 py-6">
-                <div
-                  className="flex w-full max-w-2xl mx-auto rounded-full border-2 border-[rgb(137,205,251)]
- overflow-hidden"
-                >
-                  <input
-                    type="text"
-                    value={input}
-                    placeholder="Ürün, kategori veya ilçe ara…"
-                    onChange={(e) => setInput(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") {
-                        setSearch(input);
-                      }
-                    }}
-                    className="w-full bg-white px-5 py-3 text-sm outline-none"
-                  />
-
-                  <button
-                    type="button"
-                    onClick={() => setSearch(input)}
-                    className="flex items-center justify-center ml-auto bg-[rgb(137,205,251)]
-hover:bg-gray-100  px-6 transition"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 192.904 192.904"
-                      width="18px"
-                      className="fill-white "
-                    >
-                      <path d="m190.707 180.101-47.078-47.077c11.702-14.072 18.752-32.142 18.752-51.831C162.381 36.423 125.959 0 81.191 0 36.422 0 0 36.423 0 81.193c0 44.767 36.422 81.187 81.191 81.187 19.688 0 37.759-7.049 51.831-18.751l47.079 47.078a7.474 7.474 0 0 0 5.303 2.197 7.498 7.498 0 0 0 5.303-12.803zM15 81.193C15 44.694 44.693 15 81.191 15c36.497 0 66.189 29.694 66.189 66.193 0 36.496-29.692 66.187-66.189 66.187C44.693 147.38 15 117.689 15 81.193z"></path>
-                    </svg>
-                  </button>
-                </div>
-              </div>
-
-              <div className="flex py-6 shrink-0 items-center justify-center gap-4">
+            <div className="flex py-6 shrink-0 items-center justify-center gap-4">
                 <button className="p-2 rounded-full hover:bg-gray-100">
                   <MoonIcon className="w-5 h-5 text-[rgb(137,205,251)]" />
                 </button>
@@ -261,6 +216,43 @@ hover:bg-gray-100  px-6 transition"
                   </MenuItems>
                 </Menu>
               </div>
+              <div className="space-y-2 py-6">
+                <div
+                  className="flex w-full max-w-2xl mx-auto rounded-full border-2 border-[rgb(137,205,251)]
+ overflow-hidden"
+                >
+                  <input
+                    type="text"
+                    value={input}
+                    placeholder="Ürün, kategori veya ilçe ara…"
+                    onChange={(e) => setInput(e.target.value)}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter") {
+                        setSearch(input);
+                      }
+                    }}
+                    className="w-full bg-white px-5 py-3 text-sm outline-none"
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() => setSearch(input)}
+                    className="flex items-center justify-center ml-auto bg-[rgb(137,205,251)]
+hover:bg-gray-100  px-6 transition"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 192.904 192.904"
+                      width="18px"
+                      className="fill-white "
+                    >
+                      <path d="m190.707 180.101-47.078-47.077c11.702-14.072 18.752-32.142 18.752-51.831C162.381 36.423 125.959 0 81.191 0 36.422 0 0 36.423 0 81.193c0 44.767 36.422 81.187 81.191 81.187 19.688 0 37.759-7.049 51.831-18.751l47.079 47.078a7.474 7.474 0 0 0 5.303 2.197 7.498 7.498 0 0 0 5.303-12.803zM15 81.193C15 44.694 44.693 15 81.191 15c36.497 0 66.189 29.694 66.189 66.193 0 36.496-29.692 66.187-66.189 66.187C44.693 147.38 15 117.689 15 81.193z"></path>
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+        
             </div>
           </div>
         </DialogPanel>

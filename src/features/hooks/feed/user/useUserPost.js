@@ -8,13 +8,14 @@ export default function usePostDetail() {
 
   const token = useUserStore((state) => state.token);
   const [form, setForm] = useState({
-    ownerName: "",
-    ownerSurname: "",
-    ownerRole: "alici",
+    ownerName: user?.name,
+    ownerSurname: user?.surname,
+    ownerRole: "",
     title: "",
     description: "",
-    district: "",
-    category: "sut_urunleri",
+    district: user?.district,
+    province: user?.province,
+    category: "",
     images: [],
   });
   const [loading, setLoading] = useState(false);

@@ -1,22 +1,19 @@
 import { API_URI } from "../../constant/api";
-import { postService } from "./postServices";
-
-export const userLoginService= {
-
-    postService: async (formData) => {
-      const res = await fetch(`${API_URI}/users/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formData),
-      });
-      if (!res.ok) {
-        throw new Error("API error");
-      }
-      return res.json();
-    },
-}
+export const userLoginService = {
+  postService: async (formData) => {
+    const res = await fetch(`${API_URI}/users/login`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(formData),
+    });
+    if (!res.ok) {
+      throw new Error("API error");
+    }
+    return res.json();
+  },
+};
 
 export const userRegisterService = {
   postService: async (formData) => {
@@ -45,11 +42,8 @@ export const userProfile = {
   },
 };
 
-export const userProfileUpdated={
-
+export const userProfileUpdated = {
   postService: async (formData, token) => {
-    console.log("Gelen token:", token);
-  
     const res = await fetch(`${API_URI}/users/updateUser`, {
       method: "PUT",
       headers: {
@@ -58,11 +52,35 @@ export const userProfileUpdated={
       },
       body: JSON.stringify(formData),
     });
-  
+
     if (!res.ok) throw new Error("API error");
     return res.json();
-  }
-  
-}
-//hesabı sil hesabı dondur front alanı yapılcak
+  },
+};
+export const userProfilFreeze = {
+  freezeServices: async (token) => {
+    const res = await fetch(`${API_URI}/users/freeze`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!res.ok) throw new Error("API error");
+    return res.json();
+  },
+};
 
+export const userProfileDeleted={
+  deletedServices:async(token,id)=> {
+    const res = await fetch(`${API_URI}/users/${id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    if (!res.ok) throw new Error("API error");
+    return res.json();
+  },
+}
