@@ -41,7 +41,7 @@ export default function Card({
   return (
     <>
       {data.map((item) => {
-
+//düzeltilcek
         const isOwner = user?._id !== item?.user?._id ;
 
         const hasUser = item?.user?._id ;
