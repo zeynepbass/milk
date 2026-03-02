@@ -24,9 +24,17 @@ export function Login() {
       className="hidden md:block relative h-screen bg-cover bg-center"
       style={{ backgroundImage: "url('/images/wallpaper.png')" }}
     >
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
+
+
+<img
+  src="/images/footer-logo.png"
+  alt="Milk Logo"
+  className="absolute bottom-6 left-6 w-24 opacity-90"
+/>
 
       <div className="absolute top-[40%] right-[14%] -translate-y-1/2">
-      <form className="w-[420px] rounded-xl  backdrop-blur-md p-8 shadow-xl" onSubmit={onSubmit}>
+      <form className="w-[400px] rounded-xl  backdrop-blur-md p-8 shadow-xxl" onSubmit={onSubmit}>
 
           <div className="border-b border-gray-900/10 pb-4 mb-6">
             <h2 className="text-lg font-semibold text-[rgb(71,92,120)]">
