@@ -41,9 +41,10 @@ export default function Card({
   return (
     <>
       {data.map((item) => {
-        console.log(item.user._id);
-        const isOwner = user?.id == item?.user?._id;
-        const hasUser = item?.user;
+
+        const isOwner = user?._id !== item?.user?._id ;
+
+        const hasUser = item?.user?._id ;
         return (
           <div key={item._id} className="mb-6">
             <div className="w-full max-w-md bg-white rounded-2xl shadow-md">
@@ -107,22 +108,23 @@ export default function Card({
                   </div>
 
                   <div className="flex space-x-3">
-                    {!isOwner && hasUser && (
+                  {isOwner && hasUser && (
+     
                       <button onClick={() => followId(item?.user?._id)}>
                         <UserPlusIcon className="w-5 h-5 hover:text-green-500 cursor-pointer" />
                       </button>
                     )}
-                    {isOwner && (
+                  {!isOwner && hasUser &&(
                       <button onClick={() => deleted(item._id)}>
                         <TrashIcon className="w-5 h-5 hover:text-yellow-500 cursor-pointer" />
                       </button>
                     )}
-                    // ? düzenleme sayfası yapılcak
-                    {isOwner && (
+
+                    {/* {isOwner && (
                       <button>
                         <PencilIcon className="w-5 h-5 hover:text-yellow-500 cursor-pointer" />
                       </button>
-                    )}
+                    )}  */}
                   </div>
                 </div>
               </div>
