@@ -6,9 +6,12 @@ export default function usePost() {
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const [data, setData] = useState([]);
+  const [favourite, setFavourite] = useState([]);
+  
   const search = useSearchStore((state) => state.search);
   const user = useUserStore((state) => state.user);
   const token = useUserStore((state) => state.token);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -45,6 +48,7 @@ export default function usePost() {
     }
   };
   const handlePostSave = async (id) => {
+    console.log(token)
     try {
       const res = await postService.postsavedBy(id, token);
 
@@ -68,6 +72,20 @@ export default function usePost() {
     }
   };
 
+
+    const fetchSavedPosts = async () => {
+      try {
+        setLoading(true);
+        const res = await postService.getSavedPosts(token);
+        setFavourite(res);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+
   const followId = async (id) => {
     try {
       console.log(id)
@@ -84,6 +102,8 @@ export default function usePost() {
     user,
     handlePostLike,
     handlePostSave,
+    fetchSavedPosts,
+    favourite,
     followId,
     refresh,
     openList,

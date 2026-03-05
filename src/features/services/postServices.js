@@ -77,6 +77,20 @@ export const postService = {
 
     return await res.json();
   },
+getSavedPosts:async (token) => {
+    const res = await fetch(`${API_URI}/posts/users/saved-posts`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  
+    if (!res.ok) {
+      throw new Error("API error");
+    }
+
+    return await res.json();
+  },
   userPostMe: async (token) => {
     const res = await fetch(`${API_URI}/posts/user/me`, {
       method: "GET",

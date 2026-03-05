@@ -1,8 +1,5 @@
-
-import { ArrowRightIcon,XMarkIcon } from "@heroicons/react/24/outline";
-export function CreatePostForm({ onSubmit, loading,form,setForm,setOpen}) {
-
-
+import { ArrowRightIcon, XMarkIcon } from "@heroicons/react/24/outline";
+export function CreatePostForm({ onSubmit, loading, form, setForm, setOpen }) {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -10,17 +7,17 @@ export function CreatePostForm({ onSubmit, loading,form,setForm,setOpen}) {
 
   const handleImages = (e) => {
     const files = Array.from(e.target.files);
-  
+
     const imageUrls = files.map((file) => URL.createObjectURL(file));
     setForm((prev) => ({ ...prev, images: imageUrls }));
 
-    files.forEach(file => URL.revokeObjectURL(file));
+    files.forEach((file) => URL.revokeObjectURL(file));
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit(form);
-    setOpen(false)
+    setOpen(false);
   };
 
   return (
@@ -28,9 +25,15 @@ export function CreatePostForm({ onSubmit, loading,form,setForm,setOpen}) {
       onSubmit={handleSubmit}
       className="max-w-3xl mx-auto bg-white shadow-lg rounded-2xl p-8 space-y-6"
     >
-      <p className="flex justify-between">    
-          <h2 className="text-2xl font-bold text-gray-500">Yeni Gönderi Oluştur</h2>
-    <button   type="button" onClick={()=>setOpen(false)}> <XMarkIcon className="w-6 h-6 text-gray-700 hover:text-red-500 cursor-pointer transition" /></button> </p>
+      <p className="flex justify-between">
+        <h2 className="text-2xl font-bold text-gray-500">
+          Yeni Gönderi Oluştur
+        </h2>
+        <button type="button" onClick={() => setOpen(false)}>
+          {" "}
+          <XMarkIcon className="w-6 h-6 text-gray-700 hover:text-red-500 cursor-pointer transition" />
+        </button>{" "}
+      </p>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <input
@@ -59,10 +62,12 @@ export function CreatePostForm({ onSubmit, loading,form,setForm,setOpen}) {
         onChange={handleChange}
         className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-300 outline-none"
       >
- <option value="" disabled>Seçim yapınız</option>
+        <option value="" disabled>
+          Seçim yapınız
+        </option>
         <option value="alici">Alıcı</option>
         <option value="satici">Satıcı</option>
-</select>
+      </select>
 
       <input
         type="text"
@@ -83,32 +88,35 @@ export function CreatePostForm({ onSubmit, loading,form,setForm,setOpen}) {
         className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-300 outline-none"
       />
       <div className="flex gap-4">
-      <input
-        type="text"
-        name="province"
-        placeholder="İl"
-        value={form.province || ""}
-        onChange={handleChange}
-        className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-300 outline-none"
-      />
-      <input
-        type="text"
-        name="district"
-        placeholder="İlçe"
-        value={form.district || ""}
-        onChange={handleChange}
-        className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-300 outline-none"
-      />
-
+        <input
+          type="text"
+          name="province"
+          placeholder="İl"
+          value={form.province || ""}
+          onChange={handleChange}
+          className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-300 outline-none"
+        />
+        <input
+          type="text"
+          name="district"
+          placeholder="İlçe"
+          value={form.district || ""}
+          onChange={handleChange}
+          className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-300 outline-none"
+        />
       </div>
- 
+
       <select
         name="category"
         value={form.category || ""}
         onChange={handleChange}
         className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-300 outline-none"
         required
-      > <option value="" disabled>Seçim yapınız</option>
+      >
+        {" "}
+        <option value="" disabled>
+          Seçim yapınız
+        </option>
         <option value="sut_urunleri">Süt Ürünleri</option>
         <option value="bal">Bal</option>
         <option value="zeytinyagi">Zeytinyağı</option>

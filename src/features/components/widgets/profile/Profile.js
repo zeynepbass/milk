@@ -248,11 +248,12 @@ hover:bg-gray-200
           </button>
           <button
             className={`px-4 py-2 font-semibold ${
-              activeTab === "settings"
-                ? "border-b-2 border-[rgb(82,144,246)] text-[rgb(82,144,246)]"
+              activeTab === "settings" 
+                ? "border-b-2 border-[rgb(82,144,246)] text-[rgb(82,144,246)] "
                 : "text-gray-500"
             }`}
             onClick={() => setActiveTab("settings")}
+            disabled={open}
           >
             Hesap Ayarları
           </button>

@@ -112,13 +112,12 @@ export default function Card({
                         <UserPlusIcon className="w-5 h-5 hover:text-green-500 cursor-pointer" />
                       </button>
                     )}
-
                     {isOwner && (
                       <button onClick={() => deleted(item._id)}>
                         <TrashIcon className="w-5 h-5 hover:text-yellow-500 cursor-pointer" />
                       </button>
                     )}
-                    //?sayfa eklemesı yapılcak
+                    //?sayfa düzenleme yapılcak  api hazır uı toparlancak detay sayfasına da bak
                     {isOwner && (
                       <button onClick={() => deleted(item._id)}>
                         <PencilIcon className="w-5 h-5 hover:text-yellow-500 cursor-pointer" />

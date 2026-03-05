@@ -76,10 +76,12 @@ export default function usePostDetail() {
       }
     };
     
-    const handlePostSave = async (id) => {
+    const handlePostSave = async (id,token) => {
+
       try {
+     
         const res = await postService.postsavedBy(id, token);
-    
+     
         setDetails((prev) =>
           prev.map((post) => {
             if (post._id !== id) return post;
