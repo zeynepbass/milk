@@ -23,7 +23,7 @@ export function CreatePostForm({ onSubmit, loading, form, setForm, setOpen }) {
   return (
     <form
       onSubmit={handleSubmit}
-      className="max-w-3xl mx-auto bg-white shadow-lg rounded-2xl p-8 space-y-6"
+      className="max-w-4xl mx-auto bg-white shadow-lg rounded-2xl p-8 space-y-6 m-2"
     >
       <p className="flex justify-between">
         <h2 className="text-2xl font-bold text-gray-500">

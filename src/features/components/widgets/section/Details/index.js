@@ -5,10 +5,14 @@ import {
   ChatBubbleBottomCenterIcon,
   ArrowRightIcon,
   XMarkIcon,
+  UserPlusIcon,
+  PencilIcon,
+  TrashIcon
 } from "@heroicons/react/24/outline";
+import usePost from "../../../../hooks/feed/user/useUserPost";
 import { useParams } from "react-router-dom";
 import useCommentAll from "../../../../hooks/feed/posts/usePostDetails";
-
+import usePostAll from "../../../../hooks/feed/posts/usePost";
 export function Detail() {
   const { id } = useParams();
 
@@ -22,20 +26,26 @@ export function Detail() {
     comments,
     handlePostLike,
     handlePostSave,
-    showComments, setShowComments
+    showComments,
+    setShowComments,
   } = useCommentAll(id);
+  const {followId } =
+    usePostAll();
+      const {
 
+        deleted,
+    
+      } = usePost();
   const [currentImage, setCurrentImage] = useState(0);
 
   const [newComment, setNewComment] = useState("");
-
 
   if (loading) {
     return <p className="text-center mt-10">Yükleniyor...</p>;
   }
 
   if (!details) {
-    return <p className="text-center mt-10">Gönderi bulunamadı</p>;
+    return <p className="text-center mt-10 text-gray-400">Gönderi bulunamadı</p>;
   }
 
   const images = details.images || [];
@@ -51,7 +61,9 @@ export function Detail() {
     handleComment(postId, newComment);
     setNewComment("");
   };
-
+  const itemUserId = details?.user?._id || details?.user;
+  const isOwner = user?.id === itemUserId;
+          const hasUser = !!details?.user;
   return (
     <div className="max-w-5xl mx-auto p-6">
       {images.length > 0 && (
@@ -108,7 +120,7 @@ export function Detail() {
               {details.category.replace("_", " ")}
             </span>
           )}
-        {details.province && (
+          {details.province && (
             <span className="px-4 py-1 bg-gray-100 rounded-full text-sm">
               {details.province}
             </span>
@@ -135,19 +147,39 @@ export function Detail() {
             />
             <span className="text-sm text-red-500">
               {" "}
-              {details.likes?.length || 0}
+              {details.likes?.length || ""}
             </span>
           </button>
-          <button
-            className="  flex items-center p-3 rounded-full bg-yellow-100"
-            onClick={() => handlePostSave(details._id)}
-          >
-            <BookmarkIcon className="w-5 h-5 text-yellow-500" />
-            <span className="text-sm text-yellow-500">
-              {" "}
-              {details.savedBy?.length || 0}
-            </span>
-          </button>
+          {!isOwner && (
+            <button
+              className="flex items-center p-3 rounded-full bg-yellow-100"
+              onClick={() => handlePostSave(details._id)}
+            >
+              <>
+                <BookmarkIcon className="w-5 h-5 text-yellow-500" />
+                <span className="text-sm text-yellow-500">
+                  {" "}
+                  {details.savedBy?.length || ""}
+                </span>{" "}
+              </>
+            </button>
+          )}
+                    {!isOwner && hasUser && (
+                      <button onClick={() => followId(itemUserId)} className=" flex items-center p-3 rounded-full bg-gray-100">
+                        <UserPlusIcon className="w-5 h-5 hover:text-gray-500  text-gray-500" />
+                      </button>
+                    )}
+                    {isOwner && (
+                      <button onClick={() => deleted(details._id)} className=" flex items-center p-3 rounded-full bg-blue-100">
+                        <TrashIcon className="w-5 h-5 cursor-pointer hover:text-blue-500  text-blue-500" />
+                      </button>
+                    )}
+
+                    {isOwner && (
+                      <button className=" flex items-center p-3 rounded-full bg-yellow-100">
+                        <PencilIcon className="w-5 h-5 hover:text-yellow-500 cursor-pointer text-yellow-500" />
+                      </button>
+                    )}
         </div>
 
         {showComments && (
@@ -180,7 +212,6 @@ export function Detail() {
                               </button>
                             )}
                           </p>
-                          
                         </div>
 
                         <p className="text-sm text-gray-600">{comment.text}</p>
