@@ -66,7 +66,7 @@ export function Profile() {
   };
 
   return (
-    <div className="grid grid-cols-12 h-[100vh]">
+    <div className="grid grid-cols-12 h-[100vh] overflow-scroll">
       <div className="col-span-4 overflow-hidden relative p-6 border-r border-gray-100">
         <button
           onClick={() => setButton(true)}
@@ -248,7 +248,7 @@ hover:bg-gray-200
           </button>
           <button
             className={`px-4 py-2 font-semibold ${
-              activeTab === "settings" 
+              activeTab === "settings"
                 ? "border-b-2 border-[rgb(82,144,246)] text-[rgb(82,144,246)] "
                 : "text-gray-500"
             }`}
@@ -257,30 +257,39 @@ hover:bg-gray-200
           >
             Hesap Ayarları
           </button>
+          <button
+            className={`px-4 py-2 font-semibold ${
+              activeTab === "organic"
+                ? "border-b-2 border-[rgb(82,144,246)] text-[rgb(82,144,246)] "
+                : "text-gray-500"
+            }`}
+            onClick={() => setActiveTab("organic")}
+            disabled={open}
+          >
+            Organik Sertifika Yükle
+          </button>
         </div>
 
         <div className="mt-4">
-          <div className="flex justify-end">
-            <button
-              type="submit"
-              onClick={() => setOpen(true)}
-              className="mb-2 w-1/12  rounded-md py-2.5 text-sm font-semibold text-white transition bg-[rgb(137,205,251)] hover:bg-gray-200"
-            >
-              +
-            </button>
-          </div>
-
-          {open && (
-            <CreatePostForm
-              onSubmit={onSubmit}
-              form={form}
-              setForm={setForm}
-              setOpen={setOpen}
-            />
-          )}
-
           {activeTab === "posts" && (
-            <div className="space-y-3">
+            <div className="space">
+              <div className="flex justify-end">
+                <button
+                  type="submit"
+                  onClick={() => setOpen(true)}
+                  className="mb-2 w-1/12  rounded-md py-2.5 text-sm font-semibold text-white transition bg-[rgb(137,205,251)] hover:bg-gray-200"
+                >
+                  +
+                </button>
+              </div>
+              {open && (
+                <CreatePostForm
+                  onSubmit={onSubmit}
+                  form={form}
+                  setForm={setForm}
+                  setOpen={setOpen}
+                />
+              )}
               <Card
                 data={Array.isArray(details) ? details : []}
                 loading={loading}
@@ -331,6 +340,37 @@ hover:bg-gray-200
                   Hesabı Sil
                 </button>
               </div>
+            </div>
+          )}
+          {activeTab === "organic" && (
+            <div className="space-y-6">
+              <form
+                // onSubmit={handleSubmit}
+                className="max-w-4xl mx-auto bg-white shadow-lg rounded-2xl p-8  m-2"
+              >
+ 
+
+                <input
+                  type="file"
+                  multiple
+                  onChange={handleImages}
+                  className="w-full"
+                />
+
+                <div className="flex justify-end">
+                <button
+  type="submit"
+  disabled={loading}
+  className="bg-[rgb(137,205,251)] text-white p-2 rounded-md flex items-center space-x-6"
+>
+  
+
+  <span>
+    {loading ? "Paylaşılıyor..." : "Yükle"}
+  </span>
+</button>
+                </div>
+              </form>
             </div>
           )}
         </div>

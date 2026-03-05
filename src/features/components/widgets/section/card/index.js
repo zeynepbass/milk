@@ -13,6 +13,7 @@ import { Link } from "react-router-dom";
 
 export default function Card({
   data = [],
+  favoruite,
   loading,
   user,
   followId,
@@ -42,7 +43,7 @@ export default function Card({
     <>
       {data.map((item) => {
         const itemUserId = item?.user?._id || item?.user;
-        const isOwner = user?._id === itemUserId;
+        const isOwner = user?.id === itemUserId;
         const hasUser = !!item?.user;
         return (
           <div key={item._id} className="mb-6">
@@ -92,17 +93,29 @@ export default function Card({
                       onClick={() => handlePostLike(item._id)}
                     >
                       <HeartIcon className="w-5 h-5" />
-                      <span className="text-sm">{item.likes?.length || 0}</span>
+                      <span className="text-sm">
+                        {item.likes?.length || ""}
+                      </span>
                     </button>
 
                     <button
                       className="flex items-center hover:text-green-600 transition"
                       onClick={() => handlePostSave(item._id)}
                     >
-                      <BookmarkIcon className="w-5 h-5" />
-                      <span className="text-sm">
-                        {isOwner && (item.savedBy?.length || 0)}
-                      </span>
+                      {!isOwner && (
+                        <>
+                          <BookmarkIcon
+                            className={`w-5 h-5 ${
+                              favoruite ? "text-red-500" : ""
+                            }`}
+                          />
+                          <span       className={`text-sm ${
+                              favoruite ? "text-red-500" : ""
+                            }`}>
+                            {!isOwner && (item.savedBy?.length || "")}
+                          </span>{" "}
+                        </>
+                      )}
                     </button>
                   </div>
 
@@ -117,7 +130,7 @@ export default function Card({
                         <TrashIcon className="w-5 h-5 hover:text-yellow-500 cursor-pointer" />
                       </button>
                     )}
-                    //?sayfa düzenleme yapılcak  api hazır uı toparlancak detay sayfasına da bak
+
                     {isOwner && (
                       <button onClick={() => deleted(item._id)}>
                         <PencilIcon className="w-5 h-5 hover:text-yellow-500 cursor-pointer" />
@@ -191,7 +204,6 @@ export default function Card({
                     })
                   )}
                 </div>
-
                 <div className="flex space-x-2">
                   <input
                     type="text"
