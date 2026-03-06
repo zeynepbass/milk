@@ -136,4 +136,16 @@ getSavedPosts:async (token) => {
 
     return await res.json();
   },
+  updatePost: async (id, formData, token) => {
+    const res = await fetch(`${API_URI}/posts/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(formData),
+    });
+  
+    return res.json();
+  }
 };

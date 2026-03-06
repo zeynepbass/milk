@@ -25,20 +25,21 @@ export function CreatePostForm({ onSubmit, loading, form, setForm, setOpen }) {
       onSubmit={handleSubmit}
       className="max-w-4xl mx-auto bg-white shadow-lg rounded-2xl p-8 space-y-6 m-2"
     >
-      <p className="flex justify-between">
-        <h2 className="text-2xl font-bold text-gray-500">
+    <div className="flex justify-between items-center">
+        <h2 className="text-xl font-semibold text-gray-700">
           Yeni Gönderi Oluştur
         </h2>
+
         <button type="button" onClick={() => setOpen(false)}>
-          {" "}
-          <XMarkIcon className="w-6 h-6 text-gray-700 hover:text-red-500 cursor-pointer transition" />
-        </button>{" "}
-      </p>
+          <XMarkIcon className="w-6 h-6 text-gray-500 hover:text-red-500 transition" />
+        </button>
+      </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <input
           type="text"
           name="ownerName"
+          disabled
           placeholder="Ad"
           value={form.ownerName || ""}
           onChange={handleChange}
@@ -49,6 +50,7 @@ export function CreatePostForm({ onSubmit, loading, form, setForm, setOpen }) {
           type="text"
           name="ownerSurname"
           placeholder="Soyad"
+          disabled
           value={form.ownerSurname || ""}
           onChange={handleChange}
           className="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-300 outline-none"
@@ -58,13 +60,13 @@ export function CreatePostForm({ onSubmit, loading, form, setForm, setOpen }) {
 
       <select
         name="ownerRole"
-        value={form.ownerRole || ""}
+        disabled
+        value={form?.ownerRole  || ""}
+
         onChange={handleChange}
         className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-300 outline-none"
       >
-        <option value="" disabled>
-          Seçim yapınız
-        </option>
+ 
         <option value="alici">Alıcı</option>
         <option value="satici">Satıcı</option>
       </select>
@@ -91,6 +93,7 @@ export function CreatePostForm({ onSubmit, loading, form, setForm, setOpen }) {
         <input
           type="text"
           name="province"
+          disabled
           placeholder="İl"
           value={form.province || ""}
           onChange={handleChange}
@@ -99,6 +102,7 @@ export function CreatePostForm({ onSubmit, loading, form, setForm, setOpen }) {
         <input
           type="text"
           name="district"
+          disabled
           placeholder="İlçe"
           value={form.district || ""}
           onChange={handleChange}
@@ -131,10 +135,9 @@ export function CreatePostForm({ onSubmit, loading, form, setForm, setOpen }) {
         <button
           type="submit"
           disabled={loading}
-          className="bg-[rgb(137,205,251)] text-white p-2 rounded-full"
+          className="bg-[rgb(137,205,251)] text-white px-4 py-2 rounded-full flex items-center justify-center disabled:opacity-50"
         >
-          {" "}
-          {loading ? "Paylaşılıyor..." : <ArrowRightIcon className="w-4 h-4" />}
+          {loading ? "Paylaşılıyor..." : <ArrowRightIcon className="w-5 h-5" />}
         </button>
       </div>
     </form>

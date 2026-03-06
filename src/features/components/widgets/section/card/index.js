@@ -8,16 +8,20 @@ import {
   XMarkIcon,
   PencilIcon,
 } from "@heroicons/react/24/outline";
-
+import { UpdatedPostForm } from "../../profile/UpdatedPostForm";
 import { Link } from "react-router-dom";
 
 export default function Card({
   data = [],
+  open,
+  setOpen,
   favoruite,
   loading,
   user,
   followId,
   selected,
+  setEditPostId,
+  editPostId,
   handleShowed,
   handlePostLike,
   handleDelete,
@@ -39,6 +43,10 @@ export default function Card({
     );
   }
 
+  const handeleUpdated = (id) => {
+    setOpen(true);
+    setEditPostId(id);
+  };
   return (
     <>
       {data.map((item) => {
@@ -46,12 +54,16 @@ export default function Card({
         const isOwner = user?.id === itemUserId;
         const hasUser = !!item?.user;
         return (
-          <div key={item._id} className="mb-6">
-            <div className="w-full max-w-md bg-white rounded-2xl shadow-md">
+          <div key={item._id} className="m-3">
+            <div className="w-full  bg-white rounded-2xl shadow-md">
               <Link to={`/detay/${item._id}`}>
                 <img
                   className="w-full h-60 object-cover rounded-t-2xl"
-                  src={item.images?.[0] || "https://via.placeholder.com/400"}
+                  src={
+                    Array.isArray(item.images) && item.images[0]
+                      ? item.images[0]
+                      : "https://via.placeholder.com/400"
+                  }
                   alt="Post"
                 />
               </Link>
@@ -109,10 +121,12 @@ export default function Card({
                               favoruite ? "text-red-500" : ""
                             }`}
                           />
-                          <span       className={`text-sm ${
+                          <span
+                            className={`text-sm ${
                               favoruite ? "text-red-500" : ""
-                            }`}>
-                            {!isOwner && (item.savedBy?.length || "")}
+                            }`}
+                          >
+                            {item.savedBy?.length || ""}
                           </span>{" "}
                         </>
                       )}
@@ -126,15 +140,25 @@ export default function Card({
                       </button>
                     )}
                     {isOwner && (
-                      <button onClick={() => deleted(item._id)}>
-                        <TrashIcon className="w-5 h-5 hover:text-yellow-500 cursor-pointer" />
-                      </button>
+                      <>
+                        <button onClick={() => deleted(item._id)}>
+                          <TrashIcon className="w-5 h-5 hover:text-blue-200 cursor-pointer" />
+                        </button>
+                        <button onClick={() => handeleUpdated(item._id)}>
+                          <PencilIcon className="w-5 h-5 hover:text-yellow-500 cursor-pointer" />
+                        </button>{" "}
+                      </>
                     )}
 
-                    {isOwner && (
-                      <button onClick={() => deleted(item._id)}>
-                        <PencilIcon className="w-5 h-5 hover:text-yellow-500 cursor-pointer" />
-                      </button>
+                    {open && (
+                      <div className="fixed inset-0 flex items-center justify-center bg-black/20">
+                        <div className="bg-white p-6 rounded-xl">
+                          <UpdatedPostForm
+                            editPostId={editPostId}
+                            setOpen={setOpen}
+                          />
+                        </div>
+                      </div>
                     )}
                   </div>
                 </div>

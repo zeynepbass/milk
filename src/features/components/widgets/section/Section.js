@@ -1,5 +1,6 @@
 import { useState } from "react";
 import usePostAll from "../../../hooks/feed/posts/usePost";
+import usePost from "../../../hooks/feed/user/useUserPost"
 import useCommentAll from "../../../hooks/feed/comments/useComments";
 import Card from "./card";
 export function Section() {
@@ -11,9 +12,9 @@ export function Section() {
 
   };
 
-  const { data, loading, user, followId, handlePostLike, handlePostSave } =
+  const { data, loading, user, followId, handlePostLike, handlePostSave,open,setOpen } =
     usePostAll();
-
+const {deleted,editPostId, setEditPostId}=usePost();
   const { handleComment, handleDelete, handleC0mmentLike,handleAddComment, comments,   newComment,
     setNewComment } =
     useCommentAll(selected);
@@ -28,8 +29,12 @@ export function Section() {
           setNewComment={setNewComment}
           handleAddComment={handleAddComment}
           loading={loading}
+          editPostId={editPostId}
+          setEditPostId={setEditPostId}
           followId={followId}
-
+          setOpen={setOpen || true}
+          deleted={deleted}
+          open={open || false}
           handleShowed={handleShowed}
           user={user || {}}
           handlePostSave={handlePostSave}

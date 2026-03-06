@@ -175,11 +175,7 @@ export function Detail() {
                       </button>
                     )}
 
-                    {isOwner && (
-                      <button className=" flex items-center p-3 rounded-full bg-yellow-100">
-                        <PencilIcon className="w-5 h-5 hover:text-yellow-500 cursor-pointer text-yellow-500" />
-                      </button>
-                    )}
+  
         </div>
 
         {showComments && (
