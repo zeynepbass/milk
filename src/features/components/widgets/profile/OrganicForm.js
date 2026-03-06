@@ -1,5 +1,6 @@
 import {ArrowRightIcon } from "@heroicons/react/24/outline";
 export const OrganicForm = () => {
+  //bu sayfa yapılcak
   const handleImages = (e) => {
     const file = e.target.files[0];
     if (!file) return;
