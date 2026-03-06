@@ -77,6 +77,20 @@ export const postService = {
 
     return await res.json();
   },
+getSavedPosts:async (token) => {
+    const res = await fetch(`${API_URI}/posts/users/saved-posts`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  
+    if (!res.ok) {
+      throw new Error("API error");
+    }
+
+    return await res.json();
+  },
   userPostMe: async (token) => {
     const res = await fetch(`${API_URI}/posts/user/me`, {
       method: "GET",
@@ -122,4 +136,16 @@ export const postService = {
 
     return await res.json();
   },
+  updatePost: async (id, formData, token) => {
+    const res = await fetch(`${API_URI}/posts/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(formData),
+    });
+  
+    return res.json();
+  }
 };

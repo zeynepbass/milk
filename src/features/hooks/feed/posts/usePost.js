@@ -6,9 +6,12 @@ export default function usePost() {
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const [data, setData] = useState([]);
+  const [favoruite, setfavoruite] = useState([]);
+  const [open, setOpen] = useState(false);
   const search = useSearchStore((state) => state.search);
   const user = useUserStore((state) => state.user);
   const token = useUserStore((state) => state.token);
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -44,7 +47,19 @@ export default function usePost() {
       console.log(error);
     }
   };
+  const fetchSavedPosts = async () => {
+    try {
+      setLoading(true);
+      const res = await postService.getSavedPosts(token);
+      setfavoruite(res);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
   const handlePostSave = async (id) => {
+
     try {
       const res = await postService.postsavedBy(id, token);
 
@@ -63,14 +78,36 @@ export default function usePost() {
           };
         })
       );
+      if (res.saved === false) {
+        fetchSavedPosts();
+      }
     } catch (error) {
       console.log(error);
     }
   };
 
+  const handleUpdatePost = async (id, formData) => {
+    try {
+      setLoading(true);
+  
+
+      const updatedPost = await postService.updatePost(id, formData, token);
+      
+      setData((prev) =>
+        prev.map((post) => (post._id === id ? updatedPost : post))
+      );
+  
+      setOpen(false);
+    } catch (err) {
+      console.log(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const followId = async (id) => {
     try {
-      console.log(id)
+
       await postService.followById(id, token);
       setRefresh((prev) => !prev);
       setOpenList(false);
@@ -84,9 +121,14 @@ export default function usePost() {
     user,
     handlePostLike,
     handlePostSave,
+    fetchSavedPosts,
+    favoruite,
     followId,
     refresh,
+    handleUpdatePost,
     openList,
+    open,
+    setOpen,
     setOpenList,
   };
 }

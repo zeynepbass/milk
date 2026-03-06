@@ -3,14 +3,14 @@ import { postService } from "features/services/postServices";
 import { useUserStore } from "../../../../store";
 export default function usePostDetail() {
   const [details, setDetails] = useState([]);
-
+  const [editPostId, setEditPostId] = useState(null);
   const user = useUserStore((state) => state.user);
 
   const token = useUserStore((state) => state.token);
   const [form, setForm] = useState({
     ownerName: user?.name,
     ownerSurname: user?.surname,
-    ownerRole: "",
+    ownerRole: user?.role,
     title: "",
     description: "",
     district: user?.district,
@@ -76,10 +76,12 @@ export default function usePostDetail() {
       }
     };
     
-    const handlePostSave = async (id) => {
+    const handlePostSave = async (id,token) => {
+
       try {
-        const res = await postService.postsavedBy(id, token);
-    
+     
+ await postService.postsavedBy(id, token);
+     
         setDetails((prev) =>
           prev.map((post) => {
             if (post._id !== id) return post;
@@ -100,5 +102,5 @@ export default function usePostDetail() {
     };
 
 
-  return { details, loading,onSubmit,setForm,form,deleted,handlePostLike,handlePostSave,user};
+  return { details, loading,onSubmit,setForm,form,deleted,handlePostLike,handlePostSave,user,editPostId, setEditPostId};
 }

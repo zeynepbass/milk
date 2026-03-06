@@ -34,7 +34,7 @@ export function Header() {
           </Link>
         </div>
 
-        <div className="flex lg:hidden">
+        <div className="flex md:hidden">
           <button
             type="button"
             onClick={() => setMobileMenuOpen(true)}
@@ -44,7 +44,7 @@ export function Header() {
             <Bars3Icon className="w-6 h-6" aria-hidden="true" />
           </button>
         </div>
-        <PopoverGroup className="hidden lg:flex flex-1">
+        <PopoverGroup className="hidden md:flex flex-1">
           <div
             className="flex w-full max-w-2xl mx-auto rounded-full border-2 border-[rgb(137,205,251)]
  overflow-hidden"
@@ -80,7 +80,7 @@ hover:bg-gray-100  px-6 transition"
           </div>
         </PopoverGroup>
 
-        <div className="hidden lg:flex shrink-0 items-center gap-4">
+        <div className="hidden md:flex shrink-0 items-center gap-4">
           <button className="p-2 rounded-full hover:bg-gray-100">
             <MoonIcon className="w-5 h-5 text-[rgb(137,205,251)]" />
           </button>
@@ -138,7 +138,7 @@ hover:bg-gray-100  px-6 transition"
       <Dialog
         open={mobileMenuOpen}
         onClose={setMobileMenuOpen}
-        className="lg:hidden"
+        className="md:hidden"
       >
         <div className="fixed inset-0 z-50" />
         <DialogPanel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white p-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">

@@ -5,6 +5,8 @@ import usePost from "features/hooks/feed/user/useUserPost";
 import useProfile from "../../../hooks/user/useUser";
 import useUserLogin from "features/hooks/user/useUser";
 import { CreatePostForm } from "./Form";
+import { OrganicForm } from "./OrganicForm";
+import { useSearchStore } from "../../../../store";
 import useCommentAll from "../../../hooks/feed/comments/useComments";
 import usePostAll from "../../../hooks/feed/posts/usePost";
 export function Profile() {
@@ -12,7 +14,7 @@ export function Profile() {
   const handleShowed = (id) => {
     setSelected((prev) => (prev === id ? null : id));
   };
-
+  const setSearch = useSearchStore((state) => state.setSearch);
   const {
     getProfile,
     profileForm,
@@ -20,20 +22,23 @@ export function Profile() {
     handleUpdated,
     showFreezeModal,
     setShowFreezeModal,
-    open,
+    createOpen,
     setProfileForm,
-    setOpen,
+createSetOpen,
     setButton,
   } = useUserLogin();
-  const { followId, refresh, openList, setOpenList } = usePostAll();
+  
+  const { followId, refresh, openList, setOpenList,open,setOpen } = usePostAll();
   const {
     details,
     loading,
     onSubmit,
     form,
     setForm,
-    deleted,
     handlePostLike,
+    editPostId,
+deleted,
+setEditPostId,
     handlePostSave,
     user,
   } = usePost();
@@ -45,28 +50,27 @@ export function Profile() {
   useEffect(() => {
     getProfile();
   }, [refresh]);
-
   const handleImages = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const imageUrl = URL.createObjectURL(file);
-
-    setProfileForm((prev) => ({
+    const files = Array.from(e.target.files); 
+    if (!files.length) return;
+  
+    const imageUrls = files.map((file) => URL.createObjectURL(file));
+  
+    setForm((prev) => ({
       ...prev,
-      avatar: imageUrl,
+      images: imageUrls, 
+      files: files, 
     }));
   };
-
   const handleChange = (e) => {
     setProfileForm((prev) => ({
       ...prev,
       [e.target.name]: e.target.value,
     }));
   };
-
+  const [input, setInput] = useState("");
   return (
-    <div className="grid grid-cols-12 h-[100vh]">
+    <div className="grid grid-cols-12 h-[100vh] overflow-scroll">
       <div className="col-span-4 overflow-hidden relative p-6 border-r border-gray-100">
         <button
           onClick={() => setButton(true)}
@@ -248,7 +252,7 @@ hover:bg-gray-200
           </button>
           <button
             className={`px-4 py-2 font-semibold ${
-              activeTab === "settings" 
+              activeTab === "settings"
                 ? "border-b-2 border-[rgb(82,144,246)] text-[rgb(82,144,246)] "
                 : "text-gray-500"
             }`}
@@ -257,33 +261,62 @@ hover:bg-gray-200
           >
             Hesap Ayarları
           </button>
+          <button
+            className={`px-4 py-2 font-semibold ${
+              activeTab === "organic"
+                ? "border-b-2 border-[rgb(82,144,246)] text-[rgb(82,144,246)] "
+                : "text-gray-500"
+            }`}
+            onClick={() => setActiveTab("organic")}
+            disabled={open}
+          >
+            Organik Sertifika Yükle
+          </button>
         </div>
 
-        <div className="mt-4">
-          <div className="flex justify-end">
-            <button
-              type="submit"
-              onClick={() => setOpen(true)}
-              className="mb-2 w-1/12  rounded-md py-2.5 text-sm font-semibold text-white transition bg-[rgb(137,205,251)] hover:bg-gray-200"
-            >
-              +
-            </button>
-          </div>
-
-          {open && (
-            <CreatePostForm
-              onSubmit={onSubmit}
-              form={form}
-              setForm={setForm}
-              setOpen={setOpen}
-            />
-          )}
-
+        <div className="mt-4 " >
           {activeTab === "posts" && (
-            <div className="space-y-3">
+            <>
+
+                       <div className="flex lg:justify-end mb-2">
+                       <input
+                       type="text"
+                       value={input}
+                       placeholder="Ürün, kategori veya ilçe ara…"
+              
+                       onChange={(e) => setInput(e.target.value)}
+                       onKeyDown={(e) => {
+                         if (e.key === "Enter") {
+                           setSearch(input);
+                         }
+                       }}
+                       className="sm:w-full lg:w-1/3 bg-white border-2 rounded-md px-5 m-2 py-3 text-sm outline-none"
+                     />
+                         <button
+                           type="submit"
+                           onClick={() => createSetOpen(true)}
+                           className="m-2 w-1/12   rounded-md py-2.5 text-sm font-semibold text-white transition bg-[rgb(137,205,251)] hover:bg-gray-200"
+                         >
+                           +
+                         </button>
+                       </div>
+                       {createOpen && (
+                         <CreatePostForm
+                           onSubmit={onSubmit}
+                           form={form}
+                           setForm={setForm}
+                           setOpen={createSetOpen}
+                         />
+                       )}
+           
+            <div className="grid lg:grid-cols-2 md:grid-cols-1">
+   
+
               <Card
-                data={Array.isArray(details) ? details : []}
+               data={details || []}
+  
                 loading={loading}
+                editPostId={editPostId}
                 selected={selected}
                 handleShowed={handleShowed}
                 user={user}
@@ -294,8 +327,11 @@ hover:bg-gray-200
                 handleC0mmentLike={handleC0mmentLike}
                 comments={comments}
                 deleted={deleted}
+                open={open}
+                setOpen={setOpen}
+                setEditPostId={setEditPostId}
               />
-            </div>
+            </div>               </>
           )}
 
           {activeTab === "settings" && (
@@ -332,6 +368,9 @@ hover:bg-gray-200
                 </button>
               </div>
             </div>
+          )}
+          {activeTab === "organic" && (
+           <OrganicForm/>
           )}
         </div>
 

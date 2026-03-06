@@ -4,28 +4,27 @@ import { useUserStore } from "../../../../store";
 import { commentService } from "features/services/commentService";
 
 export default function usePostDetail(id) {
+  
   const [details, setDetails] = useState(null);
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(false);
   const token = useUserStore((state) => state.token);
   const user = useUserStore((state) => state.user);
   const [showComments, setShowComments] = useState(false);
+  const fetchData = async () => {
+    try {
+      setLoading(true);
+      const res = await postService.postDetails(id, token);
+      setDetails(res.post);
+      setComments(res.comments);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
   useEffect(() => {
     if (!id) return;
-
-    const fetchData = async () => {
-      try {
-        setLoading(true);
-        const res = await postService.postDetails(id, token);
-        setDetails(res.post);
-        setComments(res.comments);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
     fetchData();
   }, [id,token]);
 
@@ -88,7 +87,7 @@ export default function usePostDetail(id) {
   };
   const handlePostSave = async (postId) => {
     try {
-      const res = await postService.postsavedBy(postId, token);
+await postService.postsavedBy(postId, token);
 
       setDetails((prev) => {
         if (!prev) return prev;
@@ -113,6 +112,7 @@ export default function usePostDetail(id) {
     handleLike,
     handleDelete,
     handleComment,
+    fetchData,
     comments,
     user,
     handlePostLike,
