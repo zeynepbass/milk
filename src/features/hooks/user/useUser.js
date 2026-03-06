@@ -13,7 +13,8 @@ import { useNavigate } from "react-router-dom";
 
 export default function useUserLogin() {
   const [showFreezeModal, setShowFreezeModal] = useState(false);
-  const [open, setOpen] = useState(false);
+
+  const [createOpen,createSetOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState("");
   const [button, setButton] = useState(false);
@@ -143,8 +144,7 @@ const deleteProfile=async(id)=>{
     showFreezeModal,
     setProfileForm,
     setShowFreezeModal,
-    open,
-    setOpen,
+    createOpen,createSetOpen,
     button,
     setButton,
     handleUpdated,
