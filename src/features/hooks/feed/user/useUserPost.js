@@ -47,6 +47,7 @@ export default function usePostDetail() {
       setLoading(false);
     }
   };
+
   const deleted=async (postId) => {
       try {
         await postService.deleted(postId, token);

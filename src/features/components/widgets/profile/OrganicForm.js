@@ -1,38 +1,44 @@
-import {ArrowRightIcon } from "@heroicons/react/24/outline";
-export const OrganicForm = () => {
-  //bu sayfa yapılcak
-  const handleImages = (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
+import { ArrowRightIcon } from "@heroicons/react/24/outline";
+import { useState } from "react";
 
-    const imageUrl = URL.createObjectURL(file);
+export const OrganicForm = ({userUpdated}) => {
+  const [file, setFile] = useState(null);
 
-    // setProfileForm((prev) => ({
-    //   ...prev,
-    //   avatar: imageUrl,
-    // }));
+  const handleFile = (e) => {
+    const selectedFile = e.target.files[0];
+
+    if (!selectedFile) return;
+
+    setFile(selectedFile);
   };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const formData = new FormData();
+    formData.append("file", file);
+    userUpdated(formData);
+  };
+
+
   return (
-    <div className="">
+    <div>
       <form
-        // onSubmit={handleSubmit}
-        className="w-full mx-auto bg-white shadow-lg rounded-2xl p-8  m-2"
+        onSubmit={handleSubmit}
+        className="w-full mx-auto bg-white shadow-lg rounded-2xl p-8 m-2"
       >
         <input
           type="file"
-          multiple
-          onChange={handleImages}
+          accept="application/pdf"
+          onChange={handleFile}
           className="w-full"
         />
 
-        <div className="flex justify-end">
-        <button
-          type="submit"
-
-          className="bg-[rgb(137,205,251)] text-white p-3 rounded-full"
-        >
- <ArrowRightIcon className="w-4 h-4" />
-        </button>
+        <div className="flex justify-end mt-4">
+          <button
+            type="submit"
+            className="bg-[rgb(137,205,251)] text-white p-3 rounded-full"
+          >
+            <ArrowRightIcon className="w-4 h-4" />
+          </button>
         </div>
       </form>
     </div>

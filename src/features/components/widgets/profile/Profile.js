@@ -1,4 +1,5 @@
 import { PencilIcon } from "@heroicons/react/24/outline";
+import { CheckBadgeIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
 import Card from "../section/card/index";
 import usePost from "features/hooks/feed/user/useUserPost";
@@ -24,11 +25,12 @@ export function Profile() {
     setShowFreezeModal,
     createOpen,
     setProfileForm,
-createSetOpen,
+    createSetOpen,
     setButton,
   } = useUserLogin();
-  
-  const { followId, refresh, openList, setOpenList,open,setOpen } = usePostAll();
+
+  const { followId, refresh, openList, setOpenList, open, setOpen } =
+    usePostAll();
   const {
     details,
     loading,
@@ -37,12 +39,12 @@ createSetOpen,
     setForm,
     handlePostLike,
     editPostId,
-deleted,
-setEditPostId,
+    deleted,
+    setEditPostId,
     handlePostSave,
     user,
   } = usePost();
-  const { freezeProfile, deleteProfile } = useProfile();
+  const { freezeProfile, deleteProfile, userUpdated, profile } = useProfile();
   const { handleComment, handleDelete, handleC0mmentLike, comments } =
     useCommentAll(selected);
   const [activeTab, setActiveTab] = useState("posts");
@@ -51,15 +53,15 @@ setEditPostId,
     getProfile();
   }, [refresh]);
   const handleImages = (e) => {
-    const files = Array.from(e.target.files); 
+    const files = Array.from(e.target.files);
     if (!files.length) return;
-  
+
     const imageUrls = files.map((file) => URL.createObjectURL(file));
-  
+
     setForm((prev) => ({
       ...prev,
-      images: imageUrls, 
-      files: files, 
+      images: imageUrls,
+      files: files,
     }));
   };
   const handleChange = (e) => {
@@ -78,17 +80,23 @@ setEditPostId,
         >
           <PencilIcon className="w-5 h-5 text-gray-500" />
         </button>
+
         <div className="flex justify-center">
-          <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center overflow-hidden shadow">
-            <img
-              src={
-                profileForm?.avatar ||
-                "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/960px-User_icon_2.svg.png"
-              }
-              alt="profile"
-              className="w-full h-full object-cover"
-            />
-          </div>
+        <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center shadow relative">
+  <img
+    src={
+      profileForm?.avatar ||
+      "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/960px-User_icon_2.svg.png"
+    }
+    alt="profile"
+    className="w-full h-full object-cover"
+  />
+
+
+{profileForm?.dogrulanmisSatici && (
+  <CheckBadgeIcon className="w-6 h-6 text-blue-500 absolute top-0 right-0 bg-white rounded-full z-20" />
+)}
+</div>
         </div>{" "}
         <br />
         {button && (
@@ -274,64 +282,59 @@ hover:bg-gray-200
           </button>
         </div>
 
-        <div className="mt-4 " >
+        <div className="mt-4 ">
           {activeTab === "posts" && (
             <>
-
-                       <div className="flex lg:justify-end mb-2">
-                       <input
-                       type="text"
-                       value={input}
-                       placeholder="Ürün, kategori veya ilçe ara…"
-              
-                       onChange={(e) => setInput(e.target.value)}
-                       onKeyDown={(e) => {
-                         if (e.key === "Enter") {
-                           setSearch(input);
-                         }
-                       }}
-                       className="sm:w-full lg:w-1/3 bg-white border-2 rounded-md px-5 m-2 py-3 text-sm outline-none"
-                     />
-                         <button
-                           type="submit"
-                           onClick={() => createSetOpen(true)}
-                           className="m-2 w-1/12   rounded-md py-2.5 text-sm font-semibold text-white transition bg-[rgb(137,205,251)] hover:bg-gray-200"
-                         >
-                           +
-                         </button>
-                       </div>
-                       {createOpen && (
-                         <CreatePostForm
-                           onSubmit={onSubmit}
-                           form={form}
-                           setForm={setForm}
-                           setOpen={createSetOpen}
-                         />
-                       )}
-           
-            <div className="grid lg:grid-cols-2 md:grid-cols-1">
-   
-
-              <Card
-               data={details || []}
-  
-                loading={loading}
-                editPostId={editPostId}
-                selected={selected}
-                handleShowed={handleShowed}
-                user={user}
-                handlePostSave={handlePostSave}
-                handlePostLike={handlePostLike}
-                handleComment={handleComment}
-                handleDelete={handleDelete}
-                handleC0mmentLike={handleC0mmentLike}
-                comments={comments}
-                deleted={deleted}
-                open={open}
-                setOpen={setOpen}
-                setEditPostId={setEditPostId}
-              />
-            </div>               </>
+              <div className="flex lg:justify-end mb-2">
+                <input
+                  type="text"
+                  value={input}
+                  placeholder="Ürün, kategori veya ilçe ara…"
+                  onChange={(e) => setInput(e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      setSearch(input);
+                    }
+                  }}
+                  className="sm:w-full lg:w-1/3 bg-white border-2 rounded-md px-5 m-2 py-3 text-sm outline-none"
+                />
+                <button
+                  type="submit"
+                  onClick={() => createSetOpen(true)}
+                  className="m-2 w-1/12   rounded-md py-2.5 text-sm font-semibold text-white transition bg-[rgb(137,205,251)] hover:bg-gray-200"
+                >
+                  +
+                </button>
+              </div>
+              {createOpen && (
+                <CreatePostForm
+                  onSubmit={onSubmit}
+                  form={form}
+                  setForm={setForm}
+                  setOpen={createSetOpen}
+                />
+              )}
+              <div className="grid lg:grid-cols-2 md:grid-cols-1">
+                <Card
+                  data={details || []}
+                  loading={loading}
+                  editPostId={editPostId}
+                  selected={selected}
+                  handleShowed={handleShowed}
+                  user={user}
+                  handlePostSave={handlePostSave}
+                  handlePostLike={handlePostLike}
+                  handleComment={handleComment}
+                  handleDelete={handleDelete}
+                  handleC0mmentLike={handleC0mmentLike}
+                  comments={comments}
+                  deleted={deleted}
+                  open={open}
+                  setOpen={setOpen}
+                  setEditPostId={setEditPostId}
+                />
+              </div>{" "}
+            </>
           )}
 
           {activeTab === "settings" && (
@@ -369,9 +372,7 @@ hover:bg-gray-200
               </div>
             </div>
           )}
-          {activeTab === "organic" && (
-           <OrganicForm/>
-          )}
+          {activeTab === "organic" && <OrganicForm userUpdated={userUpdated} />}
         </div>
 
         {showFreezeModal && (
