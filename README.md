@@ -135,7 +135,4 @@ EKLENENLER
 
 🛡️ Gelişmiş admin panel
 
-🌱 Organik sertifika yükleme
-
-
-
+🌱 Organik sertifika yükleme.
