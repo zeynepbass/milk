@@ -148,4 +148,5 @@ getSavedPosts:async (token) => {
   
     return res.json();
   }
+  
 };

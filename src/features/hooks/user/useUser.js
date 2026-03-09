@@ -18,7 +18,6 @@ export default function useUserLogin() {
   const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState("");
   const [button, setButton] = useState(false);
-
   const [profileForm, setProfileForm] = useState({
     avatar: "",
     name: "",
@@ -26,7 +25,8 @@ export default function useUserLogin() {
     email: "",
     role: "",
     province:"",
-    district:""
+    district:"",
+    dogrulanmisSatici: false,
   });
   const setUser = useUserStore((state) => state.setUser);
   const token = useUserStore((state) => state.token);
@@ -43,7 +43,10 @@ export default function useUserLogin() {
         province: profile.province || "",
         district: profile.district || "",
         following: profile.following || "",
-        followers:profile.followers || ""
+        followers:profile.followers || "",
+        organic:profile.organic || "",
+        dogrulanmisSatici: profile.dogrulanmisSatici || false,
+
       });
     }
   }, [profile]);
@@ -59,6 +62,18 @@ export default function useUserLogin() {
       setLoading(false);
     }
   };
+
+  const userUpdated=async (formData) => {
+    try {
+      setLoading(true);
+      const res = await userProfileUpdated.postService(formData, token);
+
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  }
   const handleSubmit = async (formData) => {
     try {
       setLoading(true);
@@ -141,11 +156,13 @@ const deleteProfile=async(id)=>{
     getProfile,
     profileForm,
     deleteProfile,
+    profile,
     showFreezeModal,
     setProfileForm,
     setShowFreezeModal,
     createOpen,createSetOpen,
     button,
+    userUpdated,
     setButton,
     handleUpdated,
   };
