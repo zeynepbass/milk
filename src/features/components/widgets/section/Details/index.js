@@ -14,6 +14,7 @@ import { useParams } from "react-router-dom";
 import useCommentAll from "../../../../hooks/feed/posts/usePostDetails";
 import usePostAll from "../../../../hooks/feed/posts/usePost";
 export function Detail() {
+  //? kontrol edilcek
   const { id } = useParams();
 
   const {

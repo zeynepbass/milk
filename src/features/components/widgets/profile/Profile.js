@@ -11,6 +11,7 @@ import { useSearchStore } from "../../../../store";
 import useCommentAll from "../../../hooks/feed/comments/useComments";
 import usePostAll from "../../../hooks/feed/posts/usePost";
 export function Profile() {
+  //? test edilcek
   const [selected, setSelected] = useState(null);
   const handleShowed = (id) => {
     setSelected((prev) => (prev === id ? null : id));

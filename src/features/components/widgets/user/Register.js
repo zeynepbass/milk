@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import useUserLogin from "../../../hooks/user/useUser";
 import { useState } from "react";
 export function Register() {
+    //? uı düzenlenicek
   const { handleSubmitRegister, loading } = useUserLogin();
   const [formData, setFormData] = useState({
     name: "",
