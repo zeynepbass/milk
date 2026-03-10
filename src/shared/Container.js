@@ -1,14 +1,14 @@
-import { Navigate, Outlet } from "react-router-dom";
-import useUserLogin from "features/hooks/user/useUser";
+import { Header } from "./Header";
+import { Footer } from "./Footer";
+import { Outlet, Navigate } from "react-router-dom";
+import { getUserFromToken } from "../../src/utils/auth";
 
-export function Container({ allowedRoles = [] }) {
-  const { user } = useUserLogin();
+export function Container() {
+  const user = getUserFromToken();
 
-  if (!user) return <Navigate to="/login" />;
+  if (!user) {
 
-
-  if (allowedRoles.length && !allowedRoles.includes(user.role)) {
-    return <Navigate to="/unauthorized" />;
+    return <Navigate to="/giris-yap" />;
   }
 
   return (
