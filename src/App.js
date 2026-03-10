@@ -5,7 +5,7 @@ import Register from "./pages/register/index";
 import Profile from "./pages/profile/index";
 import NotFound from "./pages/error/index";
 import Favorite from "./pages/favorite/index";
-
+import Message from "./pages/message/index";
 import Details from "./pages/section/details/index";
 import { Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
@@ -25,7 +25,7 @@ function App() {
           <Route path="/profil" element={<Profile />} />
           <Route path="/ayarlar" element={<Profile />} />
           <Route path="/favoriler" element={<Favorite />} />
-
+          <Route path="/mesajlar" element={<Message />} />
           <Route path="/detay/:id" element={<Details />} />
         </Route>
         <Route path="*" element={<NotFound />} />
