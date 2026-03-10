@@ -1,13 +1,12 @@
 import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { Outlet, Navigate } from "react-router-dom";
-import { getUserFromToken } from "../../src/utils/auth";
+import { GetUserFromToken } from "../../src/utils/auth";
 
 export function Container() {
-  const user = getUserFromToken();
+  const user = GetUserFromToken();
 
   if (!user) {
-
     return <Navigate to="/giris-yap" />;
   }
 

@@ -1,8 +1,9 @@
 
 import {jwtDecode} from "jwt-decode";
+import { useUserStore } from "../store";
+export const GetUserFromToken = () => {
+    const token = useUserStore((state) => state.token);
 
-export const getUserFromToken = () => {
-  const token = localStorage.getItem("token"); 
   if (!token) return null;
   try {
     const decoded = jwtDecode(token);
