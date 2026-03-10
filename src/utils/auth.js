@@ -1,11 +1,11 @@
 
-import jwt_decode from "jwt-decode";
+import {jwtDecode} from "jwt-decode";
 
 export const getUserFromToken = () => {
   const token = localStorage.getItem("token"); 
   if (!token) return null;
   try {
-    const decoded = jwt_decode(token);
+    const decoded = jwtDecode(token);
     return decoded; 
   } catch (err) {
     console.error("Token decode hatası:", err);

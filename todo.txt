@@ -6,5 +6,4 @@ senin ilçende paylaşım varsa bildirim gelcek
 Satış destek: sipariş bitince şikayet/bildir sahte ürün sahte kulalnıcı yanıltıcı fıyat
 dark-light mod aktif edilcek
 
-role-based aktif edilcek
 case-testing kontolu yapılcak

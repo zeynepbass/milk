@@ -3,9 +3,9 @@ import Section from "./pages/section";
 import Login from "./pages/login/index";
 import Register from "./pages/register/index";
 import Profile from "./pages/profile/index";
-import NotFound from "./pages/notFound/index";
+import NotFound from "./pages/error/index";
 import Favorite from "./pages/favorite/index";
-import ProtectedRoute from "./utils/auth";
+import {getUserFromToken} from "../src/utils/auth";
 import Details from "./pages/section/details/index";
 import { Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
@@ -30,9 +30,9 @@ function App() {
         </Route>
         <Route path="*" element={<NotFound />} />
         <Route path="/giris-yap" element={
-          <ProtectedRoute><Login /></ProtectedRoute>
+          <getUserFromToken><Login /></getUserFromToken>
           } />
-        <Route path="/uye-ol" element={  <ProtectedRoute><Register /></ProtectedRoute>} />
+        <Route path="/uye-ol" element={<getUserFromToken><Register /></getUserFromToken>} />
       </Routes>
     </>
   );
