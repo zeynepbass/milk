@@ -3,6 +3,7 @@ import Section from "./pages/section";
 import Login from "./pages/login/index";
 import Register from "./pages/register/index";
 import Profile from "./pages/profile/index";
+import NotFound from "./pages/notFound/index";
 import Favorite from "./pages/favorite/index";
 import ProtectedRoute from "./utils/auth";
 import Details from "./pages/section/details/index";
@@ -27,7 +28,7 @@ function App() {
 
           <Route path="/detay/:id" element={<Details />} />
         </Route>
-
+        <Route path="*" element={<NotFound />} />
         <Route path="/giris-yap" element={
           <ProtectedRoute><Login /></ProtectedRoute>
           } />
