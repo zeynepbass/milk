@@ -4,7 +4,7 @@ import Login from "./pages/login/index";
 import Register from "./pages/register/index";
 import Profile from "./pages/profile/index";
 import Favorite from "./pages/favorite/index";
-
+import ProtectedRoute from "./utils/auth";
 import Details from "./pages/section/details/index";
 import { Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
@@ -28,8 +28,10 @@ function App() {
           <Route path="/detay/:id" element={<Details />} />
         </Route>
 
-        <Route path="/giris-yap" element={<Login />} />
-        <Route path="/uye-ol" element={<Register />} />
+        <Route path="/giris-yap" element={
+          <ProtectedRoute><Login /></ProtectedRoute>
+          } />
+        <Route path="/uye-ol" element={  <ProtectedRoute><Register /></ProtectedRoute>} />
       </Routes>
     </>
   );
