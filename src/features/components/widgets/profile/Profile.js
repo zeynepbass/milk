@@ -52,20 +52,16 @@ export function Profile() {
 
   useEffect(() => {
     getProfile();
-  }, [refresh]);
-  const [avatar,setAvatar]=useState(null)
+  }, [profile]);
   const handleImages = (e) => {
     const file = e.target.files[0];
     if (!file) return;
   
-    const preview = URL.createObjectURL(file);
-  
-    setProfileForm((prev) => ({
-      ...prev,
-      avatar: preview
-    }));
-  
-    setAvatar(file); 
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setProfileForm(prev => ({ ...prev, avatar: reader.result }));
+    };
+    reader.readAsDataURL(file);
   };
   const handleChange = (e) => {
     setProfileForm((prev) => ({
@@ -84,21 +80,17 @@ export function Profile() {
         >
           <PencilIcon className="w-5 h-5 text-gray-500" />
         </button>
-
         <div className="flex justify-center">
-        <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center shadow relative">
+        <div className="relative w-24 h-24 rounded-full overflow-hidden shadow-md flex items-center justify-center bg-gray-100">
   <img
-    src={
-      profileForm?.avatar || avatar
-    }
+    src={profileForm?.avatar || "https://cdn-icons-png.flaticon.com/512/9131/9131478.png"}
     alt="profile"
     className="w-full h-full object-cover"
   />
 
-
-{profileForm?.dogrulanmisSatici && (
-  <CheckBadgeIcon className="w-6 h-6 text-blue-500 absolute top-0 right-0 bg-white rounded-full z-20" />
-)}
+  {profileForm?.dogrulanmisSatici && (
+    <CheckBadgeIcon className="absolute top-0 right-0 w-6 h-6 text-blue-500 bg-white rounded-full z-10" />
+  )}
 </div>
         </div>{" "}
         <br />
@@ -165,17 +157,17 @@ export function Profile() {
             className="mt-1 w-full rounded-md border border-gray-200 px-3 py-2 text-sm
                 focus:outline-none focus:ring-2 focus:ring-[rgb(82,144,246)]"
           />
-<select
-  name="role"
-  value={profileForm?.role || ""}
-  onChange={handleChange}
-  disabled={!button}
-  className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-300 outline-none"
->
-  <option value="">Seçiniz</option>
-  <option value="alici">Alıcı</option>
-  <option value="satici">Satıcı</option>
-</select>
+          <select
+            name="role"
+            value={profileForm?.role || ""}
+            onChange={handleChange}
+            disabled={!button}
+            className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-300 outline-none"
+          >
+            <option value="">Seçiniz</option>
+            <option value="alici">Alıcı</option>
+            <option value="satici">Satıcı</option>
+          </select>
         </div>
         <div className="flex justify-center mt-4 space-x-6 text-gray-700 font-medium">
           <div
@@ -306,18 +298,17 @@ hover:bg-gray-200
                       setSearch(input);
                     }
                   }}
-className="w-full lg:w-1/3 bg-white border-2 rounded-md px-5 m-2 py-3 text-sm outline-none"
+                  className="w-full lg:w-1/3 bg-white border-2 rounded-md px-5 m-2 py-3 text-sm outline-none"
                 />
-              {user.role !== "alici" && (
-  <button
-    type="submit"
-    onClick={() => createSetOpen(true)}
-    className="m-2 lg:w-1/12 w-1/6 rounded-md py-2.5 text-sm font-semibold text-white transition bg-[rgb(137,205,251)] hover:bg-gray-200"
-  >
-    +
-  </button>
-)}
-        
+                {user.role !== "alici" && (
+                  <button
+                    type="submit"
+                    onClick={() => createSetOpen(true)}
+                    className="m-2 lg:w-1/12 w-1/6 rounded-md py-2.5 text-sm font-semibold text-white transition bg-[rgb(137,205,251)] hover:bg-gray-200"
+                  >
+                    +
+                  </button>
+                )}
               </div>
               {createOpen && (
                 <CreatePostForm
@@ -335,7 +326,7 @@ className="w-full lg:w-1/3 bg-white border-2 rounded-md px-5 m-2 py-3 text-sm ou
                   selected={selected}
                   handleShowed={handleShowed}
                   user={user}
-                  avatar={avatar}
+
                   handlePostSave={handlePostSave}
                   handlePostLike={handlePostLike}
                   handleComment={handleComment}

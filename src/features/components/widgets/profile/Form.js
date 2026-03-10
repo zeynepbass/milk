@@ -6,14 +6,15 @@ export function CreatePostForm({ onSubmit, loading, form, setForm, setOpen }) {
   };
 
   const handleImages = (e) => {
-    const files = Array.from(e.target.files);
-
-    const imageUrls = files.map((file) => URL.createObjectURL(file));
-    setForm((prev) => ({ ...prev, images: imageUrls }));
-
-    files.forEach((file) => URL.revokeObjectURL(file));
+    const file = e.target.files[0];
+    if (!file) return;
+  
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setForm(prev => ({ ...prev, images: reader.result }));
+    };
+    reader.readAsDataURL(file);
   };
-
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit(form);

@@ -16,7 +16,7 @@ export default function useUserLogin() {
 
   const [createOpen,createSetOpen] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [profile, setProfile] = useState("");
+  const [profile, setProfile] = useState(null);
   const [button, setButton] = useState(false);
   const [profileForm, setProfileForm] = useState({
     avatar: "",

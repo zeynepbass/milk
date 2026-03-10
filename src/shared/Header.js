@@ -15,11 +15,12 @@ import {
   HeartIcon,
   ChatBubbleLeftRightIcon,
 } from "@heroicons/react/24/outline";
-import { useSearchStore } from "../store";
+import { useUserStore ,useSearchStore} from "../store";
 import { Link } from "react-router-dom";
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const setSearch = useSearchStore((state) => state.setSearch);
+  const user = useUserStore((state) => state.user);
   const [input, setInput] = useState("");
 
   return (
@@ -96,11 +97,19 @@ hover:bg-gray-100  px-6 transition"
             <MenuButton className="relative flex rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
               <span className="absolute -inset-1.5" />
               <span className="sr-only">Menü</span>
-              <img
-                alt=""
-                src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                className="size-8 rounded-full bg-gray-800 outline -outline-offset-1 outline-white/10"
-              />
+              <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center bg-gray-100">
+  {user?.avatar ? (
+    <img
+      src={user.avatar}
+      alt={user?.name}
+      className="w-full h-full object-cover"
+    />
+  ) : (
+    <span className="text-gray-500 font-bold">
+      {user?.name?.slice(0, 2).toUpperCase()}
+    </span>
+  )}
+</div>
             </MenuButton>
 
             <MenuItems
@@ -143,7 +152,6 @@ hover:bg-gray-100  px-6 transition"
         <div className="fixed inset-0 z-50" />
         <DialogPanel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white p-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
           <div className="flex items-center justify-between">
-     
             <button
               type="button"
               onClick={() => setMobileMenuOpen(false)}
@@ -154,9 +162,8 @@ hover:bg-gray-100  px-6 transition"
             </button>
           </div>
           <div className="mt-6 flow-root">
-            
             <div className="-my-6 divide-y divide-gray-500/10">
-            <div className="flex py-6 shrink-0 items-center justify-center gap-4">
+              <div className="flex py-6 shrink-0 items-center justify-center gap-4">
                 <button className="p-2 rounded-full hover:bg-gray-100">
                   <MoonIcon className="w-5 h-5 text-[rgb(137,205,251)]" />
                 </button>
@@ -178,11 +185,19 @@ hover:bg-gray-100  px-6 transition"
                   <MenuButton className="relative flex rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
                     <span className="absolute -inset-1.5" />
                     <span className="sr-only">Menü</span>
-                    <img
-                      alt=""
-                      src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                      className="size-8 rounded-full bg-gray-800 outline -outline-offset-1 outline-white/10"
-                    />
+                    <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center bg-gray-100">
+  {user?.avatar ? (
+    <img
+      src={user.avatar}
+      alt={user?.name}
+      className="w-full h-full object-cover"
+    />
+  ) : (
+    <span className="text-gray-500 font-bold">
+      {user?.name?.slice(0, 2).toUpperCase()}
+    </span>
+  )}
+</div>
                   </MenuButton>
 
                   <MenuItems
@@ -251,8 +266,6 @@ hover:bg-gray-100  px-6 transition"
                   </button>
                 </div>
               </div>
-
-        
             </div>
           </div>
         </DialogPanel>

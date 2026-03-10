@@ -26,19 +26,17 @@ export const UpdatedPostForm = ({editPostId,setOpen}) => {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleImages = (e) => {
-    const files = Array.from(e.target.files); 
-    if (!files.length) return;
-  
-    const imageUrls = files.map((file) => URL.createObjectURL(file));
-  
-    setForm((prev) => ({
-      ...prev,
-      images: imageUrls, 
-      files: files, 
-    }));
-  };
 
+  const handleImages = (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+  
+    const reader = new FileReader();
+    reader.onloadend = () => {
+      setForm(prev => ({ ...prev, avatar: reader.result }));
+    };
+    reader.readAsDataURL(file);
+  };
   useEffect(() => {
     if (details) {
       setForm({

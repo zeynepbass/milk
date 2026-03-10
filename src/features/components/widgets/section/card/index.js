@@ -11,11 +11,12 @@ import {
 } from "@heroicons/react/24/outline";
 import { CheckBadgeIcon } from "@heroicons/react/24/solid";
 import { UpdatedPostForm } from "../../profile/UpdatedPostForm";
+import Description from "../../profile/Description"
 import { Link } from "react-router-dom";
 
 export default function Card({
   data = [],
-  avatar,
+
   open,
   setOpen,
   favoruite,
@@ -41,9 +42,7 @@ export default function Card({
   }
 
   if (!Array.isArray(data) || data.length === 0) {
-    return (
-      <p className="text-left text-gray-400 mt-10">Gönderi bulunamadı</p>
-    );
+    return <p className="text-left text-gray-400 mt-10">Gönderi bulunamadı</p>;
   }
 
   const handeleUpdated = (id) => {
@@ -54,29 +53,28 @@ export default function Card({
     <>
       {data.map((item) => {
         const itemUserId = item?.user?._id === user._id;
-     
+
         return (
           <div key={item._id} className="m-3">
             <div className="w-full  bg-white rounded-2xl shadow-md">
               <Link to={`/detay/${item._id}`}>
                 <img
                   className="w-full h-60 object-cover rounded-t-2xl"
-                  src={
-                    Array.isArray(item?.images) && item?.images[0]
-                      ? item.images[0]
-                      : "/images/logo.png"
-                  }
+                  src={item?.images[0] || "/images/logo.png"}
                   alt="Post"
                 />
               </Link>
 
               <div className="p-5">
                 <div className="flex items-center mb-4 ">
-                  <div className="relative">
+                  <div className="w-10 h-10 rounded-full overflow-hidden shadow relative flex items-center justify-center">
                     <img
-                      src={item.user?.avatar || avatar}
+                      src={
+                        item.user?.avatar || item.image ||
+                        "https://cdn-icons-png.flaticon.com/512/9131/9131478.png"
+                      }
                       alt="profile"
-                      className="w-12 h-12 rounded-full border object-cover "
+                      className="w-full h-full object-cover"
                     />
 
                     {item.user?.dogrulanmisSatici && (
@@ -96,8 +94,8 @@ export default function Card({
                     <p className="text-xs text-gray-400 mt-1">{item.title}</p>
                   </div>
                 </div>
+                <Description text={item.description} maxLength={150} />
 
-                <p className="text-sm text-gray-600 mb-4">{item.description}</p>
 
                 <div className="flex justify-between items-center border-t pt-3 text-gray-600">
                   <div className="flex space-x-4">
@@ -144,12 +142,12 @@ export default function Card({
                   <div className="flex space-x-3">
                     {!itemUserId && (
                       <>
-    
-                      <button onClick={() => followId(item.user?._id)}>
-                        <UserPlusIcon className="w-5 h-5 hover:text-green-500 cursor-pointer" />
-                      </button>
-                                  <ChatBubbleLeftRightIcon className="w-5 h-5 text-[rgb(137,205,251)]" />
-                                  </>  )}
+                        <button onClick={() => followId(item.user?._id)}>
+                          <UserPlusIcon className="w-5 h-5 hover:text-green-500 cursor-pointer" />
+                        </button>
+                        <ChatBubbleLeftRightIcon className="w-5 h-5 text-[rgb(137,205,251)]" />
+                      </>
+                    )}
                     {itemUserId && (
                       <>
                         <button onClick={() => deleted(item._id)}>

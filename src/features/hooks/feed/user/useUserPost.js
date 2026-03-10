@@ -34,12 +34,12 @@ export default function usePostDetail() {
 
   useEffect(() => {
     fetchData();
-  }, [token]);
-  const onSubmit = async () => {
+  }, []);
+  const onSubmit = async () => {  
     try {
       setLoading(true);
-      const res = await postService.onSubmit(form,token);
-      setDetails((prev) => [...prev, res]);
+      const res = await postService.onSubmit(form, token);
+      setDetails((prev) => [res, ...prev])
 
     } catch (error) {
       console.log(error);
