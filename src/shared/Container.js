@@ -1,7 +1,16 @@
-import { Header } from "./Header";
-import { Footer } from "./Footer";
-import { Outlet } from "react-router-dom";
-export function Container() {
+import { Navigate, Outlet } from "react-router-dom";
+import useUserLogin from "features/hooks/user/useUser";
+
+export function Container({ allowedRoles = [] }) {
+  const { user } = useUserLogin();
+
+  if (!user) return <Navigate to="/login" />;
+
+
+  if (allowedRoles.length && !allowedRoles.includes(user.role)) {
+    return <Navigate to="/unauthorized" />;
+  }
+
   return (
     <div className="container mx-auto">
       <Header />
