@@ -2,7 +2,7 @@
 
 mesajlasma alanı backend ona göre ayarlanıcak card mesaj butonu tıklanınca mesaj alanına ıd ıle gıdıcek
 
-card alanı ıkonlarda sorunlar devam ediyor resimler gorunmuyor pp ve card resmi
+card alanı ıkonlarda sorunlar devam ediyor 
 senin ilçende paylaşım varsa bildirim gelcek
 Satış destek: sipariş bitince şikayet/bildir sahte ürün sahte kullanıcı yanıltıcı fıyat
 dark-light mod aktif edilcek
