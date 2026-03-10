@@ -52,9 +52,8 @@ export default function Card({
   return (
     <>
       {data.map((item) => {
-        const itemUserId = item?.user?._id || item?.user;
-        const isOwner = user?.id === itemUserId;
-        const hasUser = !!item?.user;
+        const itemUserId = item?.user?._id === user._id;
+     
         return (
           <div key={item._id} className="m-3">
             <div className="w-full  bg-white rounded-2xl shadow-md">
@@ -122,7 +121,7 @@ export default function Card({
                       className="flex items-center hover:text-green-600 transition"
                       onClick={() => handlePostSave(item._id)}
                     >
-                      {!isOwner && (
+                      {!itemUserId && (
                         <>
                           <BookmarkIcon
                             className={`w-5 h-5 ${
@@ -142,12 +141,12 @@ export default function Card({
                   </div>
 
                   <div className="flex space-x-3">
-                    {!isOwner && hasUser && (
-                      <button onClick={() => followId(itemUserId)}>
+                    {!itemUserId && (
+                      <button onClick={() => followId(item.user?._id)}>
                         <UserPlusIcon className="w-5 h-5 hover:text-green-500 cursor-pointer" />
                       </button>
                     )}
-                    {isOwner && (
+                    {itemUserId && (
                       <>
                         <button onClick={() => deleted(item._id)}>
                           <TrashIcon className="w-5 h-5 hover:text-blue-200 cursor-pointer" />
