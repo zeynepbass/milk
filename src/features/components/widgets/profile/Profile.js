@@ -90,7 +90,6 @@ export function Profile() {
   <img
     src={
       profileForm?.avatar || avatar
-
     }
     alt="profile"
     className="w-full h-full object-cover"

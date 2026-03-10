@@ -1,4 +1,4 @@
-import { Message } from "../../features/components/widgets/message";
+import { MessageDialog } from "../../features/components/widgets/chatDialog/index";
 export default function ProfilePost() {
-  return <Message />;
+  return <MessageDialog />;
 }
