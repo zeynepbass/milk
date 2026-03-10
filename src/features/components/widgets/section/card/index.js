@@ -52,51 +52,46 @@ export default function Card({
   return (
     <>
       {data.map((item) => {
+        //const ownerRole=item.user || item?.user?._id
         const itemUserId = item?.user?._id === user._id;
 
         return (
-          <div key={item._id} className="m-3">
-            <div className="w-full  bg-white rounded-2xl shadow-md">
-              <Link to={`/detay/${item._id}`}>
-                <img
-                  className="w-full h-60 object-cover rounded-t-2xl"
-                  src={item?.images[0] || "/images/logo.png"}
-                  alt="Post"
-                />
-              </Link>
+<div key={item._id} className="m-3 flex flex-col bg-white rounded-2xl shadow-md w-full max-w-md">
+  <Link to={`/detay/${item._id}`}>
+    <img
+      className="w-full h-60 object-cover rounded-t-2xl"
+      src={item?.images[0] || "/images/logo.png"}
+      alt="Post"
+    />
+  </Link>
 
-              <div className="p-5">
-                <div className="flex items-center mb-4 ">
-                  <div className="w-10 h-10 rounded-full overflow-hidden shadow relative flex items-center justify-center">
-                    <img
-                      src={
-                        item.user?.avatar || item.image ||
-                        "https://cdn-icons-png.flaticon.com/512/9131/9131478.png"
-                      }
-                      alt="profile"
-                      className="w-full h-full object-cover"
-                    />
+  <div className="p-5 flex-1 flex flex-col justify-between">
+    <div>
+      <div className="flex items-center mb-4 ">
+        <div className="w-10 h-10 rounded-full overflow-hidden shadow relative flex items-center justify-center">
+          <img
+            src={
+              item.user?.avatar || item.image ||
+              "https://cdn-icons-png.flaticon.com/512/9131/9131478.png"
+            }
+            alt="profile"
+            className="w-full h-full object-cover"
+          />
+          {item.user?.dogrulanmisSatici && (
+            <CheckBadgeIcon className="w-4 h-4 text-blue-500 absolute top-0 right-0 bg-white rounded-full z-20" />
+          )}
+        </div>
 
-                    {item.user?.dogrulanmisSatici && (
-                      <CheckBadgeIcon className="w-4 h-4 text-blue-500 absolute top-0 right-0 bg-white rounded-full z-20" />
-                    )}
-                  </div>
-
-                  <div className="ml-3 flex-1">
-                    <p className="text-sm font-semibold flex justify-between">
-                      <span>
-                        {item.user?.name} {item.user?.surname}
-                      </span>
-                      <span className="text-xs text-[rgb(137,205,251)]">
-                        {item.ownerRole}
-                      </span>
-                    </p>
-                    <p className="text-xs text-gray-400 mt-1">{item.title}</p>
-                  </div>
-                </div>
-                <Description text={item.description} maxLength={150} />
-
-
+        <div className="ml-3 flex-1">
+          <p className="text-sm font-semibold flex justify-between">
+            <span>{item.ownerName} {item.ownerSurname}</span>
+            <span className="text-xs text-[rgb(137,205,251)]">{item.ownerRole}</span>
+          </p>
+          <p className="text-xs text-gray-400 mt-1">{item.title}</p>
+        </div>
+      </div>
+      <Description text={item.description} maxLength={150} />
+    </div>
                 <div className="flex justify-between items-center border-t pt-3 text-gray-600">
                   <div className="flex space-x-4">
                     <button
@@ -171,7 +166,7 @@ export default function Card({
                     )}
                   </div>
                 </div>
-              </div>
+      
             </div>
 
             {selected === item._id && (
