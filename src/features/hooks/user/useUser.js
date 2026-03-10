@@ -92,7 +92,7 @@ console.log(profile)
         })
       );
 
-      toast.success(res.message || "Giriş başarılı");
+      toast.info(res.message || "Giriş başarılı");
 
       navigate("/");
     } catch (err) {
@@ -108,7 +108,7 @@ console.log(profile)
 
       const res = await userRegisterService.postService(formData);
 
-      toast.success(res.message || "Kayıt başarılı");
+      toast.info(res.message || "Kayıt başarılı");
       navigate("/giris-yap");
     } catch (err) {
       toast.error(

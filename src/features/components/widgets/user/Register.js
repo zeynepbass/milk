@@ -25,8 +25,8 @@ export function Register() {
   };
   return (
     <div
-      className="hidden md:block relative h-screen bg-cover bg-center"
-      style={{ backgroundImage: "url('/images/wallpaper-register.png')" }}
+      className=" relative h-screen bg-cover bg-center "
+      style={{ backgroundImage: "url('/images/wallpaper.png')" }}
     >
       <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
 
@@ -35,8 +35,11 @@ export function Register() {
         alt="Milk Logo"
         className="absolute bottom-6 left-6 w-24 opacity-90"
       />
-
-      <div className="absolute top-[40%] right-[14%] -translate-y-1/3">
+<div className="
+  lg:absolute lg:top-[40%] lg:right-[14%] lg:-translate-y-1/2 lg:w-auto lg:h-auto
+  md:flex md:justify-center md:items-center md:h-screen md:w-full
+  flex justify-center items-center h-screen w-full
+">
         <form
           className="w-[400px] rounded-xl  backdrop-blur-md p-8 shadow-xxl"
           onSubmit={onSubmit}

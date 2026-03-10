@@ -3,6 +3,7 @@ import {
   BookmarkIcon,
   ChatBubbleBottomCenterIcon,
   ArrowRightIcon,
+  ChatBubbleLeftRightIcon,
   UserPlusIcon,
   TrashIcon,
   XMarkIcon,
@@ -61,9 +62,9 @@ export default function Card({
                 <img
                   className="w-full h-60 object-cover rounded-t-2xl"
                   src={
-                    Array.isArray(item.images) && item.images[0]
+                    Array.isArray(item?.images) && item?.images[0]
                       ? item.images[0]
-                      : "https://via.placeholder.com/400"
+                      : "/images/logo.png"
                   }
                   alt="Post"
                 />
@@ -142,10 +143,13 @@ export default function Card({
 
                   <div className="flex space-x-3">
                     {!itemUserId && (
+                      <>
+    
                       <button onClick={() => followId(item.user?._id)}>
                         <UserPlusIcon className="w-5 h-5 hover:text-green-500 cursor-pointer" />
                       </button>
-                    )}
+                                  <ChatBubbleLeftRightIcon className="w-5 h-5 text-[rgb(137,205,251)]" />
+                                  </>  )}
                     {itemUserId && (
                       <>
                         <button onClick={() => deleted(item._id)}>
