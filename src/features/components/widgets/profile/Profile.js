@@ -53,17 +53,19 @@ export function Profile() {
   useEffect(() => {
     getProfile();
   }, [refresh]);
+  const [avatar,setAvatar]=useState(null)
   const handleImages = (e) => {
-    const files = Array.from(e.target.files);
-    if (!files.length) return;
-
-    const imageUrls = files.map((file) => URL.createObjectURL(file));
-
-    setForm((prev) => ({
+    const file = e.target.files[0];
+    if (!file) return;
+  
+    const preview = URL.createObjectURL(file);
+  
+    setProfileForm((prev) => ({
       ...prev,
-      images: imageUrls,
-      files: files,
+      avatar: preview
     }));
+  
+    setAvatar(file); 
   };
   const handleChange = (e) => {
     setProfileForm((prev) => ({
@@ -72,6 +74,7 @@ export function Profile() {
     }));
   };
   const [input, setInput] = useState("");
+
   return (
     <div className="grid grid-cols-12 h-[100vh] overflow-scroll">
       <div className="col-span-4 overflow-hidden relative p-6 border-r border-gray-100">
@@ -86,8 +89,8 @@ export function Profile() {
         <div className="w-24 h-24 rounded-full bg-gray-200 flex items-center justify-center shadow relative">
   <img
     src={
-      profileForm?.avatar ||
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/960px-User_icon_2.svg.png"
+      profileForm?.avatar || avatar
+
     }
     alt="profile"
     className="w-full h-full object-cover"
@@ -114,6 +117,7 @@ export function Profile() {
             name="name"
             value={profileForm?.name || []}
             onChange={handleChange}
+            disabled={!button}
             placeholder="Adı"
             className="mt-1 w-full rounded-md border border-gray-200 px-3 py-2 text-sm
                 focus:outline-none focus:ring-2 focus:ring-[rgb(82,144,246)]"
@@ -121,6 +125,7 @@ export function Profile() {
           <input
             type="surname"
             name="surname"
+            disabled={!button}
             value={profileForm?.surname || []}
             onChange={handleChange}
             placeholder="Soyadı"
@@ -132,6 +137,7 @@ export function Profile() {
           <input
             type="text"
             name="province"
+            disabled={!button}
             value={profileForm?.province || []}
             onChange={handleChange}
             placeholder="İl"
@@ -144,6 +150,7 @@ export function Profile() {
             value={profileForm?.district || []}
             onChange={handleChange}
             placeholder="İlçe"
+            disabled={!button}
             className="mt-1 w-full rounded-md border border-gray-200 px-3 py-2 text-sm
                 focus:outline-none focus:ring-2 focus:ring-[rgb(82,144,246)]"
           />
@@ -154,19 +161,22 @@ export function Profile() {
             name="email"
             value={profileForm?.email || []}
             onChange={handleChange}
+            disabled={!button}
             placeholder="Email"
             className="mt-1 w-full rounded-md border border-gray-200 px-3 py-2 text-sm
                 focus:outline-none focus:ring-2 focus:ring-[rgb(82,144,246)]"
           />
-          <input
-            type="text"
-            name="role"
-            value={profileForm?.role || []}
-            onChange={handleChange}
-            placeholder="Role"
-            className="mt-1 w-full rounded-md border border-gray-200 px-3 py-2 text-sm
-                focus:outline-none focus:ring-2 focus:ring-[rgb(82,144,246)]"
-          />
+<select
+  name="role"
+  value={profileForm?.role || ""}
+  onChange={handleChange}
+  disabled={!button}
+  className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-300 outline-none"
+>
+  <option value="">Seçiniz</option>
+  <option value="alici">Alıcı</option>
+  <option value="satici">Satıcı</option>
+</select>
         </div>
         <div className="flex justify-center mt-4 space-x-6 text-gray-700 font-medium">
           <div
@@ -297,15 +307,18 @@ hover:bg-gray-200
                       setSearch(input);
                     }
                   }}
-                  className="sm:w-full lg:w-1/3 bg-white border-2 rounded-md px-5 m-2 py-3 text-sm outline-none"
+className="w-full lg:w-1/3 bg-white border-2 rounded-md px-5 m-2 py-3 text-sm outline-none"
                 />
-                <button
-                  type="submit"
-                  onClick={() => createSetOpen(true)}
-                  className="m-2 w-1/12   rounded-md py-2.5 text-sm font-semibold text-white transition bg-[rgb(137,205,251)] hover:bg-gray-200"
-                >
-                  +
-                </button>
+              {user.role !== "alici" && (
+  <button
+    type="submit"
+    onClick={() => createSetOpen(true)}
+    className="m-2 lg:w-1/12 w-1/6 rounded-md py-2.5 text-sm font-semibold text-white transition bg-[rgb(137,205,251)] hover:bg-gray-200"
+  >
+    +
+  </button>
+)}
+        
               </div>
               {createOpen && (
                 <CreatePostForm
@@ -323,6 +336,7 @@ hover:bg-gray-200
                   selected={selected}
                   handleShowed={handleShowed}
                   user={user}
+                  avatar={avatar}
                   handlePostSave={handlePostSave}
                   handlePostLike={handlePostLike}
                   handleComment={handleComment}

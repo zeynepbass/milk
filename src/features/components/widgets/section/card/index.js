@@ -14,6 +14,7 @@ import { Link } from "react-router-dom";
 
 export default function Card({
   data = [],
+  avatar,
   open,
   setOpen,
   favoruite,
@@ -71,24 +72,17 @@ export default function Card({
 
               <div className="p-5">
                 <div className="flex items-center mb-4 ">
-<div className="relative">
-
-
+                  <div className="relative">
                     <img
-                      src={
-                        item.user?.avatar ||
-                        "https://upload.wikimedia.org/wikipedia/commons/thumb/1/12/User_icon_2.svg/960px-User_icon_2.svg.png"
-                      }
+                      src={item.user?.avatar || avatar}
                       alt="profile"
-                                            className="w-12 h-12 rounded-full border object-cover "
-
-  
+                      className="w-12 h-12 rounded-full border object-cover "
                     />
 
                     {item.user?.dogrulanmisSatici && (
                       <CheckBadgeIcon className="w-4 h-4 text-blue-500 absolute top-0 right-0 bg-white rounded-full z-20" />
                     )}
-</div>
+                  </div>
 
                   <div className="ml-3 flex-1">
                     <p className="text-sm font-semibold flex justify-between">

@@ -30,7 +30,7 @@ export default function useUserLogin() {
   });
   const setUser = useUserStore((state) => state.setUser);
   const token = useUserStore((state) => state.token);
-
+console.log(profile)
   const navigate = useNavigate();
   useEffect(() => {
     if (profile) {
@@ -51,6 +51,7 @@ export default function useUserLogin() {
     }
   }, [profile]);
   const handleUpdated = async () => {
+    console.log(profileForm)
     try {
       setLoading(true);
       const res = await userProfileUpdated.postService(profileForm, token);

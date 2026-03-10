@@ -1,10 +1,10 @@
 sayfalar test edilcek
-profilde resim güncellenmiyor
+
 mesajlasma alanı ıcın uı kodlanıcak
 backend ona göre ayarlanıcak
 senin ilçende paylaşım varsa bildirim gelcek
 Satış destek: sipariş bitince şikayet/bildir sahte ürün sahte kulalnıcı yanıltıcı fıyat
 dark-light mod aktif edilcek
-satıcı alıcı durumları kontrol edilcek
+
 role-based aktif edilcek
 case-testing kontolu yapılcak
