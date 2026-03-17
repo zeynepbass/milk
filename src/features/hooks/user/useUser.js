@@ -30,7 +30,7 @@ export default function useUserLogin() {
   });
   const setUser = useUserStore((state) => state.setUser);
   const token = useUserStore((state) => state.token);
-console.log(profile)
+
   const navigate = useNavigate();
   useEffect(() => {
     if (profile) {

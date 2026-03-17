@@ -3,6 +3,7 @@ import { postService } from "features/services/postServices";
 import { useUserStore } from "../../../../store";
 export default function usePostDetail() {
   const [details, setDetails] = useState([]);
+  const [users, setUsers] = useState([]);
   const [editPostId, setEditPostId] = useState(null);
   const user = useUserStore((state) => state.user);
 
@@ -31,10 +32,27 @@ export default function usePostDetail() {
       setLoading(false);
     }
   };
+  const userGet=async()=>{
 
-  useEffect(() => {
-    fetchData();
-  }, []);
+    try {
+      setLoading(true);      
+    const res = await postService.getUsers();
+    setUsers(res.filter((item) => item._id !== user.id));
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+
+}
+useEffect(() => {
+  const fetchAll = async () => {
+    await userGet();
+    await fetchData();  
+  };
+
+  fetchAll();
+}, []);
   const onSubmit = async () => {  
     try {
       setLoading(true);
@@ -103,5 +121,5 @@ export default function usePostDetail() {
     };
 
 
-  return { details, loading,onSubmit,setForm,form,deleted,handlePostLike,handlePostSave,user,editPostId, setEditPostId};
+  return {userGet,users, details, loading,onSubmit,setForm,form,deleted,handlePostLike,handlePostSave,user,editPostId, setEditPostId};
 }

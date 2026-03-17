@@ -11,7 +11,7 @@ import { useSearchStore } from "../../../../store";
 import useCommentAll from "../../../hooks/feed/comments/useComments";
 import usePostAll from "../../../hooks/feed/posts/usePost";
 export function Profile() {
-  //? test edilcek
+
   const [selected, setSelected] = useState(null);
   const handleShowed = (id) => {
     setSelected((prev) => (prev === id ? null : id));
@@ -81,7 +81,7 @@ export function Profile() {
           <PencilIcon className="w-5 h-5 text-gray-500" />
         </button>
         <div className="flex justify-center">
-        <div className="relative w-24 h-24 rounded-full overflow-hidden shadow-md flex items-center justify-center bg-gray-100">
+        <div className="relative p-3 w-24 h-24 rounded-full overflow-hidden shadow-md flex items-center justify-center bg-gray-100">
   <img
     src={profileForm?.avatar || "https://cdn-icons-png.flaticon.com/512/9131/9131478.png"}
     alt="profile"

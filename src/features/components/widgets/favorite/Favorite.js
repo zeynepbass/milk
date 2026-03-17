@@ -4,7 +4,7 @@ import usePostAll from "../../../hooks/feed/posts/usePost";
 import useCommentAll from "../../../hooks/feed/comments/useComments";
 import { useEffect } from "react";
 export function Favorite() {
-//? kontrol edilcek
+
  
     const [selected, setSelected] = useState(null);
     const handleShowed = (id) => {
