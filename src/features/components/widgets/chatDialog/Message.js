@@ -3,33 +3,61 @@ import { useUserStore } from "../../../../store";
 import usePost from "features/hooks/feed/user/useUserPost";
 
 export function MessageDialog() {
-  const { users } = usePost(); 
+  const { users } = usePost(); // Alıcı kullanıcılar
   const [selectedUser, setSelectedUser] = useState(null);
   const [messages, setMessages] = useState([]);
+  const [input, setInput] = useState("");
   const scrollRef = useRef();
   const user = useUserStore((state) => state.user);
 
-
+  // İlk kullanıcıyı seç
   useEffect(() => {
     if (users?.length > 0) setSelectedUser(users[0]);
   }, [users]);
 
-
+  // Kullanıcı seçildiğinde mesajları çek
   const handleUserSelect = async (u) => {
     setSelectedUser(u);
     if (!user?.id) return;
 
     try {
-
       const res = await fetch(`http://localhost:5346/api/conversations/${user.id}/${u._id}`);
       const data = await res.json();
-
 
       setMessages(data.messages || []);
     } catch (err) {
       console.error("Mesajlar alınamadı:", err);
     }
   };
+
+  // Mesaj gönder
+  const handleSend = async () => {
+    if (!input.trim() || !selectedUser) return;
+
+    const body = {
+      senderId: user.id,
+      receiverId: selectedUser._id,
+      text: input,
+      conversationId: selectedUser.conversationId || null, 
+    };
+
+    try {
+      const res = await fetch("http://localhost:5346/api/messages/send", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+
+      const newMsg = await res.json();
+
+
+      setMessages((prev) => [...prev, newMsg]);
+      setInput("");
+    } catch (err) {
+      console.error("Mesaj gönderilemedi:", err);
+    }
+  };
+
 
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -64,21 +92,41 @@ export function MessageDialog() {
       </div>
 
 
-      <div className="flex-1 flex flex-col justify-start p-4 overflow-y-auto space-y-3">
-        {messages.length === 0 && (
-          <p className="text-gray-400 text-center mt-10">Bu kullanıcıyla mesajlaşma yok</p>
-        )}
-        {messages.map((msg, i) => (
-          <div
-            key={i}
-            ref={scrollRef}
-            className={`max-w-xs p-3 rounded-lg shadow ${
-              msg.senderId === user.id ? "bg-blue-100 text-gray-900 ml-auto" : "bg-gray-200 text-gray-800 mr-auto"
-            }`}
+      <div className="flex-1 flex flex-col justify-between p-4">
+        <div className="flex-1 overflow-y-auto space-y-3">
+          {messages.length === 0 && (
+            <p className="text-gray-400 text-center mt-10">Bu kullanıcıyla mesajlaşma yok</p>
+          )}
+          {messages.map((msg, i) => (
+            <div
+              key={i}
+              ref={scrollRef}
+              className={`max-w-xs p-3 rounded-lg shadow ${
+                msg.senderId === user.id ? "bg-blue-100 text-gray-900 ml-auto" : "bg-gray-200 text-gray-800 mr-auto"
+              }`}
+            >
+              {msg.text}
+            </div>
+          ))}
+        </div>
+
+
+        <div className="flex gap-2 mt-3">
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder={`Mesajınızı ${selectedUser?.name} için yazın...`}
+            className="flex-1 p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
+            onKeyDown={(e) => e.key === "Enter" && handleSend()}
+          />
+          <button
+            onClick={handleSend}
+            className="px-4 py-2 bg-blue-400 hover:bg-blue-500 text-white font-bold rounded-lg transition"
           >
-            {msg.text}
-          </div>
-        ))}
+            Gönder
+          </button>
+        </div>
       </div>
     </div>
   );
