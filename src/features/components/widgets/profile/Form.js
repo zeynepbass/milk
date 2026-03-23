@@ -11,7 +11,7 @@ export function CreatePostForm({ onSubmit, loading, form, setForm, setOpen }) {
   
     const reader = new FileReader();
     reader.onloadend = () => {
-      setForm(prev => ({ ...prev, images: reader.result }));
+      setForm(prev => ({ ...prev, avatar: reader.result }));
     };
     reader.readAsDataURL(file);
   };

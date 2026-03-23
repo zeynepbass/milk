@@ -31,7 +31,7 @@ export function Register() {
       <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
 
       <img
-        src="/images/footer-logo.png"
+        src="/images/logo.png"
         alt="Milk Logo"
         className="absolute bottom-6 left-6 w-24 opacity-90"
       />

@@ -37,11 +37,11 @@ export default function Card({
   setNewComment,
   handleAddComment,
 }) {
-  if (loading && !data) {
-    return <p className="text-center text-gray-500">Loading...</p>;
+  if (loading) {
+    return <p className="text-left text-gray-500">Yükleniyor...</p>;
   }
 
-  if (!Array.isArray(data) || data.length === 0) {
+  if (data.length === 0) {
     return <p className="text-left text-gray-400 mt-10">Gönderi bulunamadı</p>;
   }
 
