@@ -30,7 +30,7 @@ export function Profile() {
     setButton,
   } = useUserLogin();
 
-  const { followId, refresh, openList, setOpenList, open, setOpen } =
+  const { followId, openList, setOpenList, open, setOpen } =
     usePostAll();
   const {
     details,
@@ -81,11 +81,11 @@ export function Profile() {
           <PencilIcon className="w-5 h-5 text-gray-500" />
         </button>
         <div className="flex justify-center">
-        <div className="relative p-3 w-24 h-24 rounded-full overflow-hidden shadow-md flex items-center justify-center bg-gray-100">
+        <div className="relative p-3 w-20 h-20 rounded-full overflow-hidden shadow-md flex items-center justify-center bg-gray-100">
   <img
     src={profileForm?.avatar || "https://cdn-icons-png.flaticon.com/512/9131/9131478.png"}
     alt="profile"
-    className="w-full h-full object-cover"
+    className="object-cover w-20 h-20 rounded-full"
   />
 
   {profileForm?.dogrulanmisSatici && (

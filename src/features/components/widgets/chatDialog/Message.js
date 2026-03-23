@@ -3,19 +3,19 @@ import { useUserStore } from "../../../../store";
 import usePost from "features/hooks/feed/user/useUserPost";
 
 export function MessageDialog() {
-  const { users } = usePost(); // Alıcı kullanıcılar
+  const { users } = usePost(); 
   const [selectedUser, setSelectedUser] = useState(null);
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const scrollRef = useRef();
   const user = useUserStore((state) => state.user);
 
-  // İlk kullanıcıyı seç
+
   useEffect(() => {
     if (users?.length > 0) setSelectedUser(users[0]);
   }, [users]);
 
-  // Kullanıcı seçildiğinde mesajları çek
+
   const handleUserSelect = async (u) => {
     setSelectedUser(u);
     if (!user?.id) return;
@@ -30,7 +30,7 @@ export function MessageDialog() {
     }
   };
 
-  // Mesaj gönder
+
   const handleSend = async () => {
     if (!input.trim() || !selectedUser) return;
 
@@ -62,33 +62,57 @@ export function MessageDialog() {
   useEffect(() => {
     scrollRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
-
+  const [conversations, setConversations] = useState([]);
+  useEffect(() => {
+    if (!user?.id) return;
+  
+    const fetchConversations = async () => {
+      try {
+        const res = await fetch(
+          `http://localhost:5346/api/conversations/${user.id}`
+        );
+        const data = await res.json();
+  
+        setConversations(data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+  
+    fetchConversations();
+  }, [user]);
+  const getOtherUser = (conv) => {
+    return conv.participants.find((p) => p._id !== user.id);
+  };
   return (
     <div className="flex h-screen bg-gray-50">
 
       <div className="w-1/4 bg-white border-r border-gray-200 p-4 overflow-y-auto">
         <h2 className="font-semibold text-md text-gray-400 mb-4">Alıcı Kullanıcılar</h2>
         <ul className="space-y-3">
-          {users.map((u) => (
-            <li
-              key={u._id}
-              onClick={() => handleUserSelect(u)}
-              className={`flex items-center p-2 rounded-lg cursor-pointer hover:bg-blue-50 ${
-                selectedUser?._id === u._id ? "bg-blue-100" : ""
-              }`}
-            >
-              <img
-                src={u.avatar || "/images/default-avatar.png"}
-                alt={u.name}
-                className="w-10 h-10 rounded-full mr-3"
-              />
-              <div className="flex-1">
-                <p className="font-semibold text-gray-800">{u.name}</p>
-                <p className="text-xs text-gray-500">{u.role}</p>
-              </div>
-            </li>
-          ))}
-        </ul>
+  {conversations.map((conv) => {
+    const otherUser = getOtherUser(conv);
+
+    return (
+      <li
+        key={conv._id}
+        onClick={() => handleUserSelect(otherUser)}
+        className="flex items-center p-2 rounded-lg cursor-pointer hover:bg-blue-50"
+      >
+        <img
+          src={otherUser?.avatar || "/images/default-avatar.png"}
+          className="w-10 h-10 rounded-full mr-3"
+        />
+        <div>
+          <p className="font-semibold">{otherUser?.name}</p>
+          <p className="text-xs text-gray-500">
+            {conv.lastMessage}
+          </p>
+        </div>
+      </li>
+    );
+  })}
+</ul>
       </div>
 
 
