@@ -1,9 +1,6 @@
 
-
-mesajlasma alanı backend ona göre ayarlanıcak card mesaj butonu tıklanınca mesaj alanına ıd ıle gıdıcek
-detaylar:
-urun ıcın mesaj butonuna tıklayınca urun ıdsı ıle gıdıcek sohbet alanında ve messages route da son groulme gorulcek
-bıldırımlerde mesja okunmadıysa bıldırımler alanına gıdıcek
+mesajlasma:locale ürün bazlı cekildi mesajlasma alanı tasınan urune gore mesajlasma yapılcak
+bıldırımlerde mesaj okunmadıysa bıldırımler alanına gıdıcek
 senin ilçende paylaşım varsa bildirim gelcek
 Satış destek: sipariş bitince şikayet/bildir sahte ürün sahte kullanıcı yanıltıcı fıyat
 dark-light mod aktif edilcek

@@ -10,18 +10,20 @@ export function MessageDialog() {
   const scrollRef = useRef();
   const user = useUserStore((state) => state.user);
   const socketRef = useRef();
+const localdakiUser=JSON.parse(localStorage.getItem("product"))
+const userControl = localdakiUser?.userId || user?.id
+useEffect(() => {
+  if (users?.length > 0) setSelectedUser(users[0]);
+}, [users]);
 
-  useEffect(() => {
-    if (users?.length > 0) setSelectedUser();
-  }, [users]);
 
   const handleUserSelect = async (u) => {
     setSelectedUser(u);
     if (!user?.id) return;
-
+  const sohbetControl=localdakiUser.userId || u._id
     try {
       const res = await fetch(
-        `http://localhost:5346/api/conversations/${user.id}/${u._id}`
+        `http://localhost:5346/api/conversations/${userControl}/${sohbetControl}`
       );
       const data = await res.json();
 
@@ -32,12 +34,14 @@ export function MessageDialog() {
   };
 
   const handleSend = async () => {
-    if (!input.trim() || !selectedUser) return;
-
+    if ((!input.trim() && !localdakiUser) || !selectedUser) return;
+    const text = localdakiUser
+    ? `ürünün hakkında bilgi alabilmiyim ${localdakiUser.image}`
+    : input;
     const body = {
       senderId: user.id,
       receiverId: selectedUser._id,
-      text: input,
+      text: text,
       conversationId: selectedUser.conversationId || null,
     };
 
@@ -70,7 +74,7 @@ export function MessageDialog() {
       try {
         setLoading(true);
         const res = await fetch(
-          `http://localhost:5346/api/conversations/${user.id}`
+          `http://localhost:5346/api/conversations/${userControl}`
         );
         const data = await res.json();
 
@@ -129,6 +133,12 @@ export function MessageDialog() {
 
     fetchMessages();
   }, [selectedUser, user]);
+  useEffect(() => {
+    if (localdakiUser && selectedUser) {
+      handleSend();
+      localStorage.removeItem("product")
+    }
+  }, [selectedUser]);
   return (
     <div className="flex h-screen bg-gray-50">
       <div className="w-1/4 bg-white border-r border-gray-200 p-4 overflow-y-auto">
