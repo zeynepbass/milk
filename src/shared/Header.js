@@ -124,14 +124,7 @@ hover:bg-gray-100  px-6 transition"
                   Profil
                 </Link>
               </MenuItem>
-              <MenuItem>
-                <Link
-                  to="/ayarlar"
-                  className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
-                >
-                  Ayarlar
-                </Link>
-              </MenuItem>
+     
               <MenuItem>
                 <Link
                   to="/giris-yap"
