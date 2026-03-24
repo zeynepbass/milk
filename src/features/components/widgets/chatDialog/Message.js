@@ -12,7 +12,7 @@ export function MessageDialog() {
   const socketRef = useRef();
 
   useEffect(() => {
-    if (users?.length > 0) setSelectedUser(users[0]);
+    if (users?.length > 0) setSelectedUser();
   }, [users]);
 
   const handleUserSelect = async (u) => {

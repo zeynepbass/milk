@@ -36,7 +36,9 @@ export default function Card({
   newComment,
   setNewComment,
   handleAddComment,
+  navigate,
 }) {
+
   if (loading) {
     return <p className="text-left text-gray-500">Yükleniyor...</p>;
   }
@@ -48,6 +50,17 @@ export default function Card({
   const handeleUpdated = (id) => {
     setOpen(true);
     setEditPostId(id);
+  };
+
+
+  const handleClick = (item) => {
+    console.log(item);
+    const minimalProduct={
+      productId:item._id,
+      userId:item.user._id
+    }
+    localStorage.setItem("product", JSON.stringify(minimalProduct));
+    navigate("/mesajlar");
   };
   return (
     <>
@@ -140,7 +153,9 @@ export default function Card({
                         <button onClick={() => followId(item.user?._id)}>
                           <UserPlusIcon className="w-5 h-5 hover:text-green-500 cursor-pointer" />
                         </button>
-                        <ChatBubbleLeftRightIcon className="w-5 h-5 text-[rgb(137,205,251)]" />
+                        <button onClick={() => handleClick(item)}>
+                        <ChatBubbleLeftRightIcon className="w-5 h-5 text-[rgb(137,205,251)] cursor-pointer" />
+                        </button>
                       </>
                     )}
                     {itemUserId && (

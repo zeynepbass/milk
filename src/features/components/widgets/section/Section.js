@@ -2,8 +2,10 @@ import { useState } from "react";
 import usePostAll from "../../../hooks/feed/posts/usePost";
 import usePost from "../../../hooks/feed/user/useUserPost";
 import useCommentAll from "../../../hooks/feed/comments/useComments";
+import { useNavigate } from "react-router-dom";
 import Card from "./card";
 export function Section() {
+  const navigate = useNavigate();
   const [selected, setSelected] = useState(null);
   const handleShowed = (id) => {
     setSelected((prev) => (prev === id ? null : id));
@@ -32,10 +34,12 @@ export function Section() {
   const sortedData = data.sort(
     (a, b) => b.user?.dogrulanmisSatici - a.user?.dogrulanmisSatici
   );
+
   return (
     <div className="h-[100vh] overflow-auto ">
       <div className="grid grid-cols-3 gap-1">
         <Card
+        navigate={navigate}
           data={sortedData || []}
           selected={selected}
           newComment={newComment}
