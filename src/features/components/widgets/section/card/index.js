@@ -57,7 +57,7 @@ export default function Card({
 
     const minimalProduct={
       productId:item._id,
-      name:item.name,
+      name:item.description,
       userId:item.user._id
     }
     localStorage.setItem("product", JSON.stringify(minimalProduct));
