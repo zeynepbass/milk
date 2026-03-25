@@ -1,57 +1,62 @@
 import { Link } from "react-router-dom";
 import useUserLogin from "../../../hooks/user/useUser";
 import { useState } from "react";
-export function Login() {
 
+export function Login() {
   const { handleSubmit } = useUserLogin();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
   });
+
   const handleChange = (e) => {
     setFormData({
       ...formData,
       [e.target.name]: e.target.value,
     });
   };
+
   const onSubmit = (e) => {
-    console.log(formData);
     e.preventDefault();
+    console.log(formData);
     handleSubmit(formData);
   };
-  return (
-    <div
-      className=" relative h-screen bg-cover bg-center "
-      style={{ backgroundImage: "url('/images/wallpaper.png')" }}
-    >
-      <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent"></div>
 
-      <img
-        src="/images/logo.png"
-        alt="Milk Logo"
-        className="absolute bottom-6 left-6 w-24 opacity-90"
-      />
-<div className="
-  lg:absolute lg:top-[40%] lg:right-[14%] lg:-translate-y-1/2 lg:w-auto lg:h-auto
-  md:flex md:justify-center md:items-center md:h-screen md:w-full
-  flex justify-center items-center h-screen w-full
-">
+  return (
+    <div className="flex h-screen">
+
+      <div className="relative w-2/3 hidden md:block">
+        <img
+          src="/images/wallpaper-login.png"
+          alt="Milk Wallpaper"
+          className="h-full w-full object-cover"
+        />
+        <div className="absolute bottom-0 left-0 text-white text-sm font-semibold">
+        <img      src="/images/footer-logo.png"
+        width="120"
+        height="60"
+          alt="Milk logo"/>  
+        </div>
+      </div>
+
+
+      <div className="flex w-full md:w-2/3 justify-center items-center  bg-white">
         <form
-          className="w-[400px] rounded-xl  backdrop-blur-md p-8 shadow-xxl"
+          className="w-full max-w-md "
           onSubmit={onSubmit}
         >
-          <div className="border-b border-gray-900/10 pb-4 mb-6">
-            <h2 className="text-lg font-semibold text-[rgb(71,92,120)]">
+          <div className=" pb-4 mb-6">
+            <h1 className="text-4xl font-semibold text-[rgb(71,92,120)]">
               Giriş Yap
-            </h2>
-            <p className="mt-1 text-sm text-gray-600">
+            </h1>
+            <p className="mt-1 text-md text-gray-600">
               Seni tekrar görmek güzel! Devam etmek için giriş yap.
             </p>
           </div>
 
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-500">
+              <label className="block text-sm font-medium text-gray-400 pb-2">
                 Email
               </label>
               <input
@@ -65,7 +70,7 @@ export function Login() {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-500">
+            <label className="block text-sm font-medium text-gray-400 pb-2">
                 Parola
               </label>
               <input
@@ -81,9 +86,8 @@ export function Login() {
 
           <button
             type="submit"
-            className="mt-6 w-full rounded-md  py-2.5
-            text-sm font-semibold text-white bg-[rgb(137,205,251)]
-hover:bg-gray-200  transition"
+            className="mt-6 w-full rounded-md py-3 text-md font-semibold text-white bg-[rgb(137,205,251)]
+hover:bg-gray-200 transition"
           >
             Giriş Yap
           </button>
@@ -92,7 +96,7 @@ hover:bg-gray-200  transition"
             Üye değil misin?{" "}
             <Link
               to="/uye-ol"
-              className="text-[rgb(82,144,246)] font-medium hover:underline"
+              className="text-[rgb(82,144,246)] font-semibold hover:underline"
             >
               Üye ol
             </Link>
