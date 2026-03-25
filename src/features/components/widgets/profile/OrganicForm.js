@@ -23,7 +23,7 @@ export const OrganicForm = ({userUpdated}) => {
     <div>
       <form
         onSubmit={handleSubmit}
-        className="w-full mx-auto bg-white shadow-lg rounded-2xl p-8 m-2"
+        className="w-full mx-auto p-8 "
       >
         <input
           type="file"

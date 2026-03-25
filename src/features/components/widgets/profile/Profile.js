@@ -72,8 +72,8 @@ export function Profile() {
   const [input, setInput] = useState("");
 
   return (
-    <div className="grid grid-cols-12 h-[100vh] overflow-scroll">
-      <div className="col-span-4 overflow-hidden relative p-6 border-r border-gray-100">
+    <div className="grid grid-cols-12 h-[100vh] overflow-scroll p-4 gap-1">
+      <div className="col-span-12 md:col-span-4 ">
         <button
           onClick={() => setButton(true)}
           className="absolute top-4 right-4 bg-gray-100 p-2 rounded-full hover:bg-gray-200 transition"
@@ -248,7 +248,7 @@ hover:bg-gray-200
         </div>
       </div>
 
-      <div className="col-span-8 p-6">
+      <div className="col-span-12 md:col-span-8 p-3">
         <div className="flex border-b border-gray-200">
           <button
             className={`px-4 py-2 font-semibold ${

@@ -1,6 +1,4 @@
 
-mesajlasma:locale ürün bazlı cekildi mesajlasma alanı tasınan urune gore mesajlasma yapılcak
-bıldırımlerde mesaj okunmadıysa bıldırımler alanına gıdıcek
 senin ilçende paylaşım varsa bildirim gelcek
 Satış destek: sipariş bitince şikayet/bildir sahte ürün sahte kullanıcı yanıltıcı fıyat
 dark-light mod aktif edilcek

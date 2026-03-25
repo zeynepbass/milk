@@ -45,10 +45,10 @@ export function Header() {
             <Bars3Icon className="w-6 h-6" aria-hidden="true" />
           </button>
         </div>
-        <PopoverGroup className="hidden md:flex flex-1">
+        <PopoverGroup className="hidden md:flex flex-1 m-3">
           <div
             className="flex w-full max-w-2xl mx-auto rounded-full border-2 border-[rgb(137,205,251)]
- overflow-hidden"
+ overflow-hidden h-10"
           >
             <input
               type="text"
@@ -227,7 +227,7 @@ hover:bg-gray-100  px-6 transition"
               <div className="space-y-2 py-6">
                 <div
                   className="flex w-full max-w-2xl mx-auto rounded-full border-2 border-[rgb(137,205,251)]
- overflow-hidden"
+ overflow-hidden h-10"
                 >
                   <input
                     type="text"

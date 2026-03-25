@@ -11,7 +11,7 @@ import {
 } from "@heroicons/react/24/outline";
 import { CheckBadgeIcon } from "@heroicons/react/24/solid";
 import { UpdatedPostForm } from "../../profile/UpdatedPostForm";
-import Description from "../../profile/Description"
+import Description from "../../profile/Description";
 import { Link } from "react-router-dom";
 
 export default function Card({
@@ -38,13 +38,12 @@ export default function Card({
   handleAddComment,
   navigate,
 }) {
-
   if (loading) {
-    return <p className="text-left text-gray-500">Yükleniyor...</p>;
+    return <p className="text-left text-gray-400 p-3">Yükleniyor...</p>;
   }
 
   if (data.length === 0) {
-    return <p className="text-left text-gray-400 mt-10">Gönderi bulunamadı</p>;
+    return <p className="text-left text-gray-400 p-3 mt-10">Gönderi bulunamadı</p>;
   }
 
   const handeleUpdated = (id) => {
@@ -52,13 +51,12 @@ export default function Card({
     setEditPostId(id);
   };
 
-
   const handleClick = (item) => {
-    const minimalProduct={
-      productId:item._id,
-      name:item.description,
-      userId:item.user._id
-    }
+    const minimalProduct = {
+      productId: item._id,
+      name: item.description,
+      userId: item.user._id,
+    };
     localStorage.setItem("product", JSON.stringify(minimalProduct));
     navigate("/mesajlar");
   };
@@ -69,119 +67,124 @@ export default function Card({
         const itemUserId = item?.user?._id === user._id;
 
         return (
-<div key={item._id} className="m-3 flex flex-col bg-white rounded-2xl shadow-md w-full max-w-md">
-  <Link to={`/detay/${item._id}`}>
-    <img
-      className="w-full h-60 object-cover rounded-t-2xl"
-      src={item?.images[0] || "/images/logo.png"}
-      alt="Post"
-    />
-  </Link>
+          <div
+            key={item._id}
+            className="flex flex-col bg-white rounded-2xl shadow-md w-full "
+          >
+            <Link to={`/detay/${item._id}`}>
+              <img
+                className="w-full h-60 object-cover rounded-t-2xl"
+                src={item?.images[0] || "/images/logo.png"}
+                alt="Post"
+              />
+            </Link>
 
-  <div className="p-5 flex-1 flex flex-col justify-between">
-    <div>
-      <div className="flex items-center mb-4 ">
-        <div className="w-10 h-10 rounded-full overflow-hidden shadow relative flex items-center justify-center">
-          <img
-            src={
-              item.user?.avatar || item.image ||
-              "https://cdn-icons-png.flaticon.com/512/9131/9131478.png"
-            }
-            alt="profile"
-            className="w-full h-full object-cover"
-          />
-          {item.user?.dogrulanmisSatici && (
-            <CheckBadgeIcon className="w-4 h-4 text-blue-500 absolute top-0 right-0 bg-white rounded-full z-20" />
-          )}
-        </div>
-
-        <div className="ml-3 flex-1">
-          <p className="text-sm font-semibold flex justify-between">
-            <span>{item.ownerName} {item.ownerSurname}</span>
-            <span className="text-xs text-[rgb(137,205,251)]">{item.ownerRole}</span>
-          </p>
-          <p className="text-xs text-gray-400 mt-1">{item.title}</p>
-        </div>
-      </div>
-      <Description text={item.description} maxLength={150} />
-    </div>
-                <div className="flex justify-between items-center border-t pt-3 text-gray-600">
-                  <div className="flex space-x-4">
-                    <button
-                      onClick={() => handleShowed(item._id)}
-                      className="hover:text-blue-500 transition"
-                    >
-                      <ChatBubbleBottomCenterIcon className="w-5 h-5" />
-                    </button>
-
-                    <button
-                      className="flex items-center space-x-1 hover:text-red-600 transition"
-                      onClick={() => handlePostLike(item._id)}
-                    >
-                      <HeartIcon className="w-5 h-5" />
-                      <span className="text-sm">
-                        {item.likes?.length || ""}
-                      </span>
-                    </button>
-
-                    <button
-                      className="flex items-center hover:text-green-600 transition"
-                      onClick={() => handlePostSave(item._id)}
-                    >
-                      {!itemUserId && (
-                        <>
-                          <BookmarkIcon
-                            className={`w-5 h-5 ${
-                              favoruite ? "text-red-500" : ""
-                            }`}
-                          />
-                          <span
-                            className={`text-sm ${
-                              favoruite ? "text-red-500" : ""
-                            }`}
-                          >
-                            {item.savedBy?.length || ""}
-                          </span>{" "}
-                        </>
-                      )}
-                    </button>
+            <div className="p-5 flex-1 flex flex-col justify-between">
+              <div>
+                <div className="flex items-center mb-4 ">
+                  <div className="w-10 h-10 rounded-full overflow-hidden shadow relative flex items-center justify-center">
+                    <img
+                      src={
+                        item.user?.avatar ||
+                        item.image ||
+                        "https://cdn-icons-png.flaticon.com/512/9131/9131478.png"
+                      }
+                      alt="profile"
+                      className="w-full h-full object-cover"
+                    />
+                    {item.user?.dogrulanmisSatici && (
+                      <CheckBadgeIcon className="w-4 h-4 text-blue-500 absolute top-0 right-0 bg-white rounded-full z-20" />
+                    )}
                   </div>
 
-                  <div className="flex space-x-3">
-                    {!itemUserId && (
-                      <>
-                        <button onClick={() => followId(item.user?._id)}>
-                          <UserPlusIcon className="w-5 h-5 hover:text-green-500 cursor-pointer" />
-                        </button>
-                        <button onClick={() => handleClick(item)}>
-                        <ChatBubbleLeftRightIcon className="w-5 h-5 text-[rgb(137,205,251)] cursor-pointer" />
-                        </button>
-                      </>
-                    )}
-                    {itemUserId && (
-                      <>
-                        <button onClick={() => deleted(item._id)}>
-                          <TrashIcon className="w-5 h-5 hover:text-blue-200 cursor-pointer" />
-                        </button>
-                        <button onClick={() => handeleUpdated(item._id)}>
-                          <PencilIcon className="w-5 h-5 hover:text-yellow-500 cursor-pointer" />
-                        </button>{" "}
-                      </>
-                    )}
-
-                    {open && (
-                      <div className="fixed inset-0 flex items-center justify-center bg-black/20">
-                        <div className="bg-white p-6 rounded-xl">
-                          <UpdatedPostForm
-                            editPostId={editPostId}
-                            setOpen={setOpen}
-                          />
-                        </div>
-                      </div>
-                    )}
+                  <div className="ml-3 flex-1">
+                    <p className="text-sm font-semibold flex justify-between">
+                      <span>
+                        {item.ownerName} {item.ownerSurname}
+                      </span>
+                      <span className="text-xs text-[rgb(137,205,251)]">
+                        {item.ownerRole}
+                      </span>
+                    </p>
+                    <p className="text-xs text-gray-400 mt-1">{item.title}</p>
                   </div>
                 </div>
-      
+                <Description text={item.description} maxLength={150} />
+              </div>
+              <div className="flex justify-between items-center border-t pt-3 text-gray-600">
+                <div className="flex space-x-4">
+                  <button
+                    onClick={() => handleShowed(item._id)}
+                    className="hover:text-blue-500 transition"
+                  >
+                    <ChatBubbleBottomCenterIcon className="w-5 h-5" />
+                  </button>
+
+                  <button
+                    className="flex items-center space-x-1 hover:text-red-600 transition"
+                    onClick={() => handlePostLike(item._id)}
+                  >
+                    <HeartIcon className="w-5 h-5" />
+                    <span className="text-sm">{item.likes?.length || ""}</span>
+                  </button>
+
+                  <button
+                    className="flex items-center hover:text-green-600 transition"
+                    onClick={() => handlePostSave(item._id)}
+                  >
+                    {!itemUserId && (
+                      <>
+                        <BookmarkIcon
+                          className={`w-5 h-5 ${
+                            favoruite ? "text-red-500" : ""
+                          }`}
+                        />
+                        <span
+                          className={`text-sm ${
+                            favoruite ? "text-red-500" : ""
+                          }`}
+                        >
+                          {item.savedBy?.length || ""}
+                        </span>{" "}
+                      </>
+                    )}
+                  </button>
+                </div>
+
+                <div className="flex space-x-3">
+                  {!itemUserId && (
+                    <>
+                      <button onClick={() => followId(item.user?._id)}>
+                        <UserPlusIcon className="w-5 h-5 hover:text-green-500 cursor-pointer" />
+                      </button>
+                      <button onClick={() => handleClick(item)}>
+                        <ChatBubbleLeftRightIcon className="w-5 h-5 text-[rgb(137,205,251)] cursor-pointer" />
+                      </button>
+                    </>
+                  )}
+                  {itemUserId && (
+                    <>
+                      <button onClick={() => deleted(item._id)}>
+                        <TrashIcon className="w-5 h-5 hover:text-blue-200 cursor-pointer" />
+                      </button>
+                      <button onClick={() => handeleUpdated(item._id)}>
+                        <PencilIcon className="w-5 h-5 hover:text-yellow-500 cursor-pointer" />
+                      </button>{" "}
+                    </>
+                  )}
+
+                  {open && (
+                    <div className="fixed inset-0 flex items-center justify-center bg-black/20">
+                      <div className="bg-white p-6 rounded-xl">
+                        <UpdatedPostForm
+                          editPostId={editPostId}
+                          setOpen={setOpen}
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
             </div>
 
             {selected === item._id && (
