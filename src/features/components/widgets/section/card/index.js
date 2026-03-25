@@ -54,7 +54,6 @@ export default function Card({
 
 
   const handleClick = (item) => {
-
     const minimalProduct={
       productId:item._id,
       name:item.description,
