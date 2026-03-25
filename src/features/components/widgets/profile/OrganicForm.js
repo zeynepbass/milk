@@ -1,7 +1,6 @@
-import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
-
-export const OrganicForm = ({userUpdated}) => {
+import { ArrowRightIcon } from "@heroicons/react/24/outline";
+export const OrganicForm = ({ userUpdated }) => {
   const [file, setFile] = useState(null);
 
   const handleFile = (e) => {
@@ -18,13 +17,9 @@ export const OrganicForm = ({userUpdated}) => {
     userUpdated(formData);
   };
 
-
   return (
     <div>
-      <form
-        onSubmit={handleSubmit}
-        className="w-full mx-auto p-8 "
-      >
+      <form onSubmit={handleSubmit} className="w-full mx-auto p-8 ">
         <input
           type="file"
           accept="application/pdf"

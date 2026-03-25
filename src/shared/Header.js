@@ -15,13 +15,14 @@ import {
   HeartIcon,
   ChatBubbleLeftRightIcon,
 } from "@heroicons/react/24/outline";
-import { useUserStore ,useSearchStore} from "../store";
+import { useUserStore, useSearchStore } from "../store";
 import { Link } from "react-router-dom";
 export function Header() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false); 
+   const [input, setInput] = useState("");
   const setSearch = useSearchStore((state) => state.setSearch);
   const user = useUserStore((state) => state.user);
-  const [input, setInput] = useState("");
+
 
   return (
     <header className="bg-white">
@@ -98,18 +99,18 @@ hover:bg-gray-100  px-6 transition"
               <span className="absolute -inset-1.5" />
               <span className="sr-only">Menü</span>
               <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center bg-gray-100">
-  {user?.avatar ? (
-    <img
-      src={user.avatar}
-      alt={user?.name}
-      className="w-full h-full object-cover"
-    />
-  ) : (
-    <span className="text-gray-500 font-bold">
-      {user?.name?.slice(0, 2).toUpperCase()}
-    </span>
-  )}
-</div>
+                {user?.avatar ? (
+                  <img
+                    src={user.avatar}
+                    alt={user?.name}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <span className="text-gray-500 font-bold">
+                    {user?.name?.slice(0, 2).toUpperCase()}
+                  </span>
+                )}
+              </div>
             </MenuButton>
 
             <MenuItems
@@ -124,7 +125,7 @@ hover:bg-gray-100  px-6 transition"
                   Profil
                 </Link>
               </MenuItem>
-     
+
               <MenuItem>
                 <Link
                   to="/giris-yap"
@@ -179,18 +180,18 @@ hover:bg-gray-100  px-6 transition"
                     <span className="absolute -inset-1.5" />
                     <span className="sr-only">Menü</span>
                     <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center bg-gray-100">
-  {user?.avatar ? (
-    <img
-      src={user.avatar}
-      alt={user?.name}
-      className="w-full h-full object-cover"
-    />
-  ) : (
-    <span className="text-gray-500 font-bold">
-      {user?.name?.slice(0, 2).toUpperCase()}
-    </span>
-  )}
-</div>
+                      {user?.avatar ? (
+                        <img
+                          src={user.avatar}
+                          alt={user?.name}
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <span className="text-gray-500 font-bold">
+                          {user?.name?.slice(0, 2).toUpperCase()}
+                        </span>
+                      )}
+                    </div>
                   </MenuButton>
 
                   <MenuItems
