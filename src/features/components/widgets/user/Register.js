@@ -27,7 +27,7 @@ export function Register() {
     <div className="flex h-screen">
       <div className="relative w-2/3 hidden md:block">
         <img
-          src="/images/wallpaper-login.png"
+          src="/images/wallpaper.png"
           alt="Milk Wallpaper"
           className="h-full w-full object-cover"
         />

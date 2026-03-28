@@ -6,7 +6,6 @@ import {
   ArrowRightIcon,
   XMarkIcon,
   UserPlusIcon,
-  PencilIcon,
   TrashIcon
 } from "@heroicons/react/24/outline";
 import usePost from "../../../../hooks/feed/user/useUserPost";

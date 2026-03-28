@@ -1,17 +1,16 @@
-import { PencilIcon } from "@heroicons/react/24/outline";
-import { CheckBadgeIcon } from "@heroicons/react/24/solid";
 import { useEffect, useState } from "react";
-import Card from "../section/card/index";
-import usePost from "features/hooks/feed/user/useUserPost";
-import useProfile from "../../../hooks/user/useUser";
-import useUserLogin from "features/hooks/user/useUser";
-import { CreatePostForm } from "./Form";
-import { OrganicForm } from "./OrganicForm";
 import { useSearchStore } from "../../../../store";
 import useCommentAll from "../../../hooks/feed/comments/useComments";
+import useProfile from "../../../hooks/user/useUser";
 import usePostAll from "../../../hooks/feed/posts/usePost";
+import usePost from "features/hooks/feed/user/useUserPost";
+import useUserLogin from "features/hooks/user/useUser";
+import Card from "../section/card/index";
+import { CreatePostForm } from "./Form";
+import { OrganicForm } from "./OrganicForm";
+import { PencilIcon } from "@heroicons/react/24/outline";
+import { CheckBadgeIcon } from "@heroicons/react/24/solid";
 export function Profile() {
-
   const [selected, setSelected] = useState(null);
   const handleShowed = (id) => {
     setSelected((prev) => (prev === id ? null : id));
@@ -30,8 +29,7 @@ export function Profile() {
     setButton,
   } = useUserLogin();
 
-  const { followId, openList, setOpenList, open, setOpen } =
-    usePostAll();
+  const { followId, openList, setOpenList, open, setOpen } = usePostAll();
   const {
     details,
     loading,
@@ -56,10 +54,10 @@ export function Profile() {
   const handleImages = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-  
+
     const reader = new FileReader();
     reader.onloadend = () => {
-      setProfileForm(prev => ({ ...prev, avatar: reader.result }));
+      setProfileForm((prev) => ({ ...prev, avatar: reader.result }));
     };
     reader.readAsDataURL(file);
   };
@@ -81,17 +79,20 @@ export function Profile() {
           <PencilIcon className="w-5 h-5 text-gray-500" />
         </button>
         <div className="flex justify-center">
-        <div className="relative p-3 w-20 h-20 rounded-full overflow-hidden shadow-md flex items-center justify-center bg-gray-100">
-  <img
-    src={profileForm?.avatar || "https://cdn-icons-png.flaticon.com/512/9131/9131478.png"}
-    alt="profile"
-    className="object-cover w-20 h-20 rounded-full"
-  />
+          <div className="relative p-3 w-20 h-20 rounded-full overflow-hidden shadow-md flex items-center justify-center bg-gray-100">
+            <img
+              src={
+                profileForm?.avatar ||
+                "https://cdn-icons-png.flaticon.com/512/9131/9131478.png"
+              }
+              alt="profile"
+              className="object-cover w-20 h-20 rounded-full"
+            />
 
-  {profileForm?.dogrulanmisSatici && (
-    <CheckBadgeIcon className="absolute top-0 right-0 w-6 h-6 text-blue-500 bg-white rounded-full z-10" />
-  )}
-</div>
+            {profileForm?.dogrulanmisSatici && (
+              <CheckBadgeIcon className="absolute top-0 right-0 w-6 h-6 text-blue-500 bg-white rounded-full z-10" />
+            )}
+          </div>
         </div>{" "}
         <br />
         {button && (
@@ -326,7 +327,6 @@ hover:bg-gray-200
                   selected={selected}
                   handleShowed={handleShowed}
                   user={user}
-
                   handlePostSave={handlePostSave}
                   handlePostLike={handlePostLike}
                   handleComment={handleComment}

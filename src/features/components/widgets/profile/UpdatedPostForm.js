@@ -1,12 +1,10 @@
-import {XMarkIcon,ArrowRightIcon } from "@heroicons/react/24/outline";
 import { useEffect, useState } from "react";
-import usePostUpdated from "../../../hooks/feed/posts/usePost"
-import usePostAll from "../../../hooks/feed/posts/usePostDetails"
-export const UpdatedPostForm = ({editPostId,setOpen}) => {
-
-
- const {details}=usePostAll(editPostId)
- const {handleUpdatePost,loading} =usePostUpdated()
+import usePostUpdated from "../../../hooks/feed/posts/usePost";
+import usePostAll from "../../../hooks/feed/posts/usePostDetails";
+import { XMarkIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
+export const UpdatedPostForm = ({ editPostId, setOpen }) => {
+  const { details } = usePostAll(editPostId);
+  const { handleUpdatePost, loading } = usePostUpdated();
   const [formData, setForm] = useState({
     ownerName: "",
     ownerSurname: "",
@@ -18,22 +16,18 @@ export const UpdatedPostForm = ({editPostId,setOpen}) => {
     category: "",
     images: [],
   });
-
-
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-
   const handleImages = (e) => {
     const file = e.target.files[0];
     if (!file) return;
-  
+
     const reader = new FileReader();
     reader.onloadend = () => {
-      setForm(prev => ({ ...prev, avatar: reader.result }));
+      setForm((prev) => ({ ...prev, avatar: reader.result }));
     };
     reader.readAsDataURL(file);
   };
@@ -53,7 +47,7 @@ export const UpdatedPostForm = ({editPostId,setOpen}) => {
     }
   }, [details]);
   const handleSubmit = (e) => {
-    console.log(formData)
+    console.log(formData);
     e.preventDefault();
     handleUpdatePost(details?._id, formData);
     setOpen(false);
@@ -65,11 +59,9 @@ export const UpdatedPostForm = ({editPostId,setOpen}) => {
       className="max-w-4xl mx-auto  rounded-2xl p-8 space-y-6 m-2"
     >
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold text-gray-500">
-          Gönderiyi Düzenle
-        </h2>
+        <h2 className="text-2xl font-bold text-gray-500">Gönderiyi Düzenle</h2>
 
-        <button type="button" onClick={()=>setOpen(false)} >
+        <button type="button" onClick={() => setOpen(false)}>
           <XMarkIcon className="w-6 h-6 text-gray-700 hover:text-red-500 cursor-pointer transition" />
         </button>
       </div>
@@ -89,7 +81,7 @@ export const UpdatedPostForm = ({editPostId,setOpen}) => {
           type="text"
           name="ownerSurname"
           placeholder="Soyad"
-          value={formData?.ownerSurname  || ""}
+          value={formData?.ownerSurname || ""}
           onChange={handleChange}
           disabled
           className="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-300 outline-none"
@@ -99,11 +91,10 @@ export const UpdatedPostForm = ({editPostId,setOpen}) => {
       <select
         name="ownerRole"
         disabled
-        value={formData?.ownerRole  || ""}
+        value={formData?.ownerRole || ""}
         onChange={handleChange}
         className="w-full border rounded-lg px-4 py-2"
       >
-       
         <option value="alici">Alıcı</option>
         <option value="satici">Satıcı</option>
       </select>
@@ -112,7 +103,7 @@ export const UpdatedPostForm = ({editPostId,setOpen}) => {
         type="text"
         name="title"
         placeholder="Başlık"
-        value={formData?.title  || ""}
+        value={formData?.title || ""}
         onChange={handleChange}
         className="w-full border rounded-lg px-4 py-2"
       />
@@ -120,7 +111,7 @@ export const UpdatedPostForm = ({editPostId,setOpen}) => {
       <textarea
         name="description"
         placeholder="Açıklama"
-        value={formData?.description  || ""}
+        value={formData?.description || ""}
         onChange={handleChange}
         rows={4}
         className="w-full border rounded-lg px-4 py-2"
@@ -131,7 +122,7 @@ export const UpdatedPostForm = ({editPostId,setOpen}) => {
           type="text"
           name="province"
           placeholder="İl"
-          value={formData?.province  || ""}
+          value={formData?.province || ""}
           disabled
           onChange={handleChange}
           className="w-full border rounded-lg px-4 py-2"
@@ -142,7 +133,7 @@ export const UpdatedPostForm = ({editPostId,setOpen}) => {
           name="district"
           placeholder="İlçe"
           disabled
-          value={formData?.district  || ""}
+          value={formData?.district || ""}
           onChange={handleChange}
           className="w-full border rounded-lg px-4 py-2"
         />
@@ -150,7 +141,7 @@ export const UpdatedPostForm = ({editPostId,setOpen}) => {
 
       <select
         name="category"
-        value={formData?.category  || ""}
+        value={formData?.category || ""}
         onChange={handleChange}
         className="w-full border rounded-lg px-4 py-2"
       >
@@ -162,21 +153,15 @@ export const UpdatedPostForm = ({editPostId,setOpen}) => {
         <option value="sebze">Sebze</option>
         <option value="meyve">Meyve</option>
       </select>
-      <input
-            type="file"
-            multiple
-            onChange={handleImages}
-            className="w-full"
-          />
-
+      <input type="file" multiple onChange={handleImages} className="w-full" />
 
       <div className="flex justify-end">
         <button
           type="submit"
-       disabled={loading}
+          disabled={loading}
           className="bg-[rgb(137,205,251)] text-white p-3 rounded-full"
         >
-    {loading ? "Yükleniyor..." : <ArrowRightIcon className="w-4 h-4" />} 
+          {loading ? "Yükleniyor..." : <ArrowRightIcon className="w-4 h-4" />}
         </button>
       </div>
     </form>
