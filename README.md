@@ -75,9 +75,9 @@ ZORUNLU OLANLAR
 
 ✅ Gönderi oluşturma
 
-✅ Ürün listeleme (ISR)
+✅ Ürün listeleme 
 
-✅ Ürün detayı (SSR)
+✅ Ürün detayı 
 
 ✅ Beğeni
 
