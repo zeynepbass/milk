@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
-export const OrganicForm = ({ userUpdated }) => {
+export function OrganicForm  ({ userUpdated }) {
   const [file, setFile] = useState(null);
 
   const handleFile = (e) => {
