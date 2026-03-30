@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { useSearchStore } from "../../../../store";
-import useCommentAll from "../../../hooks/feed/comments/useComments";
-import useProfile from "../../../hooks/user/useUser";
-import usePostAll from "../../../hooks/feed/posts/usePost";
-import usePost from "../../../hooks/feed/user/useUserPost";
+import { useSearchStore } from "@/store";
+import useCommentAll from "@/features/hooks/feed/comments/useComments";
+import useProfile from "@/features/hooks/user/useUser";
+import usePostAll from "@/features/hooks/feed/posts/usePost";
+import usePost from "@/features/hooks/feed/user/useUserPost";
 import Card from "../section/card/index";
 import { CreatePostForm } from "./Form";
 import { OrganicForm } from "./OrganicForm";

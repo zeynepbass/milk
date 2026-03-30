@@ -15,8 +15,8 @@ import {
   HeartIcon,
   ChatBubbleLeftRightIcon,
 } from "@heroicons/react/24/outline";
-import { useUserStore, useSearchStore } from "../store";
-import useUserLogin from "../features/hooks/user/useUser";
+import { useUserStore, useSearchStore } from "@/store";
+import useUserLogin from "@/features/hooks/user/useUser";
 import { Link } from "react-router-dom";
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false); 

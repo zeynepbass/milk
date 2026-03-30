@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
-import { commentService } from "../../../services/commentService";
-import { useUserStore } from "../../../../store/useUserStore";
+import { commentService } from "@/features/services/commentService";
+import { useUserStore } from "@/store/useUserStore";
 
 export default function usePostComment(id) {
   const [comments, setComments] = useState([]);

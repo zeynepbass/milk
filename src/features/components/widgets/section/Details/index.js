@@ -8,10 +8,10 @@ import {
   UserPlusIcon,
   TrashIcon
 } from "@heroicons/react/24/outline";
-import usePost from "../../../../hooks/feed/user/useUserPost";
+import usePost from "@/features/hooks/feed/user/useUserPost";
 import { useParams } from "react-router-dom";
-import useCommentAll from "../../../../hooks/feed/posts/usePostDetails";
-import usePostAll from "../../../../hooks/feed/posts/usePost";
+import useCommentAll from "@/features/hooks/feed/posts/usePostDetails";
+import usePostAll from "@/features/hooks/feed/posts/usePost";
 export function Detail() {
   //? kontrol edilcek
   const { id } = useParams();

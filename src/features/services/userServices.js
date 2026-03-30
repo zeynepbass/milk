@@ -1,4 +1,4 @@
-import { API_URI } from "../../constant/api";
+import { API_URI } from "@/constant/api";
 export const userLoginService = {
   postService: async (formData) => {
     const res = await fetch(`${API_URI}/users/login`, {

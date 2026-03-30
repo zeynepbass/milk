@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from "react";
-import { useUserStore } from "../../../../store";
+import { useUserStore } from "@/store";
 import { io } from "socket.io-client";
 
 export function MessageDialog() {
