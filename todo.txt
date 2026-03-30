@@ -1,4 +1,11 @@
 senin ilçende paylaşım varsa bildirim gelcek
+sistem test (hız) buna bir bak
+ana sayfaki get işlemini keşfet alanına tası
+takip ettiği kişilerin gönderilerini ana sayfa kısmına tası
 Satış destek: sipariş bitince şikayet/bildir sahte ürün sahte kullanıcı yanıltıcı fıyat
+satış destek kısmı: profil kısmına koy geri bildirim gönder organik sertifika yuklenın yanına
+içeriği genel-hata bildirimi-talep 
+altına textarea geri bildrim gönder butonu
+içeriği 
 dark-light mod aktif edilcek
 case-testing kontolu yapılcak

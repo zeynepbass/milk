@@ -56,33 +56,23 @@ export default function useUserLogin() {
   const handleSubmit = async (formData) => {
     try {
       setLoading(true);
-
+  
       const res = await userLoginService.postService(formData);
-
-
+  
+      const { setUser, setToken } = useUserStore.getState();
+  
       setUser(res.user);
-
-      localStorage.setItem(
-        "auth-storage",
-        JSON.stringify({
-          state: {
-            user: res.user,
-            token: res.token,
-          },
-        })
-      );
-
+      setToken(res.token);
+  
       toast.info(res.message || "Giriş başarılı");
       navigate("/");
-
-
+  
     } catch (err) {
       toast.error(err?.response?.data?.message || "Giriş yapılamadı");
     } finally {
       setLoading(false);
     }
   };
-
 
   const handleSubmitRegister = async (formData) => {
     try {

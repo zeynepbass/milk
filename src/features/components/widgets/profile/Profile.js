@@ -6,6 +6,7 @@ import usePostAll from "@/features/hooks/feed/posts/usePost";
 import usePost from "@/features/hooks/feed/user/useUserPost";
 import Card from "../section/card/index";
 import { CreatePostForm } from "./Form";
+import {SalesSupport} from "./SalesSupport"
 import { OrganicForm } from "./OrganicForm";
 import { PencilIcon } from "@heroicons/react/24/outline";
 import { CheckBadgeIcon } from "@heroicons/react/24/solid";
@@ -285,6 +286,17 @@ hover:bg-gray-200
           >
             Organik Sertifika Yükle
           </button>
+          <button
+            className={`px-4 py-2 font-semibold ${
+              activeTab === "backNotifications"
+                ? "border-b-2 border-[rgb(82,144,246)] text-[rgb(82,144,246)] "
+                : "text-gray-500"
+            }`}
+            onClick={() => setActiveTab("backNotifications")}
+            disabled={open}
+          >
+            Geri Bildirim Gönder
+          </button>
         </div>
 
         <div className="mt-4 ">
@@ -381,6 +393,7 @@ hover:bg-gray-200
             </div>
           )}
           {activeTab === "organic" && <OrganicForm userUpdated={userUpdated} />}
+          {activeTab === "backNotifications" && <SalesSupport />}
         </div>
 
         {showFreezeModal && (

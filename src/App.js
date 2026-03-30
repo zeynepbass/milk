@@ -22,6 +22,7 @@ function App() {
       <Routes>
         <Route element={<Container />}>
           <Route path="/" element={<Section />} />
+          <Route path="/kesfet" element={<Section />} />
           <Route path="/profil" element={<Profile />} />
           <Route path="/favoriler" element={<Favorite />} />
           <Route path="/mesajlar" element={<Message />} />

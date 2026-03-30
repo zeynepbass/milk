@@ -8,8 +8,10 @@ import {
   MenuItem,
   MenuItems,
 } from "@headlessui/react";
+
 import {
   Bars3Icon,
+  GlobeAltIcon,
   XMarkIcon,
   MoonIcon,
   HeartIcon,
@@ -19,14 +21,12 @@ import { useUserStore, useSearchStore } from "@/store";
 import useUserLogin from "@/features/hooks/user/useUser";
 import { Link } from "react-router-dom";
 export function Header() {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false); 
-   const [input, setInput] = useState("");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [input, setInput] = useState("");
   const setSearch = useSearchStore((state) => state.setSearch);
   const user = useUserStore((state) => state.user);
 
-  const {
-    profileForm
-  } = useUserLogin();
+  const { profileForm } = useUserLogin();
   return (
     <header className="bg-white">
       <nav
@@ -89,6 +89,9 @@ hover:bg-gray-100  px-6 transition"
           <button className="p-2 rounded-full hover:bg-gray-100">
             <MoonIcon className="w-5 h-5 text-[rgb(137,205,251)]" />
           </button>
+          <Link to="/kesfet" className="p-2 rounded-full hover:bg-gray-100">
+            <GlobeAltIcon className="w-5 h-5 text-[rgb(137,205,251)]" />
+          </Link>
           <Link to="/favoriler" className="p-2 rounded-full hover:bg-gray-100">
             <HeartIcon className="w-5 h-5 text-[rgb(137,205,251)]" />
           </Link>
@@ -132,8 +135,7 @@ hover:bg-gray-100  px-6 transition"
               <MenuItem>
                 <Link
                   to="/giris-yap"
-                  onClick={()=>localStorage.clear()}
-                  
+                  onClick={() => localStorage.clear()}
                   className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
                 >
                   Çıkış yap
