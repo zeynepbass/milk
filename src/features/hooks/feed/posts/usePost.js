@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { postService } from "features/services/postServices";
+import { postService } from "../../../services/postServices";
 import { useUserStore, useSearchStore } from "../../../../store";
 export default function usePost() {
   const [openList, setOpenList] = useState(null);
@@ -11,22 +11,21 @@ export default function usePost() {
   const search = useSearchStore((state) => state.search);
   const user = useUserStore((state) => state.user);
   const token = useUserStore((state) => state.token);
-
   useEffect(() => {
+    if (!token) return;
+  
     const fetchData = async () => {
+      setLoading(true);
       try {
-        setLoading(true);
         const res = await postService.getPosts(search);
-        setData([...res]);
-      } catch (error) {
-        console.log(error);
+        setData(res);
       } finally {
         setLoading(false);
       }
     };
-
+  
     fetchData();
-  }, [search, token]);
+  }, [search]);
 
   const handlePostLike = async (id) => {
     try {

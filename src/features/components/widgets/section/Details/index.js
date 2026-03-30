@@ -41,7 +41,7 @@ export function Detail() {
   const [newComment, setNewComment] = useState("");
 
   if (loading) {
-    return <p className="text-center mt-10">Yükleniyor...</p>;
+    return <p className="text-center text-gray-400 mb-2">Yükleniyor...</p>;
   }
 
   if (!details) {
@@ -64,6 +64,14 @@ export function Detail() {
   const itemUserId = details?.user?._id || details?.user;
   const isOwner = user?.id === itemUserId;
           const hasUser = !!details?.user;
+          const formatLocation = (text) => {
+            if (!text) return "";
+            return text
+              .toLowerCase()
+              .split(" ")
+              .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+              .join("-");
+          };
   return (
     <div className="max-w-5xl mx-auto p-6">
       {images.length > 0 && (
@@ -112,6 +120,9 @@ export function Detail() {
         <div>
           <h1 className="text-3xl font-bold">{details.title}</h1>
           <p className="text-gray-500 mt-2">{details.description}</p>
+          <p className="text-orange-500 mt-2">
+  {formatLocation(details.province)}-{formatLocation(details.district)}
+</p>
         </div>
 
         <div className="flex gap-3">

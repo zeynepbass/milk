@@ -3,8 +3,7 @@ import { useSearchStore } from "../../../../store";
 import useCommentAll from "../../../hooks/feed/comments/useComments";
 import useProfile from "../../../hooks/user/useUser";
 import usePostAll from "../../../hooks/feed/posts/usePost";
-import usePost from "features/hooks/feed/user/useUserPost";
-import useUserLogin from "features/hooks/user/useUser";
+import usePost from "../../../hooks/feed/user/useUserPost";
 import Card from "../section/card/index";
 import { CreatePostForm } from "./Form";
 import { OrganicForm } from "./OrganicForm";
@@ -19,6 +18,7 @@ export function Profile() {
   const {
     getProfile,
     profileForm,
+    profile,
     button,
     handleUpdated,
     showFreezeModal,
@@ -27,7 +27,8 @@ export function Profile() {
     setProfileForm,
     createSetOpen,
     setButton,
-  } = useUserLogin();
+    freezeProfile, deleteProfile, userUpdated,
+  } = useProfile();
 
   const { followId, openList, setOpenList, open, setOpen } = usePostAll();
   const {
@@ -43,7 +44,7 @@ export function Profile() {
     handlePostSave,
     user,
   } = usePost();
-  const { freezeProfile, deleteProfile, userUpdated, profile } = useProfile();
+
   const { handleComment, handleDelete, handleC0mmentLike, comments } =
     useCommentAll(selected);
   const [activeTab, setActiveTab] = useState("posts");
@@ -70,15 +71,16 @@ export function Profile() {
   const [input, setInput] = useState("");
 
   return (
-    <div className="grid grid-cols-12 h-[100vh] overflow-scroll p-4 gap-1">
+    <div className="grid grid-cols-12 h-[100vh] overflow-scroll p-4 ">
       <div className="col-span-12 md:col-span-4 ">
-        <button
+      <button
           onClick={() => setButton(true)}
-          className="absolute top-4 right-4 bg-gray-100 p-2 rounded-full hover:bg-gray-200 transition"
+          className=" bg-gray-100 p-2 rounded-full hover:bg-gray-200 transition float-end"
         >
           <PencilIcon className="w-5 h-5 text-gray-500" />
         </button>
-        <div className="flex justify-center">
+        <div className="flex justify-center pt-10">
+
           <div className="relative p-3 w-20 h-20 rounded-full overflow-hidden shadow-md flex items-center justify-center bg-gray-100">
             <img
               src={
@@ -249,7 +251,7 @@ hover:bg-gray-200
         </div>
       </div>
 
-      <div className="col-span-12 md:col-span-8 p-3">
+      <div className="col-span-12 md:col-span-8 p-3 ">
         <div className="flex border-b border-gray-200">
           <button
             className={`px-4 py-2 font-semibold ${
@@ -314,12 +316,13 @@ hover:bg-gray-200
               {createOpen && (
                 <CreatePostForm
                   onSubmit={onSubmit}
+                  profileForm={profileForm}
                   form={form}
                   setForm={setForm}
                   setOpen={createSetOpen}
                 />
               )}
-              <div className="grid lg:grid-cols-2 md:grid-cols-1">
+              <div className="grid lg:grid-cols-2 md:grid-cols-1 gap-2">
                 <Card
                   data={details || []}
                   loading={loading}

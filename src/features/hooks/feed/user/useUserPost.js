@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import { postService } from "features/services/postServices";
+import { postService } from "../../../services/postServices";
 import { useUserStore } from "../../../../store";
 export default function usePostDetail() {
   const [details, setDetails] = useState([]);
-  const [users, setUsers] = useState([]);
   const [editPostId, setEditPostId] = useState(null);
   const user = useUserStore((state) => state.user);
 
@@ -19,6 +18,22 @@ export default function usePostDetail() {
     category: "",
     images: [],
   });
+  useEffect(() => {
+    if (user) {
+      setForm((prev) => ({
+        ...prev,
+        ownerName: user?.name,
+    ownerSurname: user?.surname,
+    ownerRole: user?.role,
+    title: "",
+    description: "",
+    district: user?.district,
+    province: user?.province,
+    category: "",
+    images: [],
+      }));
+    }
+  }, [user]);
   const [loading, setLoading] = useState(false);
 
   const fetchData = async () => {
@@ -32,22 +47,9 @@ export default function usePostDetail() {
       setLoading(false);
     }
   };
-  const userGet=async()=>{
 
-    try {
-      setLoading(true);      
-    const res = await postService.getUsers();
-    setUsers(res.filter((item) => item._id !== user.id));
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-
-}
 useEffect(() => {
   const fetchAll = async () => {
-    await userGet();
     await fetchData();  
   };
 
@@ -67,10 +69,12 @@ useEffect(() => {
   };
 
   const deleted=async (postId) => {
+    console.log(postId)
       try {
         await postService.deleted(postId, token);
   
         setDetails((prev) => prev.filter((item) => item._id !== postId));
+        console.log(details)
       } catch (error) {
         console.log(error);
       }
@@ -121,5 +125,5 @@ useEffect(() => {
     };
 
 
-  return {userGet,users, details, loading,onSubmit,setForm,form,deleted,handlePostLike,handlePostSave,user,editPostId, setEditPostId};
+  return { details, loading,onSubmit,setForm,form,deleted,handlePostLike,handlePostSave,user,editPostId, setEditPostId};
 }
