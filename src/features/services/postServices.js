@@ -14,21 +14,7 @@ export const postService = {
   
     return await res.json();
   },
-  getUsers:async(token)=>{
-    const res = await fetch(`${API_URI}/users`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
 
-    if (!res.ok) {
-      throw new Error("API error");
-    }
-
-    return await res.json();
-  },
   onSubmit:async (form,token)=>{
     const res = await fetch(`${API_URI}/posts`, {
       method: "POST",

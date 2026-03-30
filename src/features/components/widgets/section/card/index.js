@@ -63,9 +63,9 @@ export default function Card({
   return (
     <>
       {data.map((item) => {
-        //const ownerRole=item.user || item?.user?._id
-        const itemUserId = item?.user?._id === user._id;
-
+        const itemUserId =
+        user &&
+        String(item?.user?._id || item?.user) === String(user?.id);
         return (
           <div
             key={item._id}

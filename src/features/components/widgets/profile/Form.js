@@ -1,5 +1,5 @@
 import { ArrowRightIcon, XMarkIcon } from "@heroicons/react/24/outline";
-export function CreatePostForm({ onSubmit, loading, form, setForm, setOpen }) {
+export function CreatePostForm({ onSubmit, loading, form, setForm, setOpen,profileForm }) {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -42,7 +42,7 @@ export function CreatePostForm({ onSubmit, loading, form, setForm, setOpen }) {
           name="ownerName"
           disabled
           placeholder="Ad"
-          value={form.ownerName || ""}
+          value={form.ownerName ||  profileForm.ownerName}
           onChange={handleChange}
           className="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-300 outline-none"
           required
@@ -52,7 +52,7 @@ export function CreatePostForm({ onSubmit, loading, form, setForm, setOpen }) {
           name="ownerSurname"
           placeholder="Soyad"
           disabled
-          value={form.ownerSurname || ""}
+          value={form.ownerSurname || profileForm.ownerSurname}
           onChange={handleChange}
           className="border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-300 outline-none"
           required
@@ -62,7 +62,7 @@ export function CreatePostForm({ onSubmit, loading, form, setForm, setOpen }) {
       <select
         name="ownerRole"
         disabled
-        value={form?.ownerRole  || ""}
+        value={form?.ownerRole  ||  profileForm.ownerRole}
 
         onChange={handleChange}
         className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-300 outline-none"
@@ -76,7 +76,7 @@ export function CreatePostForm({ onSubmit, loading, form, setForm, setOpen }) {
         type="text"
         name="title"
         placeholder="Başlık"
-        value={form.title || ""}
+        value={form.title || "" }
         onChange={handleChange}
         className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-300 outline-none"
         required
@@ -96,8 +96,13 @@ export function CreatePostForm({ onSubmit, loading, form, setForm, setOpen }) {
           name="province"
           disabled
           placeholder="İl"
-          value={form.province || ""}
-          onChange={handleChange}
+
+          value={form.province}
+          onChange={(e) =>
+            setForm({ ...form, province: e.target.value })
+          }
+
+
           className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-300 outline-none"
         />
         <input
@@ -105,8 +110,10 @@ export function CreatePostForm({ onSubmit, loading, form, setForm, setOpen }) {
           name="district"
           disabled
           placeholder="İlçe"
-          value={form.district || ""}
-          onChange={handleChange}
+          value={form.district}
+          onChange={(e) =>
+            setForm({ ...form, district: e.target.value })
+          }
           className="w-full border rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-300 outline-none"
         />
       </div>

@@ -16,6 +16,7 @@ import {
   ChatBubbleLeftRightIcon,
 } from "@heroicons/react/24/outline";
 import { useUserStore, useSearchStore } from "../store";
+import useUserLogin from "../features/hooks/user/useUser";
 import { Link } from "react-router-dom";
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false); 
@@ -23,7 +24,9 @@ export function Header() {
   const setSearch = useSearchStore((state) => state.setSearch);
   const user = useUserStore((state) => state.user);
 
-
+  const {
+    profileForm
+  } = useUserLogin();
   return (
     <header className="bg-white">
       <nav
@@ -101,7 +104,7 @@ hover:bg-gray-100  px-6 transition"
               <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center bg-gray-100">
                 {user?.avatar ? (
                   <img
-                    src={user.avatar}
+                    src={user?.avatar || profileForm?.avatar}
                     alt={user?.name}
                     className="w-full h-full object-cover"
                   />
@@ -129,6 +132,8 @@ hover:bg-gray-100  px-6 transition"
               <MenuItem>
                 <Link
                   to="/giris-yap"
+                  onClick={()=>localStorage.clear()}
+                  
                   className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
                 >
                   Çıkış yap
