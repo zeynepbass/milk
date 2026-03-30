@@ -9,3 +9,7 @@ altına textarea geri bildrim gönder butonu
 içeriği 
 dark-light mod aktif edilcek
 case-testing kontolu yapılcak
+blog kısmı projelerıme ekle
+ana sayfa logoları duzelt 
+github resmini ufalt
+footer tekrardan düzenle
