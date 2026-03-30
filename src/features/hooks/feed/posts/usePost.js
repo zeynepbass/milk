@@ -11,21 +11,26 @@ export default function usePost() {
   const search = useSearchStore((state) => state.search);
   const user = useUserStore((state) => state.user);
   const token = useUserStore((state) => state.token);
+  let ignore = false;
+
   useEffect(() => {
     if (!token) return;
   
-    const fetchData = async () => {
+    const timeout = setTimeout(async () => {
       setLoading(true);
       try {
         const res = await postService.getPosts(search);
-        setData(res);
+        if (!ignore) setData(res);
       } finally {
-        setLoading(false);
+        if (!ignore) setLoading(false);
       }
-    };
+    }, 500);
   
-    fetchData();
-  }, [search]);
+    return () => {
+      ignore = true;
+      clearTimeout(timeout);
+    };
+  }, [search, token]);
 
   const handlePostLike = async (id) => {
     try {

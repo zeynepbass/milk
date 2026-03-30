@@ -2,17 +2,22 @@ import { API_URI } from "@/constant/api";
 
 export const postService = {
   getPosts: async (search) => {
-    let url = `${API_URI}/posts`;
+    try {
+      let url = `${API_URI}/posts`;
   
-    if (search && search.trim()) {
-      url += `?title=${encodeURIComponent(search)}`;
+      if (search?.trim()) {
+        url += `?title=${encodeURIComponent(search.trim())}`;
+      }
+  
+      const res = await fetch(url);
+  
+      if (!res.ok) throw new Error("API error");
+  
+      return await res.json();
+    } catch (err) {
+      console.error(err);
+      throw err;
     }
-  
-    const res = await fetch(url);
-  
-    if (!res.ok) throw new Error("API error");
-  
-    return await res.json();
   },
 
   onSubmit:async (form,token)=>{
@@ -147,6 +152,42 @@ getSavedPosts:async (token) => {
     });
   
     return res.json();
-  }
+  },
+
+  postMessage:async(user,token)=>{
+    const res = await fetch(`${API_URI}/conversations/${user.id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
   
+    return res.json();
+
+  },
+  postMessageGet:async(user,selectedUser,token)=>{
+    const res = await fetch(`${API_URI}/conversations/${user.id}/${selectedUser._id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  
+    return res.json();
+
+  },
+  postMessageSend: async (body,token) => {
+    const res = await fetch(`${API_URI}/messages/send`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(body),
+    });
+  
+    return res.json();
+  },
 };
