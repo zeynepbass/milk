@@ -1,6 +1,6 @@
 import { ChevronDownIcon } from "@heroicons/react/16/solid";
 import { Link } from "react-router-dom";
-import useUserLogin from "../../../hooks/user/useUser";
+import useUserLogin from "@/features/hooks/user/useUser";
 import { useState } from "react";
 export function Register() {
   //? uı düzenlenicek

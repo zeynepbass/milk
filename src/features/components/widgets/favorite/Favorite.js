@@ -1,8 +1,8 @@
 
 import { useState,useEffect } from "react";
-import usePostAll from "../../../hooks/feed/posts/usePost";
-import useCommentAll from "../../../hooks/feed/comments/useComments";
-import Card from "../section/card";
+import usePostAll from "@/features/hooks/feed/posts/usePost";
+import useCommentAll from "@/features/hooks/feed/comments/useComments";
+import Card from "@/features/components/widgets/section/card";
 export function Favorite() {
 
  

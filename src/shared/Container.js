@@ -1,7 +1,7 @@
 import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { Outlet, Navigate } from "react-router-dom";
-import { GetUserFromToken } from "../../src/utils/auth";
+import { GetUserFromToken } from "@/utils/auth";
 
 export function Container() {
   const user = GetUserFromToken();

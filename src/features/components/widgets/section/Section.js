@@ -1,7 +1,7 @@
 import { useState } from "react";
-import usePostAll from "../../../hooks/feed/posts/usePost";
-import usePost from "../../../hooks/feed/user/useUserPost";
-import useCommentAll from "../../../hooks/feed/comments/useComments";
+import usePostAll from "@/features/hooks/feed/posts/usePost";
+import usePost from "@/features/hooks/feed/user/useUserPost";
+import useCommentAll from "@/features/hooks/feed/comments/useComments";
 import { useNavigate } from "react-router-dom";
 import Card from "./card";
 export function Section() {
