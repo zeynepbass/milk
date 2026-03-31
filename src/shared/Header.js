@@ -112,7 +112,7 @@ hover:bg-gray-100  px-6 transition"
                     className="w-full h-full object-cover"
                   />
                 ) : (
-                  <span className="text-gray-500 font-bold">
+                  <span className="text-gray-400">
                     {user?.name?.slice(0, 2).toUpperCase()}
                   </span>
                 )}
