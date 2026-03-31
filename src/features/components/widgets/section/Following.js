@@ -4,7 +4,7 @@ import usePost from "@/features/hooks/feed/user/useUserPost";
 import useCommentAll from "@/features/hooks/feed/comments/useComments";
 import { useNavigate } from "react-router-dom";
 import Card from "./card";
-export function Section() {
+export function Following() {
   const navigate = useNavigate();
   const [selected, setSelected] = useState(null);
   const handleShowed = (id) => {
@@ -12,7 +12,7 @@ export function Section() {
   };
 
   const {
-    data,
+    following,
     loading,
     user,
     followId,
@@ -31,7 +31,7 @@ export function Section() {
     newComment,
     setNewComment,
   } = useCommentAll(selected);
-  const sortedData = data.sort(
+  const sortedData = following.sort(
     (a, b) => b.user?.dogrulanmisSatici - a.user?.dogrulanmisSatici
   );
 

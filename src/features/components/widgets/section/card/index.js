@@ -16,12 +16,11 @@ import { Link } from "react-router-dom";
 
 export default function Card({
   data = [],
-
   open,
   setOpen,
   favoruite,
   loading,
-  user,
+  profileForm,
   followId,
   selected,
   setEditPostId,
@@ -63,9 +62,12 @@ export default function Card({
   return (
     <>
       {data.map((item) => {
-        const itemUserId =
-        user &&
-        String(item?.user?._id || item?.user) === String(user?.id);
+const postUserId =
+(item?.user?._id || item?.user) === profileForm?._id;
+console.log(item?.user?._id)
+console.log(profileForm?._id)
+//console.log(profileForm?.user?._id)
+console.log(postUserId)
         return (
           <div
             key={item._id}
@@ -132,7 +134,7 @@ export default function Card({
                     className="flex items-center hover:text-green-600 transition"
                     onClick={() => handlePostSave(item._id)}
                   >
-                    {!itemUserId && (
+                    {!postUserId && (
                       <>
                         <BookmarkIcon
                           className={`w-5 h-5 ${
@@ -152,7 +154,7 @@ export default function Card({
                 </div>
 
                 <div className="flex space-x-3">
-                  {!itemUserId && (
+                  {!postUserId && (
                     <>
                       <button onClick={() => followId(item.user?._id)}>
                         <UserPlusIcon className="w-5 h-5 hover:text-green-500 cursor-pointer" />
@@ -162,7 +164,7 @@ export default function Card({
                       </button>
                     </>
                   )}
-                  {itemUserId && (
+                  {postUserId && (
                     <>
                       <button onClick={() => deleted(item._id)}>
                         <TrashIcon className="w-5 h-5 hover:text-blue-200 cursor-pointer" />
@@ -196,7 +198,7 @@ export default function Card({
                     </p>
                   ) : (
                     comments.map((comment) => {
-                      const isCommentOwner = user?.id === comment?.user?._id;
+                      const isCommentOwner = profileForm?._id === comment?.user?._id;
 
                       return (
                         <div key={comment._id}>

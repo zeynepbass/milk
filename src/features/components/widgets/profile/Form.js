@@ -11,12 +11,13 @@ export function CreatePostForm({ onSubmit, loading, form, setForm, setOpen,profi
   
     const reader = new FileReader();
     reader.onloadend = () => {
-      setForm(prev => ({ ...prev, avatar: reader.result }));
+      setForm(prev => ({ ...prev, images: reader.result }));
     };
     reader.readAsDataURL(file);
   };
   const handleSubmit = (e) => {
     e.preventDefault();
+    console.log(form)
     onSubmit(form);
     setOpen(false);
   };

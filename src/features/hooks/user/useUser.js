@@ -100,6 +100,7 @@ export default function useUserLogin() {
   };
 
   const handleUpdated = async () => {
+
     try {
       setLoading(true);
       const res = await userProfileUpdated.postService(profileForm, token);
@@ -150,7 +151,6 @@ export default function useUserLogin() {
     handleSubmit,
     handleSubmitRegister,
     loading,
-    getProfile,
     profile,
     freezeProfile,
     getProfile,
