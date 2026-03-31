@@ -1,5 +1,6 @@
 import { Container } from "./shared/Container";
 import Section from "./pages/section";
+import Following from "./pages/following";
 import Login from "./pages/login/index";
 import Register from "./pages/register/index";
 import Profile from "./pages/profile/index";
@@ -21,7 +22,7 @@ function App() {
 
       <Routes>
         <Route element={<Container />}>
-          <Route path="/" element={<Section />} />
+          <Route path="/" element={<Following />} />
           <Route path="/kesfet" element={<Section />} />
           <Route path="/profil" element={<Profile />} />
           <Route path="/favoriler" element={<Favorite />} />

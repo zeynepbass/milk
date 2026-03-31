@@ -1,7 +1,7 @@
 import { API_URI } from "@/constant/api";
 
 export const postService = {
-  getPosts: async (search) => {
+  getPosts: async ({ search, token }) => {
     try {
       let url = `${API_URI}/posts`;
   
@@ -9,7 +9,13 @@ export const postService = {
         url += `?title=${encodeURIComponent(search.trim())}`;
       }
   
-      const res = await fetch(url);
+      const res = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
   
       if (!res.ok) throw new Error("API error");
   
@@ -19,8 +25,35 @@ export const postService = {
       throw err;
     }
   },
-
+  getFollowingPosts: async ({ search, token }) => {
+    try {
+      let url = `${API_URI}/posts/following`;
+  
+      const query =
+        typeof search === "string" ? search.trim() : "";
+  
+      if (query) {
+        url += `?title=${encodeURIComponent(query)}`;
+      }
+  
+      const res = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+  
+      if (!res.ok) throw new Error("API error");
+  
+      return await res.json();
+    } catch (err) {
+      console.error(err);
+      throw err;
+    }
+  },
   onSubmit:async (form,token)=>{
+    console.log("backend",form)
     const res = await fetch(`${API_URI}/posts`, {
       method: "POST",
       headers: {

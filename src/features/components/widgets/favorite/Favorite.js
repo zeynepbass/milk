@@ -35,7 +35,7 @@ export function Favorite() {
               followId={followId}
     
               handleShowed={handleShowed}
-              user={user || {}}
+              profileForm={user || {}}
               handlePostSave={handlePostSave}
               handlePostLike={handlePostLike}
               handleComment={handleComment}

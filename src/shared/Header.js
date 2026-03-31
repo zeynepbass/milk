@@ -168,6 +168,9 @@ hover:bg-gray-100  px-6 transition"
                 <button className="p-2 rounded-full hover:bg-gray-100">
                   <MoonIcon className="w-5 h-5 text-[rgb(137,205,251)]" />
                 </button>
+                <Link to="/kesfet" className="p-2 rounded-full hover:bg-gray-100">
+            <GlobeAltIcon className="w-5 h-5 text-[rgb(137,205,251)]" />
+          </Link>
                 <Link
                   to="/favoriler"
                   className="p-2 rounded-full hover:bg-gray-100"

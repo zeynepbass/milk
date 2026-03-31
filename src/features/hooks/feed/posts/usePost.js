@@ -6,20 +6,28 @@ export default function usePost() {
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const [data, setData] = useState([]);
+  const [following, setFollowing] = useState([]);
   const [favoruite, setfavoruite] = useState([]);
   const [open, setOpen] = useState(false);
   const search = useSearchStore((state) => state.search);
   const user = useUserStore((state) => state.user);
   const token = useUserStore((state) => state.token);
-  let ignore = false;
+
 
   useEffect(() => {
     if (!token) return;
   
+    let ignore = false;
+  
     const timeout = setTimeout(async () => {
       setLoading(true);
+  
       try {
-        const res = await postService.getPosts(search);
+        const res = await postService.getPosts({
+          search,
+          token,
+        });
+  
         if (!ignore) setData(res);
       } finally {
         if (!ignore) setLoading(false);
@@ -31,7 +39,32 @@ export default function usePost() {
       clearTimeout(timeout);
     };
   }, [search, token]);
+  useEffect(() => {
+    if (!token) return;
+  
+    let ignore = false;
+  
+    const timeout = setTimeout(async () => {
+      setLoading(true);
+  
+      try {
+        const res = await postService.getFollowingPosts({
+          search,
+          token,
+        });
 
+  
+        if (!ignore) setFollowing(res);
+      } finally {
+        if (!ignore) setLoading(false);
+      }
+    }, 500);
+  
+    return () => {
+      ignore = true;
+      clearTimeout(timeout);
+    };
+  }, [search, token]);
   const handlePostLike = async (id) => {
     try {
       const res = await postService.postLike(id, token);
@@ -123,6 +156,7 @@ export default function usePost() {
     data,
     loading,
     user,
+    following,
     handlePostLike,
     handlePostSave,
     fetchSavedPosts,

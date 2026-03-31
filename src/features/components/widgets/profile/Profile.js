@@ -52,7 +52,7 @@ export function Profile() {
 
   useEffect(() => {
     getProfile();
-  }, [profile]);
+  }, []);
   const handleImages = (e) => {
     const file = e.target.files[0];
     if (!file) return;
@@ -70,7 +70,6 @@ export function Profile() {
     }));
   };
   const [input, setInput] = useState("");
-
   return (
     <div className="grid grid-cols-12 h-[100vh] overflow-scroll p-4 ">
       <div className="col-span-12 md:col-span-4 ">
@@ -341,7 +340,7 @@ hover:bg-gray-200
                   editPostId={editPostId}
                   selected={selected}
                   handleShowed={handleShowed}
-                  user={user}
+                  profileForm={profile || ""}
                   handlePostSave={handlePostSave}
                   handlePostLike={handlePostLike}
                   handleComment={handleComment}

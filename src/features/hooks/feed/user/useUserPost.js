@@ -14,6 +14,7 @@ export default function usePostDetail() {
     title: "",
     description: "",
     district: user?.district,
+    image: user?.avatar,
     province: user?.province,
     category: "",
     images: [],
