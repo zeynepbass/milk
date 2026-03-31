@@ -1,0 +1,8 @@
+senin ilçende paylaşım varsa bildirim gelcek
+sistem test (hız) buna bir bak
+ana sayfaki get işlemini keşfet alanına tası
+takip ettiği kişilerin gönderilerini ana sayfa kısmına tası
+Satış destek: sipariş bitince şikayet/bildir sahte ürün sahte kullanıcı yanıltıcı fıyat
+dark-light mod aktif edilcek
+case-testing kontolu yapılcak
+milki projelerim kısmına ekle

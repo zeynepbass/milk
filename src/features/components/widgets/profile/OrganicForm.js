@@ -18,8 +18,8 @@ export function OrganicForm  ({ userUpdated }) {
   };
 
   return (
-    <div>
-      <form onSubmit={handleSubmit} className="w-full mx-auto p-8 ">
+    <div className="max-w-full mx-auto p-6 bg-white rounded-2xl shadow-md">
+      <form onSubmit={handleSubmit} className="w-full mx-auto ">
         <input
           type="file"
           accept="application/pdf"
