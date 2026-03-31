@@ -20,12 +20,9 @@ E-posta adresi
 Telefon numarası
 Şehir
 Semt
-Tanım
 
 Kullanıcılar şunları yapabilir:
 ---
-Bilgi ekle
-Profili düzenle
 Profili güncelle
 Profil bilgilerini sil
 Gönderiler / Paylaşım
@@ -45,14 +42,12 @@ Gönderilere yorum yapın
 
 Mesajlaşma:
 ---
-Alıcı rolüne sahip kullanıcılar mesaj gönderebilir.
 Mesajlaşma iki yönlüdür .
 Kullanıcılar birbirleriyle gerçek zamanlı olarak sohbet edebilirler.
 
 Ana Sayfa:
 ---
 Ana sayfada Koyu Mod ve Açık Mod bulunmaktadır .
-Kullanıcılar arama çubuğunu kullanarak arama yapabilirler .
 Şehir bazında arama yapılabilir .
 
 Kullanılan Teknolojiler:
@@ -89,17 +84,12 @@ ZORUNLU OLANLAR
 
 ✅ Favori (kaydet)
 
-🚫 YOK
-
-Ödeme
-
-DM
 
 Bildirim
 
 Admin panel
 
-💡 MVP = “Instagram ama köy ürünü”
+💡 MVP = “Köy ürünleri”
 
 ---
 
@@ -116,8 +106,6 @@ EKLENENLER
 🔔 Bildirim (yeni gönderi / takip)
 
 🟢 Doğrulanmış satıcı
-
-📊 Profil istatistikleri
 
 🧾 Sipariş talebi (checkout yok)
 
