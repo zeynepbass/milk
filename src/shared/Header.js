@@ -8,21 +8,23 @@ import {
   MenuItem,
   MenuItems,
 } from "@headlessui/react";
-
 import {
   Bars3Icon,
   GlobeAltIcon,
   XMarkIcon,
+  BellAlertIcon,
   MoonIcon,
   HeartIcon,
   ChatBubbleLeftRightIcon,
 } from "@heroicons/react/24/outline";
 import { useUserStore, useSearchStore } from "@/store";
 import useUserLogin from "@/features/hooks/user/useUser";
+import NotificationAlert from "@/pages/notification";
 import { Link } from "react-router-dom";
 export function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [input, setInput] = useState("");
+  const [bellOpen, setBellOpen] = useState(false);
   const setSearch = useSearchStore((state) => state.setSearch);
   const user = useUserStore((state) => state.user);
 
@@ -99,7 +101,10 @@ hover:bg-gray-100  px-6 transition"
           <Link to="/mesajlar" className="p-2 rounded-full hover:bg-gray-100">
             <ChatBubbleLeftRightIcon className="w-5 h-5 text-[rgb(137,205,251)]" />
           </Link>
-
+          <button className="p-2 rounded-full hover:bg-gray-100" onClick={()=>setBellOpen(!bellOpen)}>
+            <BellAlertIcon className="w-5 h-5 text-[rgb(137,205,251)]" />
+          </button>
+          {bellOpen && <NotificationAlert/>}
           <Menu as="div" className="relative ml-3">
             <MenuButton className="relative flex rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
               <span className="absolute -inset-1.5" />
