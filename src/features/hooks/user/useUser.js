@@ -5,7 +5,7 @@ import {
   userProfile,
   userProfileUpdated,
   userProfilFreeze,
-  userProfileDeleted
+  userProfileDeleted,
 } from "@/features/services/userServices";
 import { useUserStore } from "@/store";
 import { toast } from "react-toastify";
@@ -16,7 +16,7 @@ export default function useUserLogin() {
   const [createOpen, createSetOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [profile, setProfile] = useState(null);
-  const [button, setButton] = useState(false);
+  const [button, setButton] = useState(true);
 
   const [profileForm, setProfileForm] = useState({
     avatar: "",
@@ -32,7 +32,6 @@ export default function useUserLogin() {
   const setUser = useUserStore((state) => state.setUser);
   const token = useUserStore((state) => state.token);
   const navigate = useNavigate();
-
 
   useEffect(() => {
     if (profile) {
@@ -52,21 +51,19 @@ export default function useUserLogin() {
     }
   }, [profile]);
 
-
   const handleSubmit = async (formData) => {
     try {
       setLoading(true);
-  
+
       const res = await userLoginService.postService(formData);
-  
+
       const { setUser, setToken } = useUserStore.getState();
-  
+
       setUser(res.user);
       setToken(res.token);
-  
+
       toast.info(res.message || "Giriş başarılı");
       navigate("/");
-  
     } catch (err) {
       toast.error(err?.response?.data?.message || "Giriş yapılamadı");
     } finally {
@@ -83,12 +80,13 @@ export default function useUserLogin() {
       toast.info(res.message || "Kayıt başarılı");
       navigate("/giris-yap");
     } catch (err) {
-      toast.error(err?.response?.data?.message || "Kayıt sırasında hata oluştu");
+      toast.error(
+        err?.response?.data?.message || "Kayıt sırasında hata oluştu"
+      );
     } finally {
       setLoading(false);
     }
   };
-
 
   const getProfile = async () => {
     try {
@@ -100,12 +98,14 @@ export default function useUserLogin() {
   };
 
   const handleUpdated = async () => {
-
     try {
       setLoading(true);
+
       const res = await userProfileUpdated.postService(profileForm, token);
+
       setUser(res.user);
-      setButton(false);
+
+      setButton(true);
     } catch (error) {
       console.log(error);
     } finally {

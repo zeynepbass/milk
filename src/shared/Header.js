@@ -30,7 +30,7 @@ export function Header() {
 
   const { profileForm } = useUserLogin();
   return (
-    <header className="bg-white">
+    <header className="bg-white border-b-gray-50 border-b-2">
       <nav
         aria-label="Global"
         className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8"

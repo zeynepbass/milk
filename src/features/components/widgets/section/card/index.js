@@ -19,7 +19,7 @@ export default function Card({
   open,
   setOpen,
   favoruite,
-  loading,
+
   profileForm,
   followId,
   selected,
@@ -37,14 +37,6 @@ export default function Card({
   handleAddComment,
   navigate,
 }) {
-  if (loading) {
-    return <p className="text-left text-gray-400 p-3">Yükleniyor...</p>;
-  }
-
-  if (data.length === 0) {
-    return <p className="text-left text-gray-400 p-3 mt-10">Gönderi bulunamadı</p>;
-  }
-
   const handeleUpdated = (id) => {
     setOpen(true);
     setEditPostId(id);
@@ -62,12 +54,8 @@ export default function Card({
   return (
     <>
       {data.map((item) => {
-const postUserId =
-(item?.user?._id || item?.user) === profileForm?._id;
-console.log(item?.user?._id)
-console.log(profileForm?._id)
-//console.log(profileForm?.user?._id)
-console.log(postUserId)
+        const postUserId = (item?.user?._id || item?.user) === profileForm?._id;
+
         return (
           <div
             key={item._id}
@@ -81,10 +69,10 @@ console.log(postUserId)
               />
             </Link>
 
-            <div className="p-5 flex-1 flex flex-col justify-between">
+            <div className="p-5 flex flex-col justify-between h-full">
               <div>
-                <div className="flex items-center mb-4 ">
-                  <div className="w-10 h-10 rounded-full overflow-hidden shadow relative flex items-center justify-center">
+                <div className="flex items-center gap-3 mb-4">
+                  <div className="w-10 h-10 rounded-full overflow-hidden shadow relative">
                     <img
                       src={
                         item.user?.avatar ||
@@ -94,27 +82,34 @@ console.log(postUserId)
                       alt="profile"
                       className="w-full h-full object-cover"
                     />
+
                     {item.user?.dogrulanmisSatici && (
-                      <CheckBadgeIcon className="w-4 h-4 text-blue-500 absolute top-0 right-0 bg-white rounded-full z-20" />
+                      <CheckBadgeIcon className="w-4 h-4 text-blue-500 absolute -top-1 -right-1 bg-white rounded-full" />
                     )}
                   </div>
 
-                  <div className="ml-3 flex-1">
-                    <p className="text-sm font-semibold flex justify-between">
-                      <span>
+                  <div className="flex-1">
+                    <div className="flex justify-between items-center">
+                      <p className="text-sm font-semibold">
                         {item.ownerName} {item.ownerSurname}
-                      </span>
+                      </p>
+
                       <span className="text-xs text-[rgb(137,205,251)]">
                         {item.ownerRole}
                       </span>
+                    </div>
+
+                    <p className="text-xs text-gray-400 mt-1 line-clamp-1">
+                      {item.title}
                     </p>
-                    <p className="text-xs text-gray-400 mt-1">{item.title}</p>
                   </div>
                 </div>
+
                 <Description text={item.description} maxLength={150} />
               </div>
-              <div className="flex justify-between items-center border-t pt-3 text-gray-600">
-                <div className="flex space-x-4">
+
+              <div className="flex justify-between items-center border-t pt-4 mt-4 text-gray-600">
+                <div className="flex items-center gap-5">
                   <button
                     onClick={() => handleShowed(item._id)}
                     className="hover:text-blue-500 transition"
@@ -123,16 +118,16 @@ console.log(postUserId)
                   </button>
 
                   <button
-                    className="flex items-center space-x-1 hover:text-red-600 transition"
                     onClick={() => handlePostLike(item._id)}
+                    className="flex items-center gap-1 hover:text-red-500 transition"
                   >
                     <HeartIcon className="w-5 h-5" />
-                    <span className="text-sm">{item.likes?.length || ""}</span>
+                    <span className="text-sm">{item.likes?.length || 0}</span>
                   </button>
 
                   <button
-                    className="flex items-center hover:text-green-600 transition"
                     onClick={() => handlePostSave(item._id)}
+                    className="flex items-center gap-1 hover:text-green-500 transition"
                   >
                     {!postUserId && (
                       <>
@@ -146,105 +141,108 @@ console.log(postUserId)
                             favoruite ? "text-red-500" : ""
                           }`}
                         >
-                          {item.savedBy?.length || ""}
-                        </span>{" "}
+                          {item.savedBy?.length || 0}
+                        </span>
                       </>
                     )}
                   </button>
                 </div>
 
-                <div className="flex space-x-3">
+                <div className="flex items-center gap-3">
                   {!postUserId && (
                     <>
                       <button onClick={() => followId(item.user?._id)}>
-                        <UserPlusIcon className="w-5 h-5 hover:text-green-500 cursor-pointer" />
+                        <UserPlusIcon className="w-5 h-5 hover:text-green-500 cursor-pointer transition" />
                       </button>
+
                       <button onClick={() => handleClick(item)}>
-                        <ChatBubbleLeftRightIcon className="w-5 h-5 text-[rgb(137,205,251)] cursor-pointer" />
+                        <ChatBubbleLeftRightIcon className="w-5 h-5 text-[rgb(137,205,251)] cursor-pointer hover:scale-110 transition" />
                       </button>
-                    </>
-                  )}
-                  {postUserId && (
-                    <>
-                      <button onClick={() => deleted(item._id)}>
-                        <TrashIcon className="w-5 h-5 hover:text-blue-200 cursor-pointer" />
-                      </button>
-                      <button onClick={() => handeleUpdated(item._id)}>
-                        <PencilIcon className="w-5 h-5 hover:text-yellow-500 cursor-pointer" />
-                      </button>{" "}
                     </>
                   )}
 
-                  {open && (
-                    <div className="fixed inset-0 flex items-center justify-center bg-black/20">
-                      <div className="bg-white p-6 rounded-xl">
-                        <UpdatedPostForm
-                          editPostId={editPostId}
-                          setOpen={setOpen}
-                        />
-                      </div>
-                    </div>
+                  {postUserId && (
+                    <>
+                      <button onClick={() => deleted(item._id)}>
+                        <TrashIcon className="w-5 h-5 hover:text-red-500 cursor-pointer transition" />
+                      </button>
+
+                      <button onClick={() => handeleUpdated(item._id)}>
+                        <PencilIcon className="w-5 h-5 hover:text-yellow-500 cursor-pointer transition" />
+                      </button>
+                    </>
                   )}
                 </div>
+
+                {open && (
+                  <div className="fixed inset-0 flex items-center justify-center bg-black/30 backdrop-blur-sm z-50">
+                    <div className="bg-white p-6 rounded-2xl shadow-xl w-full max-w-md">
+                      <UpdatedPostForm
+                        editPostId={editPostId}
+                        setOpen={setOpen}
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
 
             {selected === item._id && (
-              <div className="mt-2 bg-white rounded-2xl shadow-md p-4 max-w-md">
-                <div className="space-y-3 max-h-48 overflow-y-auto mb-3">
+              <div className="mt-3 bg-white rounded-2xl shadow-sm border p-4 max-w-md">
+                <div className="space-y-4 max-h-60 overflow-y-auto mb-4 pr-1">
                   {comments.length === 0 ? (
-                    <p className="text-gray-400 text-sm italic">
+                    <p className="text-gray-400 text-sm italic text-center py-4">
                       Henüz yorum yok
                     </p>
                   ) : (
                     comments.map((comment) => {
-                      const isCommentOwner = profileForm?._id === comment?.user?._id;
+                      const isCommentOwner =
+                        profileForm?._id === comment?.user?._id;
 
                       return (
-                        <div key={comment._id}>
-                          <div className="flex items-start gap-3">
-                            <img
-                              src={
-                                comment?.user?.profileImage ||
-                                "https://i.pravatar.cc/150"
-                              }
-                              alt="profile"
-                              className="w-8 h-8 rounded-full object-cover"
-                            />
+                        <div key={comment._id} className="flex gap-3">
+                          <img
+                            src={
+                              comment?.user?.profileImage ||
+                              "https://i.pravatar.cc/150"
+                            }
+                            alt="profile"
+                            className="w-9 h-9 rounded-full object-cover shadow-sm"
+                          />
 
-                            <div className="flex flex-col w-full">
-                              <div className="flex justify-between">
-                                <p className="text-sm font-semibold">
-                                  {comment?.user?.name} {comment?.user?.surname}
-                                </p>
-
-                                {isCommentOwner && (
-                                  <button
-                                    onClick={() => handleDelete(comment._id)}
-                                  >
-                                    <XMarkIcon className="w-4 h-4 text-gray-400 hover:text-red-500 cursor-pointer transition" />
-                                  </button>
-                                )}
-                              </div>
-
-                              <p className="text-sm text-gray-600">
-                                {comment.text}
+                          <div className="flex flex-col w-full">
+                            <div className="flex justify-between items-center">
+                              <p className="text-sm font-semibold">
+                                {comment?.user?.name} {comment?.user?.surname}
                               </p>
 
-                              <div className="flex gap-3 mt-1">
+                              {isCommentOwner && (
                                 <button
-                                  onClick={() => handleCommentLike(comment._id)}
-                                  className="text-xs underline"
+                                  onClick={() => handleDelete(comment._id)}
+                                  className="hover:bg-gray-100 p-1 rounded-full transition"
                                 >
-                                  {comment?.liked
-                                    ? "Beğenmekten Vazgeç"
-                                    : "Beğen"}
+                                  <XMarkIcon className="w-4 h-4 text-gray-400 hover:text-red-500 transition" />
                                 </button>
+                              )}
+                            </div>
 
-                                <span className="text-xs text-gray-400">
-                                  {comment?.likes?.length || 0} beğeni
-                                </span>
-                              </div>
+                            <p className="text-sm text-gray-600 mt-1">
+                              {comment.text}
+                            </p>
+
+                            <div className="flex items-center gap-4 mt-2">
+                              <button
+                                onClick={() => handleCommentLike(comment._id)}
+                                className="text-xs text-blue-500 hover:underline transition"
+                              >
+                                {comment?.liked
+                                  ? "Beğenmekten Vazgeç"
+                                  : "Beğen"}
+                              </button>
+
+                              <span className="text-xs text-gray-400">
+                                {comment?.likes?.length || 0} beğeni
+                              </span>
                             </div>
                           </div>
                         </div>
@@ -252,18 +250,19 @@ console.log(postUserId)
                     })
                   )}
                 </div>
-                <div className="flex space-x-2">
+
+                <div className="flex items-center gap-2 border-t pt-3">
                   <input
                     type="text"
                     placeholder="Yorum yap..."
                     value={newComment}
                     onChange={(e) => setNewComment(e.target.value)}
-                    className="flex-1 border rounded-full px-3 py-2 text-sm"
+                    className="flex-1 border rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[rgb(137,205,251)] transition"
                   />
 
                   <button
                     onClick={() => handleAddComment(item._id)}
-                    className="bg-[rgb(137,205,251)] text-white p-2 rounded-full"
+                    className="bg-[rgb(137,205,251)] hover:opacity-90 text-white p-2 rounded-full transition"
                   >
                     <ArrowRightIcon className="w-4 h-4" />
                   </button>
