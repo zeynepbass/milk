@@ -11,7 +11,10 @@ export function Container() {
   return (
     <div className="container mx-auto">
       <Header />
+      <div className="h-[100vh]">
       <Outlet />
+      </div>
+
       <Footer />
     </div>
   );

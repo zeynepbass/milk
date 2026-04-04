@@ -24,14 +24,14 @@ export default function usePostDetail() {
       setForm((prev) => ({
         ...prev,
         ownerName: user?.name,
-    ownerSurname: user?.surname,
-    ownerRole: user?.role,
-    title: "",
-    description: "",
-    district: user?.district,
-    province: user?.province,
-    category: "",
-    images: [],
+        ownerSurname: user?.surname,
+        ownerRole: user?.role,
+        title: "",
+        description: "",
+        district: user?.district,
+        province: user?.province,
+        category: "",
+        images: [],
       }));
     }
   }, [user]);
@@ -49,19 +49,18 @@ export default function usePostDetail() {
     }
   };
 
-useEffect(() => {
-  const fetchAll = async () => {
-    await fetchData();  
-  };
+  useEffect(() => {
+    const fetchAll = async () => {
+      await fetchData();
+    };
 
-  fetchAll();
-}, []);
-  const onSubmit = async () => {  
+    fetchAll();
+  }, []);
+  const onSubmit = async () => {
     try {
       setLoading(true);
       const res = await postService.onSubmit(form, token);
-      setDetails((prev) => [res, ...prev])
-
+      setDetails((prev) => [res, ...prev]);
     } catch (error) {
       console.log(error);
     } finally {
@@ -69,62 +68,72 @@ useEffect(() => {
     }
   };
 
-  const deleted=async (postId) => {
-    console.log(postId)
-      try {
-        await postService.deleted(postId, token);
-  
-        setDetails((prev) => prev.filter((item) => item._id !== postId));
-        console.log(details)
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    const handlePostLike = async (id) => {
-      try {
-        const res = await postService.postLike(id, token);
-    
-        setDetails((prev) =>
-          prev.map((post) =>
-            post._id === id
-              ? {
-                  ...post,
-                  likes: res.likes, 
-                  liked: res.liked,
-                }
-              : post
-          )
-        );
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    
-    const handlePostSave = async (id,token) => {
+  const deleted = async (postId) => {
+    console.log(postId);
+    try {
+      await postService.deleted(postId, token);
 
-      try {
-     
- await postService.postsavedBy(id, token);
-     
-        setDetails((prev) =>
-          prev.map((post) => {
-            if (post._id !== id) return post;
-    
-            const alreadySaved = Array.isArray(post.savedBy) && post.savedBy.includes(user.id);
-    
-            return {
-              ...post,
-              savedBy: alreadySaved
-                ? post.savedBy.filter((u) => u !== user.id)
-                : [...post.savedBy, user.id],
-            };
-          })
-        );
-      } catch (error) {
-        console.log(error);
-      }
-    };
+      setDetails((prev) => prev.filter((item) => item._id !== postId));
+      console.log(details);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const handlePostLike = async (id) => {
+    try {
+      const res = await postService.postLike(id, token);
 
+      setDetails((prev) =>
+        prev.map((post) =>
+          post._id === id
+            ? {
+                ...post,
+                likes: res.likes,
+                liked: res.liked,
+              }
+            : post
+        )
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
-  return { details, loading,onSubmit,setForm,form,deleted,handlePostLike,handlePostSave,user,editPostId, setEditPostId};
+  const handlePostSave = async (id, token) => {
+    try {
+      await postService.postsavedBy(id, token);
+
+      setDetails((prev) =>
+        prev.map((post) => {
+          if (post._id !== id) return post;
+
+          const alreadySaved =
+            Array.isArray(post.savedBy) && post.savedBy.includes(user.id);
+
+          return {
+            ...post,
+            savedBy: alreadySaved
+              ? post.savedBy.filter((u) => u !== user.id)
+              : [...post.savedBy, user.id],
+          };
+        })
+      );
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  return {
+    details,
+    loading,
+    onSubmit,
+    setForm,
+    form,
+    deleted,
+    handlePostLike,
+    handlePostSave,
+    user,
+    editPostId,
+    setEditPostId,
+  };
 }
