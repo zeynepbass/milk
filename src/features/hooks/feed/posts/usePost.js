@@ -16,31 +16,7 @@ export default function usePost() {
   const token = useUserStore((state) => state.token);
 
 
-  useEffect(() => {
-    if (!token) return;
-  
-    let ignore = false;
-  
-    const timeout = setTimeout(async () => {
-      setLoading(true);
-  
-      try {
-        const res = await postService.getPosts({
-          search,
-          token,
-        });
-  
-        if (!ignore) setData(res);
-      } finally {
-        if (!ignore) setLoading(false);
-      }
-    }, 500);
-  
-    return () => {
-      ignore = true;
-      clearTimeout(timeout);
-    };
-  }, [search, token]);
+
   useEffect(() => {
     if (!token) return;
   

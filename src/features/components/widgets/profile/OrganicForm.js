@@ -26,6 +26,7 @@ export function OrganicForm({ userUpdated }) {
 
     try {
       await userUpdated(formData);
+      setFile("")
     } finally {
       setLoading(false);
     }

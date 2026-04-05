@@ -10,8 +10,7 @@ import { SalesSupport } from "./SalesSupport";
 import { OrganicForm } from "./OrganicForm";
 import {
   PencilIcon,
-  MagnifyingGlassIcon,
-  PlusIcon,
+  MagnifyingGlassIcon
 } from "@heroicons/react/24/outline";
 
 import { CheckBadgeIcon } from "@heroicons/react/24/solid";
@@ -43,7 +42,9 @@ export function Profile() {
   const {
     details,
     onSubmit,
+    postLoading,
     form,
+loadingPost,
     setForm,
     handlePostLike,
     editPostId,
@@ -138,106 +139,111 @@ export function Profile() {
               </div>{" "}
             </>
           ) : (
-            <>
-              <div className="flex flex-col items-center">
-                <label className="relative cursor-pointer group">
-                  <img
-                    src={
-                      profileForm?.avatar
-                        ? profileForm.avatar
-                        : "https://cdn-icons-png.flaticon.com/512/9131/9131478.png"
-                    }
-                    alt="profile"
-                    className="w-28 h-28 rounded-full object-cover border shadow-sm"
-                  />
-
-                  <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/40 opacity-0 group-hover:opacity-100 transition">
-                    <span className="text-white text-xs">Değiştir</span>
-                  </div>
-
-                  <input
-                    type="file"
-                    accept="image/*"
-                    onChange={handleImages}
-                    className="hidden"
-                  />
-                </label>
-
-                <p className="text-sm text-gray-400 mt-2">
-                  Profil fotoğrafını güncelle
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-                <input
-                  type="text"
-                  name="name"
-                  value={profileForm?.name || ""}
-                  onChange={handleChange}
-                  placeholder="Ad"
-                  className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:ring-2 focus:ring-[rgb(82,144,246)] outline-none"
+            <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              handleUpdated(profileForm);
+            }}
+          >
+            <div className="flex flex-col items-center">
+              <label className="relative cursor-pointer group">
+                <img
+                  src={
+                    profileForm?.avatar
+                      ? profileForm.avatar
+                      : "https://cdn-icons-png.flaticon.com/512/9131/9131478.png"
+                  }
+                  alt="profile"
+                  className="w-28 h-28 rounded-full object-cover border shadow-sm"
                 />
-
+          
+                <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/40 opacity-0 group-hover:opacity-100 transition">
+                  <span className="text-white text-xs">Değiştir</span>
+                </div>
+          
                 <input
-                  type="text"
-                  name="surname"
-                  value={profileForm?.surname || ""}
-                  onChange={handleChange}
-                  placeholder="Soyad"
-                  className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:ring-2 focus:ring-[rgb(82,144,246)] outline-none"
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImages}
+                  className="hidden"
                 />
-
-                <input
-                  type="text"
-                  name="province"
-                  value={profileForm?.province || ""}
-                  onChange={handleChange}
-                  placeholder="İl"
-                  className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:ring-2 focus:ring-[rgb(82,144,246)] outline-none"
-                />
-
-                <input
-                  type="text"
-                  name="district"
-                  value={profileForm?.district || ""}
-                  onChange={handleChange}
-                  placeholder="İlçe"
-                  className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:ring-2 focus:ring-[rgb(82,144,246)] outline-none"
-                />
-
-                <input
-                  type="email"
-                  name="email"
-                  value={profileForm?.email || ""}
-                  onChange={handleChange}
-                  placeholder="Email"
-                  className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:ring-2 focus:ring-[rgb(82,144,246)] outline-none md:col-span-2"
-                />
-
-                <select
-                  name="role"
-                  value={profileForm?.role || ""}
-                  onChange={handleChange}
-                  className="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-300 outline-none md:col-span-2"
-                >
-                  <option value="">Seçiniz</option>
-                  <option value="alici">Alıcı</option>
-                  <option value="satici">Satıcı</option>
-                </select>
-              </div>
-
-              <button
-                onClick={handleUpdated}
-                disabled={loading}
-                className={`w-full mt-3 py-2.5 rounded-xl text-white font-medium transition ${
-                  loading
-                    ? "bg-gray-400 cursor-not-allowed"
-                    : "bg-[rgb(82,144,246)] hover:opacity-90"
-                }`}
+              </label>
+          
+              <p className="text-sm text-gray-400 mt-2">
+                Profil fotoğrafını güncelle
+              </p>
+            </div>
+          
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+              <input
+                type="text"
+                name="name"
+                value={profileForm?.name || ""}
+                onChange={handleChange}
+                placeholder="Ad"
+                className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:ring-2 focus:ring-[rgb(82,144,246)] outline-none"
+              />
+          
+              <input
+                type="text"
+                name="surname"
+                value={profileForm?.surname || ""}
+                onChange={handleChange}
+                placeholder="Soyad"
+                className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:ring-2 focus:ring-[rgb(82,144,246)] outline-none"
+              />
+          
+              <input
+                type="text"
+                name="province"
+                value={profileForm?.province || ""}
+                onChange={handleChange}
+                placeholder="İl"
+                className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:ring-2 focus:ring-[rgb(82,144,246)] outline-none"
+              />
+          
+              <input
+                type="text"
+                name="district"
+                value={profileForm?.district || ""}
+                onChange={handleChange}
+                placeholder="İlçe"
+                className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:ring-2 focus:ring-[rgb(82,144,246)] outline-none"
+              />
+          
+              <input
+                type="email"
+                name="email"
+                value={profileForm?.email || ""}
+                onChange={handleChange}
+                placeholder="Email"
+                className="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm focus:ring-2 focus:ring-[rgb(82,144,246)] outline-none md:col-span-2"
+              />
+          
+              <select
+                name="role"
+                value={profileForm?.role || ""}
+                onChange={handleChange}
+                className="w-full border rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-blue-300 outline-none md:col-span-2"
               >
-                {loading ? "Kaydediliyor..." : "Kaydet"}
-              </button>
-            </>
+                <option value="">Seçiniz</option>
+                <option value="alici">Alıcı</option>
+                <option value="satici">Satıcı</option>
+              </select>
+            </div>
+          
+            <button
+              type="submit"
+              disabled={loading}
+              className={`w-full mt-3 py-2.5 rounded-xl text-white font-medium transition ${
+                loading
+                  ? "bg-gray-400 cursor-not-allowed"
+                  : "bg-[rgb(82,144,246)] hover:opacity-90"
+              }`}
+            >
+              {loading ? "Kaydediliyor..." : "Kaydet"}
+            </button>
+          </form>
           )}
           {openList && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
@@ -360,21 +366,20 @@ export function Profile() {
     focus:bg-white focus:ring-2 focus:ring-[rgb(82,144,246)] 
     transition-all"
                   />
-
                 </div>
                 <button
-                                            onClick={() => createSetOpen(true)}
-              type="submit"
-              disabled={loading}
-              className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed transition"
-            >
-       +
-            </button>
+                  onClick={() => createSetOpen(true)}
+                  type="submit"
+                  disabled={loading}
+                  className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed transition"
+                >
+                  +
+                </button>
               </div>
               {createOpen && (
                 <CreatePostForm
                   onSubmit={onSubmit}
-                  loading={loading}
+                  postLoading={postLoading}
                   profileForm={profileForm}
                   form={form}
                   setForm={setForm}
@@ -382,13 +387,13 @@ export function Profile() {
                 />
               )}
 
-              {loading && (
+              {loadingPost && (
                 <div className="flex flex-col items-center justify-center h-[60vh] text-gray-400 ">
                   Yükleniyor...
                 </div>
               )}
 
-              {!loading && details.length === 0 && (
+              {!loadingPost && details.length === 0 && (
                 <div className="flex flex-col items-center justify-center text-center mt-5 px-6">
                   <img
                     src="/images/gonderi-bulunamadi.png"
@@ -426,7 +431,7 @@ export function Profile() {
 
               <Card
                 data={details || []}
-                loading={loading}
+                loading={loadingPost}
                 editPostId={editPostId}
                 selected={selected}
                 handleShowed={handleShowed}

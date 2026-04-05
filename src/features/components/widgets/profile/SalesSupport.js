@@ -1,27 +1,24 @@
 import { useState } from "react";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
-
+import usePost from "@/features/hooks/feed/user/useUserPost"
 export function SalesSupport() {
+  const {onSubmitFeedback,feedback} = usePost();
   const [type, setType] = useState("genel");
   const [message, setMessage] = useState("");
-  const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+  
     if (!message.trim()) return;
-
-    setLoading(true);
 
     const payload = {
       type,
       message,
     };
 
-    try {
-      console.log(payload);
-    } finally {
-      setLoading(false);
-    }
+    await onSubmitFeedback(payload);
+    setMessage("");
+    setType("genel");
   };
 
   const types = [
@@ -80,10 +77,10 @@ export function SalesSupport() {
         <div className="flex justify-end">
           <button
             type="submit"
-            disabled={!message.trim() || loading}
+            disabled={!message || !type || feedback}
             className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-full disabled:opacity-50 disabled:cursor-not-allowed transition"
           >
-            {loading ?  "Gönderiliyor..." :  <ArrowRightIcon className="w-4 h-4" />}
+            {feedback ?  "Gönderiliyor..." :  <ArrowRightIcon className="w-4 h-4" />}
           </button>
         </div>
       </form>

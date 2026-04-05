@@ -24,7 +24,7 @@ export function Section() {
     setOpen,
   } = usePostAll();
 
-  const { deleted, editPostId, setEditPostId } = usePost();
+  const { deleted, editPostId, setEditPostId,loadingPost } = usePost();
 
   const {
     handleComment,
