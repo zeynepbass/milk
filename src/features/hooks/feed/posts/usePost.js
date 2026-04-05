@@ -6,6 +6,8 @@ export default function usePost() {
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const [data, setData] = useState([]);
+  const [notifications, setNotifications] = useState([]);
+  
   const [following, setFollowing] = useState([]);
   const [favoruite, setfavoruite] = useState([]);
   const [open, setOpen] = useState(false);
@@ -152,11 +154,40 @@ export default function usePost() {
       console.log(error);
     }
   };
+  const NotificationAlerts = async () => {
+    try {
+      setLoading(true);
+      const res = await postService.notifications(token);
+
+      setNotifications(res.reverse());
+
+    } catch (error) {
+      console.log("Notification error:", error);
+    }
+    finally {
+      setLoading(false);
+    }
+  }
+
+  const markAsRead = async (id) => {
+    try {
+      await postService.markAsRead(id,token);
+  
+      setNotifications((prev) =>
+        prev.map((n) =>
+          n._id === id ? { ...n, isRead: true } : n
+        )
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return {
     data,
     loading,
     user,
     following,
+    markAsRead,
     handlePostLike,
     handlePostSave,
     fetchSavedPosts,
@@ -168,5 +199,7 @@ export default function usePost() {
     open,
     setOpen,
     setOpenList,
+    NotificationAlerts,
+    notifications
   };
 }

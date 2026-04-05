@@ -47,7 +47,7 @@ export function CreatePostForm({
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit(form);
-    setOpen(false);
+
   };
 
   return (
@@ -161,21 +161,6 @@ export function CreatePostForm({
             <option value="meyve">Meyve</option>
           </select>
 
-          <label className="flex flex-col items-center justify-center border-2 border-dashed rounded-xl p-6 cursor-pointer hover:border-blue-400 transition bg-gray-50">
-            <input
-              type="file"
-              multiple
-              accept="image/*"
-              onChange={handleImages}
-              className="hidden"
-            />
-
-            <PhotoIcon className="w-10 h-10 text-gray-400 mb-2" />
-            <p className="text-sm text-gray-500">
-              Görselleri yüklemek için tıklayın veya sürükleyin
-            </p>
-          </label>
-
           {form.images?.length > 0 && (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {form.images.map((img, i) => (
@@ -197,6 +182,21 @@ export function CreatePostForm({
               ))}
             </div>
           )}
+          <label className="flex flex-col items-center justify-center border-2 border-dashed rounded-xl p-6 cursor-pointer hover:border-blue-400 transition bg-gray-50">
+            <input
+              type="file"
+              multiple
+              accept="image/*"
+              onChange={handleImages}
+              className="hidden"
+            />
+
+            <PhotoIcon className="w-10 h-10 text-gray-400 mb-2" />
+            <p className="text-sm text-gray-500">
+              Görselleri yüklemek için tıklayın veya sürükleyin
+            </p>
+          </label>
+
 
           <div className="flex justify-end">
             <button

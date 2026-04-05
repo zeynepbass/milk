@@ -360,11 +360,21 @@ export function Profile() {
     focus:bg-white focus:ring-2 focus:ring-[rgb(82,144,246)] 
     transition-all"
                   />
+
                 </div>
+                <button
+                                            onClick={() => createSetOpen(true)}
+              type="submit"
+              disabled={loading}
+              className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-md disabled:opacity-50 disabled:cursor-not-allowed transition"
+            >
+       +
+            </button>
               </div>
               {createOpen && (
                 <CreatePostForm
                   onSubmit={onSubmit}
+                  loading={loading}
                   profileForm={profileForm}
                   form={form}
                   setForm={setForm}
@@ -373,7 +383,7 @@ export function Profile() {
               )}
 
               {loading && (
-                <div className="flex flex-col items-center justify-center h-[60vh] text-gray-400">
+                <div className="flex flex-col items-center justify-center h-[60vh] text-gray-400 ">
                   Yükleniyor...
                 </div>
               )}

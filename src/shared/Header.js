@@ -104,7 +104,7 @@ hover:bg-gray-100  px-6 transition"
           <button className="p-2 rounded-full hover:bg-gray-100" onClick={()=>setBellOpen(!bellOpen)}>
             <BellAlertIcon className="w-5 h-5 text-[rgb(137,205,251)]" />
           </button>
-          {bellOpen && <NotificationAlert/>}
+          {bellOpen && <NotificationAlert open={bellOpen}/>}
           <Menu as="div" className="relative ml-3">
             <MenuButton className="relative flex rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
               <span className="absolute -inset-1.5" />

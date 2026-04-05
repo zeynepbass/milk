@@ -223,4 +223,28 @@ getSavedPosts:async (token) => {
   
     return res.json();
   },
+
+  notifications:async(token)=>{
+    const res=await fetch(`${API_URI}/posts/notifications`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      }
+    });
+  
+    return res.json();
+  },
+
+  markAsRead:async(id,token)=>{
+    const res=await fetch(`${API_URI}/posts/markAsRead/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      }
+    });
+  
+    return res.json();
+  },
 };
