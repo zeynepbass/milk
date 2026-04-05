@@ -59,7 +59,7 @@ export default function Card({
         return (
           <div
             key={item._id}
-            className="flex flex-col bg-white rounded-2xl shadow-md w-full "
+            className="flex flex-col bg-white rounded-2xl shadow-md w-full mt-4 "
           >
             <Link to={`/detay/${item._id}`}>
               <img
