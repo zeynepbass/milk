@@ -1,6 +1,6 @@
 export function Footer() {
   return (
-    <footer className="bg-white border-t border-gray-200">
+    <footer className="bg-white border-t border-gray-200 dark:bg-gray-900 dark:border-gray-800 ">
       <div className="max-w-7xl px-6 py-6 flex items-center gap-2 text-sm text-[rgb(71,92,120)]">
         <span>© {new Date().getFullYear()} | Keyifle kodlanmıştır.</span>
         <video

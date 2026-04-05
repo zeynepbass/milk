@@ -211,6 +211,18 @@ getSavedPosts:async (token) => {
     return res.json();
 
   },
+  feedback:async(token,payload)=>{
+    const res=await fetch(`${API_URI}/users/feedback`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify(payload),
+    });
+  
+    return res.json();
+  },
   postMessageSend: async (body,token) => {
     const res = await fetch(`${API_URI}/messages/send`, {
       method: "POST",
@@ -246,5 +258,6 @@ getSavedPosts:async (token) => {
     });
   
     return res.json();
-  },
+  }
+
 };

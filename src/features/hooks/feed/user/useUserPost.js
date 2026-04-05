@@ -5,7 +5,7 @@ export default function usePostDetail() {
   const [details, setDetails] = useState([]);
   const [editPostId, setEditPostId] = useState(null);
   const user = useUserStore((state) => state.user);
-
+  const [loadingPost, setLoading] = useState(false);
   const token = useUserStore((state) => state.token);
   const [form, setForm] = useState({
     ownerName: user?.name,
@@ -35,7 +35,7 @@ export default function usePostDetail() {
       }));
     }
   }, [user]);
-  const [loading, setLoading] = useState(false);
+
 
   const fetchData = async () => {
     try {
@@ -50,31 +50,29 @@ export default function usePostDetail() {
   };
 
   useEffect(() => {
-    const fetchAll = async () => {
-      await fetchData();
-    };
 
-    fetchAll();
+ fetchData();
+
   }, []);
+  const [postLoading,setPostLoading]=useState(false)
   const onSubmit = async () => {
     try {
-      setLoading(true);
+      setPostLoading(true);
       const res = await postService.onSubmit(form, token);
       setDetails((prev) => [res, ...prev]);
+
     } catch (error) {
       console.log(error);
     } finally {
-      setLoading(false);
+      setPostLoading(false);
     }
   };
 
   const deleted = async (postId) => {
     console.log(postId);
     try {
-      await postService.deleted(postId, token);
-
       setDetails((prev) => prev.filter((item) => item._id !== postId));
-      console.log(details);
+      await postService.deleted(postId, token);
     } catch (error) {
       console.log(error);
     }
@@ -98,7 +96,20 @@ export default function usePostDetail() {
       console.log(error);
     }
   };
+  const [feedback,setFeeback]=useState(false)
+  const onSubmitFeedback = async (payload) => {
+    try {
 
+      setFeeback(true); 
+  
+      await postService.feedback(token, payload);
+  
+    } catch (error) {
+      console.log("Notification error:", error);
+    } finally {
+      setFeeback(false);
+    }
+  };
   const handlePostSave = async (id, token) => {
     try {
       await postService.postsavedBy(id, token);
@@ -125,14 +136,17 @@ export default function usePostDetail() {
 
   return {
     details,
-    loading,
+    feedback,
+    onSubmitFeedback,
     onSubmit,
+    postLoading,
     setForm,
     form,
     deleted,
     handlePostLike,
     handlePostSave,
     user,
+    loadingPost,
     editPostId,
     setEditPostId,
   };

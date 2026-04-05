@@ -97,7 +97,7 @@ export default function useUserLogin() {
     }
   };
 
-  const handleUpdated = async () => {
+  const handleUpdated = async (profileForm) => {
     try {
       setLoading(true);
 

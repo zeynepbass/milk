@@ -6,7 +6,7 @@ import {
 
 export function CreatePostForm({
   onSubmit,
-  loading,
+  postLoading,
   form,
   setForm,
   setOpen,
@@ -47,6 +47,7 @@ export function CreatePostForm({
   const handleSubmit = (e) => {
     e.preventDefault();
     onSubmit(form);
+    setForm("")
 
   };
 
@@ -75,7 +76,7 @@ export function CreatePostForm({
             <button
               type="button"
               onClick={() => setOpen(false)}
-              className="p-2 rounded-full hover:bg-gray-100 transition"
+              className="p-2 rounded-full  hover:bg-gray-100 dark:hover:bg-gray-800  transition"
             >
               <XMarkIcon className="w-5 h-5 text-gray-500 hover:text-red-500" />
             </button>
@@ -201,10 +202,10 @@ export function CreatePostForm({
           <div className="flex justify-end">
             <button
               type="submit"
-              disabled={loading}
+              disabled={postLoading}
               className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-full disabled:opacity-50 disabled:cursor-not-allowed transition"
             >
-              {loading ? (
+              {postLoading ? (
                 "Paylaşılıyor..."
               ) : (
                 <ArrowRightIcon className="w-4 h-4" />

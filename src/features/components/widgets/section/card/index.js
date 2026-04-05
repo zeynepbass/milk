@@ -219,7 +219,7 @@ export default function Card({
                               {isCommentOwner && (
                                 <button
                                   onClick={() => handleDelete(comment._id)}
-                                  className="hover:bg-gray-100 p-1 rounded-full transition"
+                                  className=" hover:bg-gray-100 dark:hover:bg-gray-800  p-1 rounded-full transition"
                                 >
                                   <XMarkIcon className="w-4 h-4 text-gray-400 hover:text-red-500 transition" />
                                 </button>
