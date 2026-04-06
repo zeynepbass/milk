@@ -51,144 +51,152 @@ export default function Card({
     localStorage.setItem("product", JSON.stringify(minimalProduct));
     navigate("/mesajlar");
   };
+
   return (
     <>
       {data.map((item) => {
         const postUserId = (item?.user?._id || item?.user) === profileForm?._id;
 
         return (
-          <div
-            key={item._id}
-            className="flex flex-col bg-white rounded-2xl shadow-md w-full mt-4 "
-          >
-            <Link to={`/detay/${item._id}`}>
-              <img
-                className="w-full h-60 object-cover rounded-t-2xl"
-                src={item?.images[0] || "/images/logo.png"}
-                alt="Post"
-              />
-            </Link>
+          <div className="flex flex-col">
+            <div
+              key={item._id}
+              className="flex flex-col bg-white dark:bg-gray-700 rounded-2xl rounded-b-none shadow-md w-full mt-4 "
+            >
+              <Link to={`/detay/${item._id}`}>
+                <img
+                  className="w-full h-60 object-cover rounded-t-2xl"
+                  src={
+                    item?.images?.[0]
+                      ? `http://localhost:5346${item.images[0]}`
+                      : "/images/logo.png"
+                  }
+                  alt="Post"
+                />
+              </Link>
 
-            <div className="p-5 flex flex-col justify-between h-full">
-              <div>
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="w-10 h-10 rounded-full overflow-hidden shadow relative">
-                    <img
-                      src={
-                        item.user?.avatar ||
-                        item.image ||
-                        "https://cdn-icons-png.flaticon.com/512/9131/9131478.png"
-                      }
-                      alt="profile"
-                      className="w-full h-full object-cover"
-                    />
+              <div className="p-5 flex flex-col justify-between h-full">
+                <div>
+                  <div className="flex items-center gap-3 mb-4">
+                    <div className="w-10 h-10 rounded-full overflow-hidden shadow relative">
+                      <img
+                        src={
+                          item.user?.avatar ||
+                          item?.image ||
+                          "https://cdn-icons-png.flaticon.com/512/9131/9131478.png"
+                        }
+                        alt="profile"
+                        className="w-full h-full object-cover"
+                      />
 
-                    {item.user?.dogrulanmisSatici && (
-                      <CheckBadgeIcon className="w-4 h-4 text-blue-500 absolute -top-1 -right-1 bg-white rounded-full" />
-                    )}
-                  </div>
-
-                  <div className="flex-1">
-                    <div className="flex justify-between items-center">
-                      <p className="text-sm font-semibold">
-                        {item.ownerName} {item.ownerSurname}
-                      </p>
-
-                      <span className="text-xs text-[rgb(137,205,251)]">
-                        {item.ownerRole}
-                      </span>
+                      {item.user?.dogrulanmisSatici && (
+                        <CheckBadgeIcon className="w-4 h-4 text-blue-500 absolute -top-1 -right-1 bg-white rounded-full" />
+                      )}
                     </div>
 
-                    <p className="text-xs text-gray-400 mt-1 line-clamp-1">
-                      {item.title}
-                    </p>
+                    <div className="flex-1">
+                      <div className="flex justify-between items-center">
+                        <p className="text-sm font-semibold dark:text-gray-400 ">
+                          {item.ownerName} {item.ownerSurname}
+                        </p>
+
+                        <span className="text-xs text-[rgb(137,205,251)]">
+                          {item.ownerRole}
+                        </span>
+                      </div>
+
+                      <p className="text-xs text-gray-400 mt-1 line-clamp-1">
+                        {item.title}
+                      </p>
+                    </div>
                   </div>
+
+                  <Description text={item.description} maxLength={150} />
                 </div>
 
-                <Description text={item.description} maxLength={150} />
-              </div>
+                <div className="flex justify-between items-center border-t pt-4 mt-4 text-gray-600">
+                  <div className="flex items-center gap-5">
+                    <button
+                      onClick={() => handleShowed(item._id)}
+                      className="hover:text-blue-500 transition  dark:text-gray-400 dark:hover:text-gray-200"
+                    >
+                      <ChatBubbleBottomCenterIcon className="w-5 h-5   transition hover:scale-110" />
+                    </button>
 
-              <div className="flex justify-between items-center border-t pt-4 mt-4 text-gray-600">
-                <div className="flex items-center gap-5">
-                  <button
-                    onClick={() => handleShowed(item._id)}
-                    className="hover:text-blue-500 transition"
-                  >
-                    <ChatBubbleBottomCenterIcon className="w-5 h-5" />
-                  </button>
+                    <button
+                      onClick={() => handlePostLike(item._id)}
+                      className="flex items-center gap-1 hover:hover:text-red-500  dark:text-gray-400   transition hover:scale-110"
+                    >
+                      <HeartIcon className="w-5 h-5 " />
+                      <span className="text-sm ">
+                        {item.likes?.length || 0}
+                      </span>
+                    </button>
 
-                  <button
-                    onClick={() => handlePostLike(item._id)}
-                    className="flex items-center gap-1 hover:text-red-500 transition"
-                  >
-                    <HeartIcon className="w-5 h-5" />
-                    <span className="text-sm">{item.likes?.length || 0}</span>
-                  </button>
+                    <button
+                      onClick={() => handlePostSave(item._id)}
+                      className="flex items-center gap-1 dark:text-gray-400 dark:hover:text-black transition hover:scale-110"
+                    >
+                      {!postUserId && (
+                        <>
+                          <BookmarkIcon
+                            className={`w-5 h-5 ${
+                              favoruite ? "text-red-500  " : ""
+                            }`}
+                          />
+                          <span
+                            className={`text-sm ${
+                              favoruite ? "text-red-500 " : ""
+                            }`}
+                          >
+                            {item.savedBy?.length || 0}
+                          </span>
+                        </>
+                      )}
+                    </button>
+                  </div>
 
-                  <button
-                    onClick={() => handlePostSave(item._id)}
-                    className="flex items-center gap-1 hover:text-green-500 transition"
-                  >
+                  <div className="flex items-center gap-3">
                     {!postUserId && (
                       <>
-                        <BookmarkIcon
-                          className={`w-5 h-5 ${
-                            favoruite ? "text-red-500" : ""
-                          }`}
-                        />
-                        <span
-                          className={`text-sm ${
-                            favoruite ? "text-red-500" : ""
-                          }`}
-                        >
-                          {item.savedBy?.length || 0}
-                        </span>
+                        <button onClick={() => followId(item.user?._id)}>
+                          <UserPlusIcon className="w-5 h-5 hover:text-green-500 dark:hover:text-green-600  dark:text-gray-400 cursor-pointer transition hover:scale-110" />
+                        </button>
+
+                        <button onClick={() => handleClick(item)}>
+                          <ChatBubbleLeftRightIcon className="w-5 h-5 text-[rgb(137,205,251)] dark:text-gray-400 dark:hover:text-blue-400 cursor-pointer hover:scale-110 transition" />
+                        </button>
                       </>
                     )}
-                  </button>
-                </div>
 
-                <div className="flex items-center gap-3">
-                  {!postUserId && (
-                    <>
-                      <button onClick={() => followId(item.user?._id)}>
-                        <UserPlusIcon className="w-5 h-5 hover:text-green-500 cursor-pointer transition" />
-                      </button>
+                    {postUserId && (
+                      <>
+                        <button onClick={() => deleted(item._id)}>
+                          <TrashIcon className="w-5 h-5 hover:text-red-500 dark:hover:text-red-600 dark:text-gray-400 cursor-pointer transition" />
+                        </button>
 
-                      <button onClick={() => handleClick(item)}>
-                        <ChatBubbleLeftRightIcon className="w-5 h-5 text-[rgb(137,205,251)] cursor-pointer hover:scale-110 transition" />
-                      </button>
-                    </>
-                  )}
-
-                  {postUserId && (
-                    <>
-                      <button onClick={() => deleted(item._id)}>
-                        <TrashIcon className="w-5 h-5 hover:text-red-500 cursor-pointer transition" />
-                      </button>
-
-                      <button onClick={() => handeleUpdated(item._id)}>
-                        <PencilIcon className="w-5 h-5 hover:text-yellow-500 cursor-pointer transition" />
-                      </button>
-                    </>
-                  )}
-                </div>
-
-                {open && (
-                  <div className="fixed inset-0 flex items-center justify-center bg-black/30 backdrop-blur-sm z-50">
-                    <div className="bg-white p-6 rounded-2xl shadow-xl w-full max-w-md">
-                      <UpdatedPostForm
-                        editPostId={editPostId}
-                        setOpen={setOpen}
-                      />
-                    </div>
+                        <button onClick={() => handeleUpdated(item._id)}>
+                          <PencilIcon className="w-5 h-5 hover:text-yellow-500 dark:hover:text-yellow-400 dark:text-gray-400 cursor-pointer transition" />
+                        </button>
+                      </>
+                    )}
                   </div>
-                )}
+
+                  {open && (
+                    <div className="fixed inset-0 flex items-center justify-center bg-black/30 backdrop-blur-sm z-50">
+                      <div className="bg-white p-6 rounded-2xl shadow-xl w-full max-w-md">
+                        <UpdatedPostForm
+                          editPostId={editPostId}
+                          setOpen={setOpen}
+                        />
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
-
             {selected === item._id && (
-              <div className="mt-3 bg-white rounded-2xl shadow-sm border p-4 max-w-md">
+              <div className="bg-white rounded-t-none dark:bg-gray-700 dark:border-none rounded-2xl shadow-sm border p-4 max-w-full">
                 <div className="space-y-4 max-h-60 overflow-y-auto mb-4 pr-1">
                   {comments.length === 0 ? (
                     <p className="text-gray-400 text-sm italic text-center py-4">
@@ -203,7 +211,7 @@ export default function Card({
                         <div key={comment._id} className="flex gap-3">
                           <img
                             src={
-                              comment?.user?.profileImage ||
+                              comment?.user?.avatar ||
                               "https://i.pravatar.cc/150"
                             }
                             alt="profile"
@@ -226,14 +234,14 @@ export default function Card({
                               )}
                             </div>
 
-                            <p className="text-sm text-gray-600 mt-1">
+                            <p className="text-sm text-gray-600 dark:text-gray-400">
                               {comment.text}
                             </p>
 
-                            <div className="flex items-center gap-4 mt-2">
+                            <div className="flex items-center gap-4 mt-1">
                               <button
                                 onClick={() => handleCommentLike(comment._id)}
-                                className="text-xs text-blue-500 hover:underline transition"
+                                className="text-xs text-blue-500 dark:text-yellow-400 hover:underline transition"
                               >
                                 {comment?.liked
                                   ? "Beğenmekten Vazgeç"
@@ -257,12 +265,12 @@ export default function Card({
                     placeholder="Yorum yap..."
                     value={newComment}
                     onChange={(e) => setNewComment(e.target.value)}
-                    className="flex-1 border rounded-full px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[rgb(137,205,251)] transition"
+                    className="flex-1 border rounded-full dark:bg-gray-900 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[rgb(137,205,251)] transition"
                   />
 
                   <button
                     onClick={() => handleAddComment(item._id)}
-                    className="bg-[rgb(137,205,251)] hover:opacity-90 text-white p-2 rounded-full transition"
+                    className=" bg-[rgb(82,144,246)] dark:bg-gray-900 hover:opacity-90 text-white gap-2 p-3 rounded-lg  transition disabled:cursor-not-allowed"
                   >
                     <ArrowRightIcon className="w-4 h-4" />
                   </button>

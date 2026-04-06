@@ -10,7 +10,7 @@ export function Footer() {
           muted
           playsInline
           aria-hidden="true"
-          className="w-7 h-7 object-cover"
+    className="w-7 h-7 object-cover block dark:hidden"
         />
       </div>
     </footer>

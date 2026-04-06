@@ -28,9 +28,9 @@ export function SalesSupport() {
   ];
 
   return (
-    <div className="max-w-full mx-auto p-6 bg-white rounded-2xl shadow-lg border space-y-6">
+    <div className="max-w-full mx-auto p-6 bg-white dark:border-gray-400 dark:bg-gray-800 rounded-2xl shadow-lg border space-y-6">
       <div>
-      <h3 className="text-md font-semibold text-gray-700 mb-2">
+      <h3 className="text-md font-semibold text-gray-700 mb-2 dark:text-gray-400 ">
           Görüş, Öneri veya Hata Bildir
         </h3>
         <p className="text-gray-400 text-sm mb-4">
@@ -51,8 +51,9 @@ export function SalesSupport() {
                 className={`px-4 py-1 rounded-full border text-sm transition-all
                   ${
                     type === item.value
-                      ? "bg-blue-500 text-white border-blue-500 shadow"
-                      : "bg-gray-100 text-gray-600 hover:bg-gray-200"
+                    ? "bg-gray-100 text-gray-600 dark:text-gray-200 hover:bg-gray-200 dark:bg-gray-900 dark:bg-opacity-5"
+                      : "bg-blue-500 text-white  dark:text-gray-400  dark:bg-gray-900  dark:border-gray-500 border-blue-500 shadow"
+
                   }
                 `}
               >
@@ -70,7 +71,7 @@ export function SalesSupport() {
             onChange={(e) => setMessage(e.target.value)}
             rows={5}
             placeholder="Mesajınızı yazın..."
-            className="w-full p-3 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-300 resize-none"
+            className="w-full p-3 rounded-lg border dark:bg-gray-700 border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-300 resize-none"
           />
         </div>
 
@@ -78,7 +79,8 @@ export function SalesSupport() {
           <button
             type="submit"
             disabled={!message || !type || feedback}
-            className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-full disabled:opacity-50 disabled:cursor-not-allowed transition"
+           className=" bg-[rgb(82,144,246)] dark:bg-gray-900 hover:opacity-90 text-white gap-2 px-5 py-2 rounded-full  transition disabled:cursor-not-allowed"
+
           >
             {feedback ?  "Gönderiliyor..." :  <ArrowRightIcon className="w-4 h-4" />}
           </button>

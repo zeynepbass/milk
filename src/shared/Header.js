@@ -33,15 +33,25 @@ export function Header() {
 
   const { profileForm } = useUserLogin();
   return (
-<header className="bg-white dark:bg-gray-900 border-b-gray-50 dark:border-gray-800 border-b-2 transition-colors">
+<header className=" dark:bg-gray-900 w-full mx-auto border-b-gray-50 dark:border-gray-800 border-b-2 transition-colors">
       <nav
         aria-label="Global"
         className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8"
       >
         <div className="flex shrink-0">
           <Link to="/" className="-m-1.5 p-1.5">
-            <img alt="Logo" src="/images/logo.png" className="h-16 w-auto" />
-          </Link>
+              <img
+    src="/images/logo.png"
+    alt="Logo"
+    className="h-16 w-auto block dark:hidden"
+  />
+
+
+  <img
+    src="/images/dark-logo.png"
+    alt="Logo Dark"
+    className="h-16 w-auto hidden dark:block"
+  />          </Link>
         </div>
 
         <div className="flex md:hidden">

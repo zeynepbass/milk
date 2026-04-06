@@ -12,7 +12,7 @@ export function Following() {
   };
 
   const {
-    following,
+
     loading,
     user,
     followId,
@@ -21,11 +21,11 @@ export function Following() {
     open,
     setOpen,
   } = usePostAll();
-  const { deleted, editPostId, setEditPostId } = usePost();
+  const { deleted, editPostId, setEditPostId,following } = usePost();
   const {
     handleComment,
     handleDelete,
-    handleC0mmentLike,
+    handleCommentLike,
     handleAddComment,
     comments,
     newComment,
@@ -47,11 +47,16 @@ export function Following() {
   if (!loading && sortedData.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center text-center mt-16 px-4">
-        <img
-          src="/images/gonderi-bulunamadi.png"
-          alt="Gönderi bulunamadı"
-          className="w-40 h-40 object-contain opacity-80"
-        />
+  <img
+    src="/images/gonderi-bulunamadi.png"
+    alt="Gönderi bulunamadı"
+    className="w-40 h-40 object-contain opacity-80 block dark:hidden"
+  />
+  <img
+    src="/images/dark-gonderi-bulunamadi.png"
+    alt="Gönderi bulunamadı"
+    className="w-40 h-40 object-contain opacity-80 hidden dark:block"
+  />
 
         <h2 className="text-lg font-semibold text-gray-700 mb-1">
           Gönderi Bulunamadı
@@ -86,7 +91,7 @@ export function Following() {
           handlePostLike={handlePostLike}
           handleComment={handleComment}
           handleDelete={handleDelete}
-          handleC0mmentLike={handleC0mmentLike}
+          handleCommentLike={handleCommentLike}
           comments={comments || []}
         />{" "}
       </div>

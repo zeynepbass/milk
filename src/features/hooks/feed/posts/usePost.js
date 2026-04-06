@@ -8,7 +8,7 @@ export default function usePost() {
   const [data, setData] = useState([]);
   const [notifications, setNotifications] = useState([]);
   
-  const [following, setFollowing] = useState([]);
+
   const [favoruite, setfavoruite] = useState([]);
   const [open, setOpen] = useState(false);
   const search = useSearchStore((state) => state.search);
@@ -26,13 +26,13 @@ export default function usePost() {
       setLoading(true);
   
       try {
-        const res = await postService.getFollowingPosts({
+        const res = await postService.getPosts({
           search,
           token,
         });
 
   
-        if (!ignore) setFollowing(res);
+        if (!ignore) setData(res);
       } finally {
         if (!ignore) setLoading(false);
       }
@@ -42,7 +42,7 @@ export default function usePost() {
       ignore = true;
       clearTimeout(timeout);
     };
-  }, [search, token]);
+  }, [search,token]);
   const handlePostLike = async (id) => {
     try {
       const res = await postService.postLike(id, token);
@@ -162,7 +162,6 @@ export default function usePost() {
     data,
     loading,
     user,
-    following,
     markAsRead,
     handlePostLike,
     handlePostSave,
