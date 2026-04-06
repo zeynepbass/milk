@@ -492,7 +492,7 @@ rounded-2xl shadow-md p-6 relative transition"
 
           {activeTab === "settings" && (
             <div className="space-y-6">
-              <div className="bg-white dark:border-gray-400 rounded-2xl p-6 shadow-sm border  dark:bg-gray-800    border-gray-100 hover:shadow-md transition">
+              <div className="bg-white shadow-lg dark:border-gray-400 rounded-2xl p-6 border  dark:bg-gray-800    border-gray-100 hover:shadow-md transition">
                 <h3 className="text-md font-semibold text-gray-700 mb-2  dark:text-gray-500 ">
                   Hesabı Dondur
                 </h3>
@@ -510,7 +510,7 @@ rounded-2xl shadow-md p-6 relative transition"
                 </button>
               </div>
 
-              <div className="bg-white rounded-2xl p-6 shadow-sm border  dark:border-gray-400 dark:bg-gray-800    border-gray-100 hover:shadow-md transition">
+              <div className="bg-white rounded-2xl p-6  border shadow-lg dark:border-gray-400 dark:bg-gray-800    border-gray-100 hover:shadow-md transition">
                 <h3 className="text-md font-semibold text-gray-700 mb-2  dark:text-gray-500 ">
                     Hesabı Sil
                 </h3>
