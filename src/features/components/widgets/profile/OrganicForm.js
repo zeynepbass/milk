@@ -33,10 +33,10 @@ export function OrganicForm({ userUpdated }) {
   };
 
   return (
-    <div className="max-w-full p-6 bg-white rounded-2xl shadow-lg border space-y-6">
+    <div className="max-w-full p-6 bg-white dark:bg-gray-800  dark:border-gray-400  rounded-2xl shadow-lg border space-y-6">
 
       <div>
-      <h3 className="text-md font-semibold text-gray-700 mb-2">
+      <h3 className="text-md font-semibold text-gray-700 mb-2 dark:text-gray-400">
           Organik Form Yükleyin
         </h3>
         <p className="text-gray-400 text-sm mb-4">
@@ -46,7 +46,9 @@ export function OrganicForm({ userUpdated }) {
 
       <form onSubmit={handleSubmit} className="space-y-4">
 
-        <label className="flex flex-col items-center justify-center border-2 border-dashed rounded-xl p-6 cursor-pointer hover:border-blue-400 transition">
+        <label className="flex flex-col items-center justify-center border-2 border-dashed rounded-xl p-6 cursor-pointer
+        dark:hover:border-gray-500
+        hover:border-blue-400 transition">
           <input
             type="file"
             accept="application/pdf"
@@ -86,7 +88,8 @@ export function OrganicForm({ userUpdated }) {
           <button
             type="submit"
             disabled={!file || loading}
-            className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-full disabled:opacity-50 disabled:cursor-not-allowed transition"
+            className=" bg-[rgb(82,144,246)] dark:bg-gray-900 hover:opacity-90 text-white gap-2 px-5 py-2 rounded-full  transition disabled:cursor-not-allowed"
+
           >
             {loading ?  "Gönderiliyor..." :  <ArrowRightIcon className="w-4 h-4" /> }
           </button>

@@ -12,7 +12,7 @@ export const postService = {
       const res = await fetch(url, {
         method: "GET",
         headers: {
-          "Content-Type": "application/json",
+
           Authorization: `Bearer ${token}`,
         },
       });
@@ -28,20 +28,16 @@ export const postService = {
   getFollowingPosts: async ({ search, token }) => {
     try {
       let url = `${API_URI}/posts/following`;
-  
-      const query =
-        typeof search === "string" ? search.trim() : "";
-  
-      if (query) {
-        url += `?title=${encodeURIComponent(query)}`;
+      if (search?.trim()) {
+        url += `?title=${encodeURIComponent(search.trim())}`;
       }
   
       const res = await fetch(url, {
         method: "GET",
         headers: {
-          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
+      
       });
   
       if (!res.ok) throw new Error("API error");
@@ -52,23 +48,18 @@ export const postService = {
       throw err;
     }
   },
-  onSubmit:async (form,token)=>{
-    console.log("backend",form)
+  onSubmit: async (formData, token) => {
     const res = await fetch(`${API_URI}/posts`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify(form),
+      body: formData, // ✅
     });
-
-    if (!res.ok) {
-      throw new Error("API error");
-    }
-
+  
+    if (!res.ok) throw new Error("API error");
+  
     return await res.json();
-
   },
   postDetails: async (id, token) => {
     const res = await fetch(`${API_URI}/posts/${id}`, {
@@ -187,8 +178,8 @@ getSavedPosts:async (token) => {
     return res.json();
   },
 
-  postMessage:async(user,token)=>{
-    const res = await fetch(`${API_URI}/conversations/${user.id}`, {
+  postMessage:async(userId,token)=>{
+    const res = await fetch(`${API_URI}/conversations/${userId}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -199,8 +190,8 @@ getSavedPosts:async (token) => {
     return res.json();
 
   },
-  postMessageGet:async(user,selectedUser,token)=>{
-    const res = await fetch(`${API_URI}/conversations/${user.id}/${selectedUser._id}`, {
+  postMessageGet:async(userId,selectedUser,token)=>{
+    const res = await fetch(`${API_URI}/conversations/${userId}/${selectedUser._id}`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",

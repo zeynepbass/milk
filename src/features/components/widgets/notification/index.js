@@ -23,12 +23,12 @@ export function NotificationAlerts({ open }) {
       )}
 
       {open && (
-        <div className="absolute right-0 mt-3 w-80 bg-white rounded-2xl shadow-xl border z-50 overflow-hidden">
-          <div className="px-4 py-3 border-b font-semibold text-gray-700">
+        <div className="absolute right-0 mt-3 w-80 bg-white dark:bg-gray-800 rounded-2xl shadow-xl border z-50 dark:border-none overflow-hidden">
+          <div className="px-4 py-3 border-b font-semibold text-gray-700 dark:text-yellow-400 dark:border-gray-500">
             Bildirimler
           </div>
 
-          <div className="max-h-80 overflow-y-auto">
+          <div className="max-h-80 overflow-y-auto dark:bg-dark-800">
 
             {loading ? (
               <p className="text-center text-gray-400 py-6 text-sm">
@@ -49,11 +49,11 @@ export function NotificationAlerts({ open }) {
                       navigate(`/detay/${item.postId}`);
                     }
                   }}
-                  className={`px-4 py-3 border-b text-sm cursor-pointer hover:bg-gray-50 transition ${
-                    !item.isRead ? "bg-blue-50" : ""
+                  className={`px-4 py-3  dark:bg-dark-800 border-b dark:border-b-gray-900 dark:hover:bg-gray-400 text-sm cursor-pointer hover:bg-gray-50 transition ${
+                    !item.isRead ? " dark:bg-dark-800" : ""
                   }`}
                 >
-                  <p className="text-gray-700">{item.message}</p>
+                  <p className="text-gray-700 dark:text-gray-200">{item.message}</p>
 
                   <span className="text-xs text-gray-400 mt-1 block">
                     {new Date(item.createdAt).toLocaleString("tr-TR")}

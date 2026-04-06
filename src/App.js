@@ -1,6 +1,6 @@
 import { Container } from "./shared/Container";
 import Section from "./pages/section";
-import Following from "./pages/following";
+import Following from "./pages/following/index";
 import Login from "./pages/login/index";
 import Register from "./pages/register/index";
 import Profile from "./pages/profile/index";

@@ -9,7 +9,7 @@ export default function Description({ text, maxLength }) {
   const displayText = expanded || !isLong ? text : text.slice(0, maxLength) + "...";
 
   return (
-    <p className="text-sm text-gray-600 mb-4">
+    <p className="text-sm text-gray-600 mb-4 dark:text-gray-200">
       {displayText}{" "}
       {isLong && (
         <span

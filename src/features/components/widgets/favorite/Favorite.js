@@ -15,7 +15,7 @@ export function Favorite() {
     const {favoruite, fetchSavedPosts,data,loading, user, followId, handlePostLike, handlePostSave } =
       usePostAll();
   
-    const { handleComment, handleDelete, handleC0mmentLike,handleAddComment, comments,   newComment,
+    const { handleComment, handleDelete, handleCommentLike,handleAddComment, comments,   newComment,
       setNewComment } =
       useCommentAll(selected);
       useEffect(() => {
@@ -40,7 +40,7 @@ export function Favorite() {
               handlePostLike={handlePostLike}
               handleComment={handleComment}
               handleDelete={handleDelete}
-              handleC0mmentLike={handleC0mmentLike}
+              handleCommentLike={handleCommentLike}
               comments={comments || []}
             />{" "}
           </div>

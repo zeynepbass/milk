@@ -20,21 +20,11 @@ export function CreatePostForm({
   const handleImages = (e) => {
     const files = Array.from(e.target.files || []);
     if (!files.length) return;
-
-    const readers = files.map((file) => {
-      return new Promise((resolve) => {
-        const reader = new FileReader();
-        reader.onloadend = () => resolve(reader.result);
-        reader.readAsDataURL(file);
-      });
-    });
-
-    Promise.all(readers).then((images) => {
-      setForm((prev) => ({
-        ...prev,
-        images,
-      }));
-    });
+  
+    setForm((prev) => ({
+      ...prev,
+      images: files, // ❗ artık base64 değil File[]
+    }));
   };
 
   const removeImage = (index) => {
@@ -46,9 +36,30 @@ export function CreatePostForm({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    onSubmit(form);
-    setForm("")
+  
+    const formData = new FormData();
+  
+    formData.append("title", form.title || "");
+    formData.append("description", form.description || "");
+    formData.append("province", form.province || "");
+    formData.append("district", form.district || "");
+    formData.append("category", form.category || "");
 
+    if (form.images && form.images.length > 0) {
+      form.images.forEach((file) => {
+        formData.append("images", file);
+      });
+    }
+    onSubmit(formData);
+  
+    setForm({
+      images: [],
+      title: "",
+      description: "",
+      province: "",
+      district: "",
+      category: "",
+    });
   };
 
   return (
@@ -163,26 +174,26 @@ export function CreatePostForm({
           </select>
 
           {form.images?.length > 0 && (
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-              {form.images.map((img, i) => (
-                <div key={i} className="relative group">
-                  <img
-                    src={img}
-                    alt="preview"
-                    className="w-full h-24 object-cover rounded-lg border"
-                  />
+  <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+    {form.images.map((file, i) => (
+      <div key={i} className="relative group">
+        <img
+          src={URL.createObjectURL(file)}
+          alt="preview"
+          className="w-full h-24 object-cover rounded-lg border"
+        />
 
-                  <button
-                    type="button"
-                    onClick={() => removeImage(i)}
-                    className="absolute top-1 right-1 bg-white/80 hover:bg-white text-red-500 rounded-full p-1 opacity-0 group-hover:opacity-100 transition"
-                  >
-                    <XMarkIcon className="w-4 h-4" />
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
+        <button
+          type="button"
+          onClick={() => removeImage(i)}
+          className="absolute top-1 right-1 bg-white/80 hover:bg-white text-red-500 rounded-full p-1 opacity-0 group-hover:opacity-100 transition"
+        >
+          <XMarkIcon className="w-4 h-4" />
+        </button>
+      </div>
+    ))}
+  </div>
+)}
           <label className="flex flex-col items-center justify-center border-2 border-dashed rounded-xl p-6 cursor-pointer hover:border-blue-400 transition bg-gray-50">
             <input
               type="file"

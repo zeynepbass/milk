@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { postService } from "@/features/services/postServices";
-import { useUserStore } from "@/store";
+import { useUserStore,useSearchStore } from "@/store";
 export default function usePostDetail() {
   const [details, setDetails] = useState([]);
   const [editPostId, setEditPostId] = useState(null);
+  const [following, setFollowing] = useState([]);
   const user = useUserStore((state) => state.user);
   const [loadingPost, setLoading] = useState(false);
+    const search = useSearchStore((state) => state.search);
   const token = useUserStore((state) => state.token);
   const [form, setForm] = useState({
     ownerName: user?.name,
@@ -36,7 +38,32 @@ export default function usePostDetail() {
     }
   }, [user]);
 
+  useEffect(() => {
+    if (!token) return;
+  
+    let ignore = false;
+  
+    const timeout = setTimeout(async () => {
+      setLoading(true);
+  
+      try {
+        const res = await postService.getFollowingPosts({
+          search,
+          token,
+        });
 
+  
+        if (!ignore) setFollowing(res);
+      } finally {
+        if (!ignore) setLoading(false);
+      }
+    }, 500);
+  
+    return () => {
+      ignore = true;
+      clearTimeout(timeout);
+    };
+  }, [search,token]);
   const fetchData = async () => {
     try {
       setLoading(true);
@@ -55,10 +82,11 @@ export default function usePostDetail() {
 
   }, []);
   const [postLoading,setPostLoading]=useState(false)
-  const onSubmit = async () => {
+  const onSubmit = async (formData) => {
+    console.log(formData)
     try {
       setPostLoading(true);
-      const res = await postService.onSubmit(form, token);
+      const res = await postService.onSubmit(formData, token);
       setDetails((prev) => [res, ...prev]);
 
     } catch (error) {
@@ -137,6 +165,7 @@ export default function usePostDetail() {
   return {
     details,
     feedback,
+    following,
     onSubmitFeedback,
     onSubmit,
     postLoading,

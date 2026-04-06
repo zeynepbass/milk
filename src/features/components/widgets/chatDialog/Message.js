@@ -13,100 +13,137 @@ export function MessageDialog() {
     selectedUser,
     handleSend,
   } = useMessage();
+
   return (
-    <div className="flex h-screen bg-gray-50">
-      <div className="w-1/4 bg-white border-r border-gray-200 p-4 overflow-y-auto">
-        <h2 className="font-semibold text-md text-gray-400 mb-4">
-          Alıcı Kullanıcılar
-        </h2>
+    <div className="flex h-screen bg-gray-100 dark:bg-gray-900">
 
-        {loading && (
-          <p className="text-center text-gray-400 mb-2">Yükleniyor...</p>
-        )}
+      <div className="w-80 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col">
 
-        <ul className="space-y-3">
+        <div className="p-4 border-b dark:border-gray-700">
+          <h2 className="font-semibold text-gray-700 dark:text-gray-300">
+            Sohbetler
+          </h2>
+        </div>
+
+        <div className="flex-1 overflow-y-auto p-3 space-y-2">
+          {loading && (
+            <p className="text-center text-gray-400">Yükleniyor...</p>
+          )}
+
           {conversations.map((conv) => {
             const otherUser = getOtherUser(conv);
             const isOnline = onlineUsers.includes(otherUser._id);
 
             return (
-              <li
+              <div
                 key={conv._id}
                 onClick={() => handleUserSelect(otherUser)}
-                className={`flex items-center p-2 rounded-lg cursor-pointer hover:bg-blue-50 ${
-                  selectedUser?._id === otherUser._id ? "bg-blue-100" : ""
-                }`}
+                className={`flex items-center gap-3 p-2 rounded-xl cursor-pointer transition
+                  ${
+                    selectedUser?._id === otherUser._id
+                      ? "bg-blue-100 dark:bg-gray-700"
+                      : "hover:bg-gray-100 dark:hover:bg-gray-700"
+                  }`}
               >
-                <div className="flex-shrink-0 mr-3 relative">
+                <div className="relative">
                   <img
-                    src={otherUser?.avatar || "/images/default-avatar.png"}
-                    alt={otherUser?.name}
-                    className="w-12 h-12 rounded-full"
+                    src={otherUser?.avatar || "/images/footer-logo.png"}
+                    className="w-12 h-12 rounded-full object-cover"
                   />
+
                   <span
-                    className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border border-white ${
-                      isOnline ? "bg-green-500" : "bg-gray-400"
-                    }`}
-                  ></span>
+                    className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white
+                      ${isOnline ? "bg-green-500" : "bg-gray-400"}`}
+                  />
                 </div>
 
-                <div className="flex-1 min-w-0">
-                  <div className="flex justify-between items-center">
-                    <p className="font-semibold text-gray-800 truncate">
-                      {otherUser?.name}
-                    </p>
-                    <span className="text-xs text-gray-500">
-                      {isOnline ? "Çevrimiçi" : "Çevrimdışı"}
-                    </span>
-                  </div>
+                <div className="flex-1">
+                  <p className="font-medium text-gray-800 dark:text-gray-200">
+                    {otherUser?.name}
+                  </p>
                   <p className="text-xs text-gray-400 truncate">
                     {conv.lastMessage || "Henüz mesaj yok"}
                   </p>
                 </div>
-              </li>
+              </div>
             );
           })}
-        </ul>
+        </div>
       </div>
 
-      <div className="flex-1 flex flex-col p-4">
-        <div className="flex-1 overflow-y-auto space-y-3">
+
+      <div className="flex-1 flex flex-col">
+
+        <div className="h-16 border-b bg-white dark:bg-gray-800 dark:border-gray-700 flex items-center px-4">
+      
+            <div className="flex items-center gap-3">
+              <img
+                src={selectedUser?.avatar || "/images/footer-logo.png"}
+                className="w-10 h-10 rounded-full"
+              />
+              <div>
+                <p className="font-semibold text-gray-800 dark:text-gray-200">
+                  {selectedUser?.name}
+                </p>
+                <p className="text-xs text-gray-400">
+                  {onlineUsers.includes(selectedUser?._id)
+                    ? "Çevrimiçi"
+                    : "Çevrimdışı"}
+                </p>
+              </div>
+            </div>
+        
+        </div>
+
+
+        <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50 dark:bg-gray-900">
           {messages.length === 0 && (
-            <p className="text-gray-400 text-center mt-10">
-              Herhangi bir sohbet bulunamadı
+            <p className="text-center text-gray-400 mt-10">
+              Mesaj yok
             </p>
           )}
 
-          {messages.map((msg, i) => (
-            <div
-              key={i}
-              className={`max-w-xs p-3 rounded-lg shadow ${
-                msg.senderId === user.id
-                  ? "bg-blue-100 text-gray-900 ml-auto"
-                  : "bg-gray-200 text-gray-800 mr-auto"
-              }`}
-            >
-              {msg.text}
-            </div>
-          ))}
+          {messages.map((msg, i) => {
+            const isMe = msg.senderId === user._id;
+
+            return (
+              <div
+                key={i}
+                className={`flex ${isMe ? "justify-end" : "justify-start"}`}
+              >
+                <div
+                  className={`px-4 py-2 rounded-2xl max-w-xs text-sm shadow
+                    ${
+                      isMe
+                        ? "bg-blue-500 text-white rounded-br-none"
+                        : "bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-bl-none"
+                    }`}
+                >
+                  {msg.text}
+                </div>
+              </div>
+            );
+          })}
         </div>
 
-        <div className="flex gap-2 mt-3">
+
+        <div className="p-3 border-t bg-white dark:bg-gray-800 dark:border-gray-700 flex gap-2">
           <input
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             placeholder={
               selectedUser
-                ? `Mesajınızı ${selectedUser.name} için yazın`
-                : "Kullanıcı seçin"
+                ? `Mesaj yaz...`
+                : "Önce kullanıcı seç"
             }
-            className="flex-1 p-3 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-300"
+            className="flex-1 px-4 py-2 rounded-full border dark:bg-gray-900 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
             onKeyDown={(e) => e.key === "Enter" && handleSend()}
           />
+
           <button
             onClick={handleSend}
-            className="px-4 py-2 bg-blue-400 hover:bg-blue-500 text-white font-bold rounded-lg transition"
+            className="px-5 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-full transition"
           >
             Gönder
           </button>

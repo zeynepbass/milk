@@ -6,14 +6,13 @@ import {
   ArrowRightIcon,
   XMarkIcon,
   UserPlusIcon,
-  TrashIcon
+  TrashIcon,
 } from "@heroicons/react/24/outline";
 import usePost from "@/features/hooks/feed/user/useUserPost";
 import { useParams } from "react-router-dom";
 import useCommentAll from "@/features/hooks/feed/posts/usePostDetails";
 import usePostAll from "@/features/hooks/feed/posts/usePost";
 export function Detail() {
-  //? kontrol edilcek
   const { id } = useParams();
 
   const {
@@ -29,13 +28,8 @@ export function Detail() {
     showComments,
     setShowComments,
   } = useCommentAll(id);
-  const {followId } =
-    usePostAll();
-      const {
-
-        deleted,
-    
-      } = usePost();
+  const { followId } = usePostAll();
+  const { deleted } = usePost();
   const [currentImage, setCurrentImage] = useState(0);
 
   const [newComment, setNewComment] = useState("");
@@ -45,16 +39,12 @@ export function Detail() {
   }
 
   if (!details) {
-    return <p className="text-center mt-10 text-gray-400">Gönderi bulunamadı</p>;
+    return (
+      <p className="text-center mt-10 text-gray-400">Gönderi bulunamadı</p>
+    );
   }
 
   const images = details.images || [];
-
-  const nextImage = () => setCurrentImage((prev) => (prev + 1) % images.length);
-
-  const prevImage = () =>
-    setCurrentImage((prev) => (prev - 1 + images.length) % images.length);
-
   const handleAddComment = (postId) => {
     if (!newComment.trim()) return;
 
@@ -63,66 +53,63 @@ export function Detail() {
   };
   const itemUserId = details?.user?._id || details?.user;
   const isOwner = user?.id === itemUserId;
-          const hasUser = !!details?.user;
-          const formatLocation = (text) => {
-            if (!text) return "";
-            return text
-              .toLowerCase()
-              .split(" ")
-              .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-              .join("-");
-          };
+  const hasUser = !!details?.user;
+  const formatLocation = (text) => {
+    if (!text) return "";
+    return text
+      .toLowerCase()
+      .split(" ")
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+      .join("-");
+  };
   return (
-    <div className="max-w-5xl mx-auto p-6">
+    <div className="max-w-5xl mx-auto p-6 dark:bg-gray-800 rounded-lg m-2">
       {images.length > 0 && (
         <div className="relative w-full h-96">
           <img
-            src={images[currentImage]}
+            src={ `http://localhost:5346${images[currentImage]}`}
             alt={details.title}
-            className="w-full h-full object-cover rounded-xl"
+            className="w-full h-full object-cover rounded-xl " 
           />
 
           {images.length > 1 && (
-            <>
-              <button
-                onClick={prevImage}
-                className="absolute top-1/2 left-3 -translate-y-1/2 bg-white/70 rounded-full p-2"
-              >
-                <ArrowRightIcon className="w-6 h-6 rotate-180" />
-              </button>
-
-              <button
-                onClick={nextImage}
-                className="absolute top-1/2 right-3 -translate-y-1/2 bg-white/70 rounded-full p-2"
-              >
-                <ArrowRightIcon className="w-6 h-6" />
-              </button>
-            </>
+            <div className="flex gap-2 justify-center mt-2">
+              {images.map((_, i) => (
+                <div
+                  key={i}
+                  onClick={() => setCurrentImage(i)}
+                  className={`w-2 h-2 rounded-full cursor-pointer ${
+                    i === currentImage ? "bg-black" : "bg-gray-300"
+                  }`}
+                />
+              ))}
+            </div>
           )}
         </div>
       )}
 
       <div className="mt-6 space-y-6">
         <div className="flex items-center space-x-4">
-          <div className="bg-gray-200 w-14 h-14 rounded-full flex items-center justify-center font-semibold">
+          <div className="bg-gray-200   w-14 h-14 rounded-full flex items-center justify-center font-semibold">
             {details.ownerName?.[0]}
             {details.ownerSurname?.[0]}
           </div>
 
           <div>
-            <p className="font-bold">
+            <p className="font-bold dark:text-gray-400">
               {details.ownerName} {details.ownerSurname}
             </p>
-            <p className="text-sm text-gray-400">{details.ownerRole}</p>
+            <p className="text-sm text-gray-400 dark:text-gray-600">{details.ownerRole}</p>
           </div>
         </div>
 
         <div>
           <h1 className="text-3xl font-bold">{details.title}</h1>
-          <p className="text-gray-500 mt-2">{details.description}</p>
+          <p className="text-gray-500 mt-2 dark:text-gray-400">{details.description}</p>
           <p className="text-orange-500 mt-2">
-  {formatLocation(details.province)}-{formatLocation(details.district)}
-</p>
+            {formatLocation(details.province)}-
+            {formatLocation(details.district)}
+          </p>
         </div>
 
         <div className="flex gap-3">
@@ -175,18 +162,22 @@ export function Detail() {
               </>
             </button>
           )}
-                    {!isOwner && hasUser && (
-                      <button onClick={() => followId(itemUserId)} className=" flex items-center p-3 rounded-full bg-gray-100">
-                        <UserPlusIcon className="w-5 h-5 hover:text-gray-500  text-gray-500" />
-                      </button>
-                    )}
-                    {isOwner && (
-                      <button onClick={() => deleted(details._id)} className=" flex items-center p-3 rounded-full bg-blue-100">
-                        <TrashIcon className="w-5 h-5 cursor-pointer hover:text-blue-500  text-blue-500" />
-                      </button>
-                    )}
-
-  
+          {!isOwner && hasUser && (
+            <button
+              onClick={() => followId(itemUserId)}
+              className=" flex items-center p-3 rounded-full bg-gray-100"
+            >
+              <UserPlusIcon className="w-5 h-5 hover:text-gray-500  text-gray-500" />
+            </button>
+          )}
+          {isOwner && (
+            <button
+              onClick={() => deleted(details._id)}
+              className=" flex items-center p-3 rounded-full bg-blue-100"
+            >
+              <TrashIcon className="w-5 h-5 cursor-pointer hover:text-blue-500  text-blue-500" />
+            </button>
+          )}
         </div>
 
         {showComments && (
