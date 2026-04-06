@@ -115,7 +115,7 @@ export function MessageDialog() {
                   className={`px-4 py-2 rounded-2xl max-w-xs text-sm shadow
                     ${
                       isMe
-                        ? "bg-blue-500 text-white rounded-br-none"
+                        ? "bg-blue-500 dark:bg-yellow-400  text-white rounded-br-none"
                         : "bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-bl-none"
                     }`}
                 >
@@ -143,7 +143,7 @@ export function MessageDialog() {
 
           <button
             onClick={handleSend}
-            className="px-5 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-full transition"
+            className="px-5 py-2 bg-blue-500 dark:bg-yellow-400 dark:hover:bg-yellow-400 hover:bg-blue-600 text-white rounded-full transition"
           >
             Gönder
           </button>
