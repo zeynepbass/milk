@@ -134,7 +134,7 @@ EKLENENLER
 
 ---
 
-<img src="./public/images/core-web-vitals.png"  alt="proje yapisi" width="400" height="500"/>
+<img src="./public/images/core-web-vitals.png"  alt="proje yapisi" width="400" height="550"/>
 
 
 🎯 Proje Amacı
