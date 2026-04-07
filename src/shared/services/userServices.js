@@ -1,7 +1,7 @@
-import { API_URI } from "@/constant/api";
+import { API_BASE_URL } from "@/shared/constant/api";
 export const userLoginService = {
   postService: async (formData) => {
-    const res = await fetch(`${API_URI}/users/login`, {
+    const res = await fetch(`${API_BASE_URL}/users/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -17,7 +17,7 @@ export const userLoginService = {
 
 export const userRegisterService = {
   postService: async (formData) => {
-    const res = await fetch(`${API_URI}/users/register`, {
+    const res = await fetch(`${API_BASE_URL}/users/register`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
@@ -29,7 +29,7 @@ export const userRegisterService = {
 
 export const userProfile = {
   getService: async (token) => {
-    const res = await fetch(`${API_URI}/users/profile`, {
+    const res = await fetch(`${API_BASE_URL}/users/profile`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -44,7 +44,7 @@ export const userProfile = {
 
 export const userProfileUpdated = {
   postService: async (formData, token) => {
-    const res = await fetch(`${API_URI}/users/updateUser`, {
+    const res = await fetch(`${API_BASE_URL}/users/updateUser`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -59,7 +59,7 @@ export const userProfileUpdated = {
 };
 export const userProfilFreeze = {
   freezeServices: async (token) => {
-    const res = await fetch(`${API_URI}/users/freeze`, {
+    const res = await fetch(`${API_BASE_URL}/users/freeze`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -73,7 +73,7 @@ export const userProfilFreeze = {
 
 export const userProfileDeleted={
   deletedServices:async(token,id)=> {
-    const res = await fetch(`${API_URI}/users/${id}`, {
+    const res = await fetch(`${API_BASE_URL}/users/${id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",

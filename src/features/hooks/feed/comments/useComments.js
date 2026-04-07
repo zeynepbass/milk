@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { commentService } from "@/features/services/commentService";
+import { commentService } from "@/shared/services/commentService";
 import { useUserStore } from "@/features/store/useUserStore";
 
 export default function usePostComment(id) {

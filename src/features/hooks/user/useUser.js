@@ -6,7 +6,7 @@ import {
   userProfileUpdated,
   userProfilFreeze,
   userProfileDeleted,
-} from "@/features/services/userServices";
+} from "@/shared/services/userServices";
 import { useUserStore } from "@/features/store";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
