@@ -1,7 +1,10 @@
 🥛 MILK – Yerel Pazar Platformu
 
+<<<<<<< HEAD
 MILK, yerel üreticiler ile tüketicileri buluşturan, gerçek zamanlı mesajlaşma ve sosyal etkileşim özelliklerine sahip bir pazar platformudur.
 
+=======
+>>>>>>> af7848a1570241be13ae7a068477567fcff25d92
 ---
 
 Giriş ve kayıt sistemine sahip bir randevu sistemi web uygulamasıdır.
@@ -128,6 +131,7 @@ EKLENENLER
 
 🌱 Organik sertifika yükleme
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 
 ---
@@ -139,6 +143,11 @@ EKLENENLER
 <img src="https://raw.githubusercontent.com/zeynepbasss/milk/main/images/core-vitals.png"  alt="proje yapisi" width="400" height="40vh"/>
 
 
+=======
+
+---
+
+>>>>>>> af7848a1570241be13ae7a068477567fcff25d92
 🎯 Proje Amacı
 
 MILK’in amacı, yerel üreticiler ile tüketiciler arasında dijital bir köprü oluşturmak ve küçük üreticileri keşfetmeyi kolaylaştırmaktır.
@@ -149,4 +158,7 @@ MILK’in amacı, yerel üreticiler ile tüketiciler arasında dijital bir köpr
 
 Zeynep Baş
 
+<<<<<<< HEAD
 >>>>>>> development
+=======
+>>>>>>> af7848a1570241be13ae7a068477567fcff25d92
