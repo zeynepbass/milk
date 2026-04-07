@@ -124,3 +124,16 @@ EKLENENLER
 🛡️ Gelişmiş admin panel
 
 🌱 Organik sertifika yükleme
+
+---
+
+🎯 Proje Amacı
+
+MILK’in amacı, yerel üreticiler ile tüketiciler arasında dijital bir köprü oluşturmak ve küçük üreticileri keşfetmeyi kolaylaştırmaktır.
+
+⸻
+
+👩‍💻 Geliştirici
+
+Zeynep Baş
+
