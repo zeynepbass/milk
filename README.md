@@ -134,7 +134,7 @@ EKLENENLER
 
 ---
 
-<img src="/images/core-vitals />
+<img src="/images/core-vitals" />
 
 
 🎯 Proje Amacı
