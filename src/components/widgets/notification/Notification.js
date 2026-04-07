@@ -2,7 +2,7 @@ import usePost from "@/features/hooks/feed/posts/usePost";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 
-export function NotificationAlerts({ open }) {
+export function Notifications({ open }) {
   const navigate = useNavigate();
   const {
     NotificationAlerts,

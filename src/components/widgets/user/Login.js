@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import useUserLogin from "@/features/hooks/user/useUser";
 import { useState } from "react";
-
+import Input from "@/components/atoms/Input"
 export function Login() {
   const { handleSubmit } = useUserLogin();
 
@@ -65,32 +65,28 @@ export function Login() {
 
           <div className="space-y-5">
             <div>
-              <label className="block text-sm font-medium text-gray-500 pb-2">
-                Email
-              </label>
-              <input
-                type="email"
-                name="email"
-                onChange={handleChange}
-                placeholder="ornek@mail.com"
-                className="w-full rounded-lg border border-gray-200 px-4 py-2 text-sm
-                focus:outline-none focus:ring-2 focus:ring-[rgb(82,144,246)] transition"
-              />
+            <Input
+              label="Email"
+              type="email"
+              name="email"
+              value={formData.email}
+              placeholder="ornek@mail.com"
+              onChange={handleChange}
+            />
+       </div>
+
+       <div>
+            <Input
+              label="Parola"
+              type="password"
+              name="password"
+              value={formData.password}
+              placeholder="••••••••"
+              onChange={handleChange}
+            />
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-500 pb-2">
-                Parola
-              </label>
-              <input
-                type="password"
-                name="password"
-                onChange={handleChange}
-                placeholder="••••••••"
-                className="w-full rounded-lg border border-gray-200 px-4 py-2 text-sm
-                focus:outline-none focus:ring-2 focus:ring-[rgb(82,144,246)] transition"
-              />
-            </div>
+     
           </div>
 
 

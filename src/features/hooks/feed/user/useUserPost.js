@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { postService } from "@/features/services/postServices";
-import { useUserStore,useSearchStore } from "@/store";
+import { useUserStore,useSearchStore } from "@/features/store";
 export default function usePostDetail() {
   const [details, setDetails] = useState([]);
   const [editPostId, setEditPostId] = useState(null);

@@ -2,10 +2,8 @@
 import { useState,useEffect } from "react";
 import usePostAll from "@/features/hooks/feed/posts/usePost";
 import useCommentAll from "@/features/hooks/feed/comments/useComments";
-import Card from "@/features/components/widgets/section/card";
+import Card from "@/components/molecules/Card";
 export function Favorite() {
-
- 
     const [selected, setSelected] = useState(null);
     const handleShowed = (id) => {
       setSelected((prev) => (prev === id ? null : id));

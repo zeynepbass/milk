@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { postService } from "@/features/services/postServices";
-import { useUserStore } from "@/store";
+import { useUserStore } from "@/features/store";
 import { io } from "socket.io-client";
 
 export default function useMessage() {

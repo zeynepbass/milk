@@ -3,7 +3,9 @@ import usePostAll from "@/features/hooks/feed/posts/usePost";
 import usePost from "@/features/hooks/feed/user/useUserPost";
 import useCommentAll from "@/features/hooks/feed/comments/useComments";
 import { useNavigate } from "react-router-dom";
-import Card from "./card";
+import Loading from "@/components/atoms/Loading"
+import Sortered from "@/components/molecules/Sortered"
+import Card from "@/components/molecules/Card";
 
 export function Section() {
   const navigate = useNavigate();
@@ -40,39 +42,9 @@ export function Section() {
     (a, b) => b.user?.dogrulanmisSatici - a.user?.dogrulanmisSatici
   );
 
-  if (loading) {
-    return (
-      <div className="flex flex-col items-center justify-center h-[60vh] text-gray-400">
-        Yükleniyor...
-      </div>
-    );
-  }
+  if (loading) return <Loading />;
 
-  if (!loading && sortedData.length === 0) {
-    return (
-      <div className="flex flex-col items-center justify-center text-center mt-16 px-4">
-        <img
-          src="/images/gonderi-bulunamadi.png"
-          alt="Gönderi bulunamadı"
-          className="w-40 h-40 object-contain opacity-80 block dark:hidden"
-        />
-        <img
-          src="/images/dark-gonderi-bulunamadi.png"
-          alt="Gönderi bulunamadı"
-          className="w-40 h-40 object-contain opacity-80 hidden dark:block"
-        />
-
-        <h2 className="text-lg font-semibold text-gray-700 mb-1 dark:text-gray-400">
-          Gönderi Bulunamadı
-        </h2>
-
-        <p className="text-gray-400 text-sm m-1 ">
-          Henüz paylaşılmış bir gönderi bulunamadı
-        </p>
-      </div>
-    );
-  }
-
+ <Sortered sortedData={sortedData} />;
   return (
     <div className="h-[100vh] overflow-auto p-4">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">

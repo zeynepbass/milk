@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { postService } from "@/features/services/postServices";
-import { useUserStore, useSearchStore } from "@/store";
+import { useUserStore, useSearchStore } from "@/features/store";
 export default function usePost() {
   const [openList, setOpenList] = useState(null);
   const [loading, setLoading] = useState(false);
