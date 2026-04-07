@@ -130,11 +130,11 @@ EKLENENLER
 
 ---
 
-📌 Proje Yapısı (Önerilen)
+📌 Proje Yapısı
 
 ---
 
-<img src="./public/images/core-web-vitals.png"  alt="proje yapisi" width="400" height="600"/>
+<img src="./public/images/core-web-vitals.png"  alt="proje yapisi" width="400" height="500"/>
 
 
 🎯 Proje Amacı
