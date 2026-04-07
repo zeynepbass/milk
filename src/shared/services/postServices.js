@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "@/shared/constant/api";
+import { API_BASE_URL } from "@/shared/constants/api";
 
 export const postService = {
   getPosts: async ({ search, token }) => {

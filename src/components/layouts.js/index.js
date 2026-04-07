@@ -1,5 +1,5 @@
-import { Header } from "./Header";
-import { Footer } from "./Footer";
+import { Header } from "../organism/Header";
+import { Footer } from "../organism/Footer";
 import { Outlet, Navigate } from "react-router-dom";
 import { GetUserFromToken } from "@/shared/utils/auth";
 

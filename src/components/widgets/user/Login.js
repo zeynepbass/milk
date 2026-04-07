@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import useUserLogin from "@/features/hooks/user/useUser";
+import useUserLogin from "@/features/hooks/auth/useUser";
 import { useState } from "react";
 import Input from "@/components/atoms/Input"
 export function Login() {

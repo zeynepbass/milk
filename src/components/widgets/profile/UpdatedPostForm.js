@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import usePostUpdated from "@/features/hooks/feed/posts/usePost";
-import usePostAll from "@/features/hooks/feed/posts/usePostDetails";
+import usePostUpdated from "@/features/hooks/feed/post/usePost";
+import usePostAll from "@/features/hooks/feed/post/usePostDetails";
 import { XMarkIcon, ArrowRightIcon } from "@heroicons/react/24/outline";
 export const UpdatedPostForm = ({ editPostId, setOpen }) => {
   const { details } = usePostAll(editPostId);

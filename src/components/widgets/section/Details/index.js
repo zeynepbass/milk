@@ -10,8 +10,8 @@ import {
 } from "@heroicons/react/24/outline";
 import usePost from "@/features/hooks/feed/user/useUserPost";
 import { useParams } from "react-router-dom";
-import useCommentAll from "@/features/hooks/feed/posts/usePostDetails";
-import usePostAll from "@/features/hooks/feed/posts/usePost";
+import useCommentAll from "@/features/hooks/feed/post/usePostDetails";
+import usePostAll from "@/features/hooks/feed/post/usePost";
 export function Detail() {
   const { id } = useParams();
 

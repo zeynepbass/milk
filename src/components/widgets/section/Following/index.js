@@ -1,5 +1,5 @@
 import { useState } from "react";
-import usePostAll from "@/features/hooks/feed/posts/usePost";
+import usePostAll from "@/features/hooks/feed/post/usePost";
 import usePost from "@/features/hooks/feed/user/useUserPost";
 import useCommentAll from "@/features/hooks/feed/comments/useComments";
 import { useNavigate } from "react-router-dom";

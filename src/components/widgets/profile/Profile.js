@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useSearchStore } from "@/features/store";
 import useCommentAll from "@/features/hooks/feed/comments/useComments";
-import useProfile from "@/features/hooks/user/useUser";
-import usePostAll from "@/features/hooks/feed/posts/usePost";
+import useProfile from "@/features/hooks/auth/useUser";
+import usePostAll from "@/features/hooks/feed/post/usePost";
 import usePost from "@/features/hooks/feed/user/useUserPost";
 import Card from "@/components/molecules/Card";
 import { CreatePostForm } from "./Form";

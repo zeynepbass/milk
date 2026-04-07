@@ -1,4 +1,4 @@
-import { Container } from "./components/organism/Container";
+import { Container } from "./components/layouts.js";
 import Section from "./pages/section";
 import Following from "./pages/following/index";
 import Login from "./pages/login/index";

@@ -1,4 +1,4 @@
-import usePost from "@/features/hooks/feed/posts/usePost";
+import usePost from "@/features/hooks/feed/post/usePost";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 

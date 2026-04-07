@@ -19,10 +19,10 @@ import {
   SunIcon,
 } from "@heroicons/react/24/outline";
 import { useUserStore, useSearchStore } from "@/features/store";
-import useUserLogin from "@/features/hooks/user/useUser";
+import useUserLogin from "@/features/hooks/auth/useUser";
 import NotificationAlert from "@/pages/notification";
 import { Link } from "react-router-dom";
-import { useTheme } from "@/features/hooks/useTheme";
+import { useTheme } from "@/shared/utils/useTheme";
 export function Header() {
   const { theme, toggleTheme } = useTheme();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);

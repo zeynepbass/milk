@@ -1,4 +1,4 @@
-import { API_BASE_URL } from "@/shared/constant/api";
+import { API_BASE_URL } from "@/shared/constants/api";
 export const userLoginService = {
   postService: async (formData) => {
     const res = await fetch(`${API_BASE_URL}/users/login`, {

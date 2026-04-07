@@ -1,6 +1,6 @@
 
 import { useState,useEffect } from "react";
-import usePostAll from "@/features/hooks/feed/posts/usePost";
+import usePostAll from "@/features/hooks/feed/post/usePost";
 import useCommentAll from "@/features/hooks/feed/comments/useComments";
 import Card from "@/components/molecules/Card";
 export function Favorite() {
