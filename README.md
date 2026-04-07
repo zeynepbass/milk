@@ -1,10 +1,13 @@
-MILK 
---
+🥛 MILK – Yerel Pazar Platformu
+
+MILK, yerel üreticiler ile tüketicileri buluşturan, gerçek zamanlı mesajlaşma ve sosyal etkileşim özelliklerine sahip bir pazar platformudur.
+
+---
 
 Giriş ve kayıt sistemine sahip bir randevu sistemi web uygulamasıdır.
 ---
 Kimlik doğrulama
-Kullanıcılar kayıt olabilir ve giriş yapabilirler.
+Kullanıcılar kayıt olabilir ve giriş yapabilirler. 
 
 Kayıt sırasında kullanıcı bir rol seçer :
 ---
@@ -20,12 +23,9 @@ E-posta adresi
 Telefon numarası
 Şehir
 Semt
-Tanım
 
 Kullanıcılar şunları yapabilir:
 ---
-Bilgi ekle
-Profili düzenle
 Profili güncelle
 Profil bilgilerini sil
 Gönderiler / Paylaşım
@@ -45,14 +45,12 @@ Gönderilere yorum yapın
 
 Mesajlaşma:
 ---
-Alıcı rolüne sahip kullanıcılar mesaj gönderebilir.
 Mesajlaşma iki yönlüdür .
 Kullanıcılar birbirleriyle gerçek zamanlı olarak sohbet edebilirler.
 
 Ana Sayfa:
 ---
 Ana sayfada Koyu Mod ve Açık Mod bulunmaktadır .
-Kullanıcılar arama çubuğunu kullanarak arama yapabilirler .
 Şehir bazında arama yapılabilir .
 
 Kullanılan Teknolojiler:
@@ -62,7 +60,7 @@ State Management – Zustand
 Axios – API istekleri için 
 Tailwind CSS – Kullanıcı arayüzü stillendirmesi için
 React Router DOM – Sayfa yönlendirmesi için
-Node.js – Arka uç ve sunucu tarafı geliştirme için
+Node.js – Arka uç ve sunucu tarafı geliştirme 
 
 ---
 
@@ -89,17 +87,12 @@ ZORUNLU OLANLAR
 
 ✅ Favori (kaydet)
 
-🚫 YOK
-
-Ödeme
-
-DM
 
 Bildirim
 
 Admin panel
 
-💡 MVP = “Instagram ama köy ürünü”
+💡 MVP = “Köy ürünleri”
 
 ---
 
@@ -116,8 +109,6 @@ EKLENENLER
 🔔 Bildirim (yeni gönderi / takip)
 
 🟢 Doğrulanmış satıcı
-
-📊 Profil istatistikleri
 
 🧾 Sipariş talebi (checkout yok)
 
@@ -136,3 +127,23 @@ EKLENENLER
 🛡️ Gelişmiş admin panel
 
 🌱 Organik sertifika yükleme
+
+---
+
+📌 Proje Yapısı (Önerilen)
+
+---
+
+<img src="/images/core-vitals />
+
+
+🎯 Proje Amacı
+
+MILK’in amacı, yerel üreticiler ile tüketiciler arasında dijital bir köprü oluşturmak ve küçük üreticileri keşfetmeyi kolaylaştırmaktır.
+
+⸻
+
+👩‍💻 Geliştirici
+
+Zeynep Baş
+
