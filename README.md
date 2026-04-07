@@ -136,11 +136,11 @@ EKLENENLER
 
 ---
 
-📌 Proje Yapısı (Önerilen)
+📌 Proje Yapısı
 
 ---
 
-<img src="https://raw.githubusercontent.com/zeynepbasss/milk/main/images/core-vitals.png"  alt="proje yapisi" width="400" height="40vh"/>
+<img src="./public/images/core-web-vitals.png"  alt="proje yapisi" width="300" height="600"/>
 
 
 =======
