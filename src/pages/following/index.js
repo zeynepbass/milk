@@ -1,4 +1,4 @@
-import { Following } from "@/features/components/widgets/section";
+import { Following } from "@/components/widgets/section";
 export default function Outlet() {
   return <Following />;
 }

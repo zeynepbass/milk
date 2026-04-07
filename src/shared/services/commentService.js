@@ -1,0 +1,67 @@
+import { API_BASE_URL } from "@/shared/constants/api";
+
+export const commentService = {
+
+
+  postComment: async (postId, text, token) => {
+    const res = await fetch(`${API_BASE_URL}/comments/${postId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      },
+      body: JSON.stringify({ text }),
+    });
+
+    if (!res.ok) {
+      throw new Error("Comment eklenemedi");
+    }
+
+    return await res.json();
+  },
+
+
+  getComments: async (postId,token) => {
+    const res = await fetch(`${API_BASE_URL}/comments/${postId}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        }
+      });
+    if (!res.ok) {
+      throw new Error("Yorumlar alınamadı");
+    }
+
+    return await res.json();
+  },
+
+  deleteComment:async(postId,token)=>{
+    const res = await fetch(`${API_BASE_URL}/comments/${postId}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
+      }
+    });
+  if (!res.ok) {
+    throw new Error("Yorumlar alınamadı");
+  }
+
+  return await res.json();
+},
+likeComment:async(postId,token)=>{
+  const res = await fetch(`${API_BASE_URL}/comments/${postId}/like`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`
+    }
+  });
+if (!res.ok) {
+  throw new Error("Yorumlar alınamadı");
+}
+
+return await res.json();
+},
+};

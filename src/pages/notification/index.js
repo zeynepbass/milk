@@ -1,4 +1,4 @@
-import { NotificationAlerts } from "@/features/components/widgets/notification";
+import { Notifications } from "@/components/widgets/notification";
 export default function Notification({open}) {
-  return <NotificationAlerts open={open}/>;
+  return <Notifications open={open}/>;
 }

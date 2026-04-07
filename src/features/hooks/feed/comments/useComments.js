@@ -1,6 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
-import { commentService } from "@/features/services/commentService";
-import { useUserStore } from "@/store/useUserStore";
+import { commentService } from "@/shared/services/commentService";
+import { useUserStore } from "@/features/store/useUserStore";
 
 export default function usePostComment(id) {
   const [comments, setComments] = useState([]);
@@ -66,7 +66,7 @@ export default function usePostComment(id) {
       console.log(error);
     }
   };
-  const handleC0mmentLike = async (commentId) => {
+  const handleCommentLike = async (commentId) => {
     try {
       const res = await commentService.likeComment(commentId, token);
   
@@ -91,7 +91,7 @@ export default function usePostComment(id) {
   return {
     comments,
     handleDelete,
-    handleC0mmentLike,
+    handleCommentLike,
     loading,
     newComment,
     setNewComment,

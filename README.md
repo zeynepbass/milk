@@ -1,10 +1,13 @@
-MILK 
---
+🥛 MILK – Yerel Pazar Platformu
+
+MILK, yerel üreticiler ile tüketicileri buluşturan, gerçek zamanlı mesajlaşma ve sosyal etkileşim özelliklerine sahip bir pazar platformudur.
+
+---
 
 Giriş ve kayıt sistemine sahip bir randevu sistemi web uygulamasıdır.
 ---
 Kimlik doğrulama
-Kullanıcılar kayıt olabilir ve giriş yapabilirler.
+Kullanıcılar kayıt olabilir ve giriş yapabilirler. 
 
 Kayıt sırasında kullanıcı bir rol seçer :
 ---
@@ -57,7 +60,7 @@ State Management – Zustand
 Axios – API istekleri için 
 Tailwind CSS – Kullanıcı arayüzü stillendirmesi için
 React Router DOM – Sayfa yönlendirmesi için
-Node.js – Arka uç ve sunucu tarafı geliştirme için
+Node.js – Arka uç ve sunucu tarafı geliştirme 
 
 ---
 
@@ -124,3 +127,26 @@ EKLENENLER
 🛡️ Gelişmiş admin panel
 
 🌱 Organik sertifika yükleme
+<<<<<<< HEAD
+=======
+
+---
+
+📌 Proje Yapısı (Önerilen)
+
+---
+
+<img src="https://raw.githubusercontent.com/zeynepbasss/milk/main/images/core-vitals.png"  alt="proje yapisi" width="400" height="40vh"/>
+
+
+🎯 Proje Amacı
+
+MILK’in amacı, yerel üreticiler ile tüketiciler arasında dijital bir köprü oluşturmak ve küçük üreticileri keşfetmeyi kolaylaştırmaktır.
+
+⸻
+
+👩‍💻 Geliştirici
+
+Zeynep Baş
+
+>>>>>>> development
