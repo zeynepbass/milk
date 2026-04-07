@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { useSearchStore } from "@/store";
+import { useSearchStore } from "@/features/store";
 import useCommentAll from "@/features/hooks/feed/comments/useComments";
 import useProfile from "@/features/hooks/user/useUser";
 import usePostAll from "@/features/hooks/feed/posts/usePost";
 import usePost from "@/features/hooks/feed/user/useUserPost";
-import Card from "../section/card/index";
+import Card from "@/components/molecules/Card";
 import { CreatePostForm } from "./Form";
 import { SalesSupport } from "./SalesSupport";
 import { OrganicForm } from "./OrganicForm";
@@ -280,7 +280,7 @@ rounded-2xl shadow-md p-6 relative transition"
                 {" "}
                 <div className="flex justify-between items-center mb-4">
                   {" "}
-                  <h2 className="text-lg font-semibold dark:text-gray-400" >
+                  <h2 className="text-lg font-semibold dark:text-gray-400">
                     {" "}
                     {openList === "following"
                       ? "Takip Ettiklerin"
@@ -331,7 +331,7 @@ rounded-2xl shadow-md p-6 relative transition"
           <button
             className={`px-4 py-2 font-semibold ${
               activeTab === "posts"
-    ? "border-b-2 border-[rgb(82,144,246)] text-[rgb(82,144,246)] dark:border-gray-200 dark:text-gray-200 "
+                ? "border-b-2 border-[rgb(82,144,246)] text-[rgb(82,144,246)] dark:border-gray-200 dark:text-gray-200 "
                 : "text-gray-500"
             }`}
             onClick={() => setActiveTab("posts")}
@@ -352,7 +352,7 @@ rounded-2xl shadow-md p-6 relative transition"
           <button
             className={`px-4 py-2 font-semibold ${
               activeTab === "organic"
-              ? "border-b-2 border-[rgb(82,144,246)] text-[rgb(82,144,246)] dark:border-gray-200  dark:text-gray-200 "
+                ? "border-b-2 border-[rgb(82,144,246)] text-[rgb(82,144,246)] dark:border-gray-200  dark:text-gray-200 "
                 : "text-gray-500"
             }`}
             onClick={() => setActiveTab("organic")}
@@ -363,7 +363,7 @@ rounded-2xl shadow-md p-6 relative transition"
           <button
             className={`px-4 py-2 font-semibold ${
               activeTab === "backNotifications"
-            ? "border-b-2 border-[rgb(82,144,246)] text-[rgb(82,144,246)] dark:border-gray-200 dark:text-gray-200 "
+                ? "border-b-2 border-[rgb(82,144,246)] text-[rgb(82,144,246)] dark:border-gray-200 dark:text-gray-200 "
                 : "text-gray-500"
             }`}
             onClick={() => setActiveTab("backNotifications")}
@@ -423,34 +423,31 @@ rounded-2xl shadow-md p-6 relative transition"
 
               {!loadingPost && details.length === 0 && (
                 <div className="flex flex-col items-center justify-center text-center mt-16 px-4">
+                  <div className="mb-4">
+                    <img
+                      src="/images/gonderi-bulunamadi.png"
+                      alt="Gönderi bulunamadı"
+                      className="w-40 h-40 object-contain opacity-80 block dark:hidden"
+                    />
+                    <img
+                      src="/images/dark-gonderi-bulunamadi.png"
+                      alt="Gönderi bulunamadı"
+                      className="w-40 h-40 object-contain opacity-80 hidden dark:block"
+                    />
+                  </div>
 
+                  <h2 className="text-lg font-semibold text-gray-700 dark:text-white mb-1">
+                    Gönderi Bulunamadı
+                  </h2>
 
-<div className="mb-4">
-  <img
-    src="/images/gonderi-bulunamadi.png"
-    alt="Gönderi bulunamadı"
-    className="w-40 h-40 object-contain opacity-80 block dark:hidden"
-  />
-  <img
-    src="/images/dark-gonderi-bulunamadi.png"
-    alt="Gönderi bulunamadı"
-    className="w-40 h-40 object-contain opacity-80 hidden dark:block"
-  />
-</div>
+                  <p className="text-gray-400 dark:text-gray-300 text-sm mb-4 max-w-xs">
+                    Henüz paylaşılmış bir gönderi bulunamadı. İlk gönderiyi sen
+                    oluşturabilirsin.
+                  </p>
 
-
-<h2 className="text-lg font-semibold text-gray-700 dark:text-white mb-1">
-  Gönderi Bulunamadı
-</h2>
-
-<p className="text-gray-400 dark:text-gray-300 text-sm mb-4 max-w-xs">
-  Henüz paylaşılmış bir gönderi bulunamadı. İlk gönderiyi sen oluşturabilirsin.
-</p>
-
-
-<button
-  onClick={() => createSetOpen(true)}
-  className="
+                  <button
+                    onClick={() => createSetOpen(true)}
+                    className="
     px-5 py-2.5
     rounded-xl
     bg-[rgb(82,144,246)] text-white
@@ -462,11 +459,10 @@ rounded-2xl shadow-md p-6 relative transition"
     active:scale-95
     transition-all duration-200
   "
->
-  Gönderi Paylaş
-</button>
-
-</div>
+                  >
+                    Gönderi Paylaş
+                  </button>
+                </div>
               )}
 
               <Card
@@ -512,7 +508,7 @@ rounded-2xl shadow-md p-6 relative transition"
 
               <div className="bg-white rounded-2xl p-6  border shadow-lg dark:border-gray-400 dark:bg-gray-800    border-gray-100 hover:shadow-md transition">
                 <h3 className="text-md font-semibold text-gray-700 mb-2  dark:text-gray-500 ">
-                    Hesabı Sil
+                  Hesabı Sil
                 </h3>
 
                 <p className="text-gray-400 text-sm mb-4">

@@ -18,7 +18,7 @@ import {
   MoonIcon, 
   SunIcon,
 } from "@heroicons/react/24/outline";
-import { useUserStore, useSearchStore } from "@/store";
+import { useUserStore, useSearchStore } from "@/features/store";
 import useUserLogin from "@/features/hooks/user/useUser";
 import NotificationAlert from "@/pages/notification";
 import { Link } from "react-router-dom";
