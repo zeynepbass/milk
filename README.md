@@ -134,7 +134,7 @@ EKLENENLER
 
 ---
 
-<img src="https://raw.githubusercontent.com/zeynepbasss/milk/main/images/core-vitals.png"  alt="proje yapisi" width="400" height="40vh"/>
+<img src="./public/images/core-vitals.png"  alt="proje yapisi" width="400" height="40vh"/>
 
 
 🎯 Proje Amacı
