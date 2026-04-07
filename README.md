@@ -57,7 +57,14 @@ State Management – Zustand
 Axios – API istekleri için 
 Tailwind CSS – Kullanıcı arayüzü stillendirmesi için
 React Router DOM – Sayfa yönlendirmesi için
-Node.js – Arka uç ve sunucu tarafı geliştirme için
+Node.js – Arka uç ve sunucu tarafı geliştirme 
+
+frontend/
+  ├── components/
+  ├── pages/
+  ├── store/        # Zustand state yönetimi
+  ├── services/     # API istekleri
+
 
 ---
 
