@@ -1,1 +1,1 @@
-export * from "../layouts.js/index.js"
+export * from "../layouts/index.js"

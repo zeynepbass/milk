@@ -1,4 +1,4 @@
-import { Container } from "./components/layouts.js";
+import { Container } from "./components/layouts/index.js";
 import Section from "./pages/section";
 import Following from "./pages/following/index";
 import Login from "./pages/login/index";
