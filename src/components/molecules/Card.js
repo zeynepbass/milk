@@ -72,6 +72,7 @@ import {
                         : "/images/logo.png"
                     }
                     alt="Post"
+                    loading="lazy"
                   />
                 </Link>
   
@@ -87,6 +88,7 @@ import {
                           }
                           alt="profile"
                           className="w-full h-full object-cover"
+                                   loading="lazy"
                         />
   
                         {item.user?.dogrulanmisSatici && (
@@ -215,6 +217,7 @@ import {
                                 "https://i.pravatar.cc/150"
                               }
                               alt="profile"
+                                       loading="lazy"
                               className="w-9 h-9 rounded-full object-cover shadow-sm"
                             />
   

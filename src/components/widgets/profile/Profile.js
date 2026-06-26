@@ -158,6 +158,7 @@ rounded-2xl shadow-md p-6 relative transition"
                         : "https://cdn-icons-png.flaticon.com/512/9131/9131478.png"
                     }
                     alt="profile"
+                             loading="lazy"
                     className="w-28 h-28 rounded-full object-cover border shadow-sm"
                   />
 

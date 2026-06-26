@@ -70,6 +70,7 @@ export function Detail() {
             src={ `http://localhost:5346${images[currentImage]}`}
             alt={details.title}
             className="w-full h-full object-cover rounded-xl " 
+                     loading="lazy"
           />
 
           {images.length > 1 && (
@@ -195,6 +196,7 @@ export function Detail() {
                           "https://i.pravatar.cc/150"
                         }
                         alt="profile"
+                                 loading="lazy"
                         className="w-8 h-8 rounded-full object-cover"
                       />
 

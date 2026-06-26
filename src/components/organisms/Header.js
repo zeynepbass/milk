@@ -135,6 +135,7 @@ export function Header() {
                     src={user?.avatar || profileForm?.avatar}
                     alt={user?.name}
                     className="w-full h-full object-cover"
+                             loading="lazy"
                   />
                 ) : (
                   <span className="text-gray-400">
@@ -219,6 +220,7 @@ export function Header() {
                         <img
                           src={user.avatar}
                           alt={user?.name}
+                                   loading="lazy"
                           className="w-full h-full object-cover"
                         />
                       ) : (
