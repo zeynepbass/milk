@@ -136,6 +136,54 @@ EKLENENLER
 
 <img src="./public/images/core-web-vitals.png"  alt="proje yapisi" width="300" height="600"/>
 
+---
+
+## Arayüzler
+
+<p align="center">
+  <img src="./public/images/screenshots/1775502944455.jpeg" alt="Dashboards" width="900">
+</p>
+<p align="center">
+  <img src="./public/images/screenshots/1775502944246.jpeg" alt="Dashboards" width="900">
+</p>
+<p align="center">
+  <img src="./public/images/screenshots/1775502942378.jpeg" alt="Dashboards" width="900">
+</p>
+<p align="center">
+  <img src="./public/images/screenshots/1775502942309.jpeg" alt="Dashboards" width="900">
+</p>
+<p align="center">
+  <img src="./public/images/screenshots/1775502942167.jpeg" alt="Dashboards" width="900">
+</p>
+<p align="center">
+  <img src="./public/images/screenshots/1775502941876.jpeg" alt="Dashboards" width="900">
+</p>
+<p align="center">
+  <img src="./public/images/screenshots/1775502941686.jpeg" alt="Dashboards" width="900">
+</p>
+<p align="center">
+  <img src="./public/images/screenshots/1775502940117.jpeg" alt="Dashboards" width="900">
+</p>
+<p align="center">
+  <img src="./public/images/screenshots/1775502940022.jpeg" alt="Dashboards" width="900">
+</p>
+<p align="center">
+  <img src="./public/images/screenshots/1775502939991.jpeg" alt="Dashboards" width="900">
+</p>
+<p align="center">
+  <img src="./public/images/screenshots/1775502939916.jpeg" alt="Dashboards" width="900">
+</p>
+<p align="center">
+  <img src="./public/images/screenshots/1775502939837.jpeg" alt="Dashboards" width="900">
+</p>
+<p align="center">
+  <img src="./public/images/screenshots/1775502939826.jpeg" alt="Dashboards" width="900">
+</p>
+<p align="center">
+  <img src="./public/images/screenshots/1775502938947.jpeg" alt="Dashboards" width="900">
+</p>
+
+---
 
 🎯 Proje Amacı
 
@@ -146,4 +194,5 @@ MILK’in amacı, yerel üreticiler ile tüketiciler arasında dijital bir köpr
 👩‍💻 Geliştirici
 
 Zeynep Baş
+
 
