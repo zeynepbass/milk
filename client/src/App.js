@@ -1,11 +1,59 @@
-
-import {Following,Favorite,Message,DetailsPost,Outlet} from  "@/features/feed/pages"
-import {Login,Register,Profile} from "@/features/auth/pages"
+import { lazy, Suspense } from "react";
 import { Container } from "@/shared/layout";
 import { Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import NotFound from "@/shared/error/index";
 import "react-toastify/dist/ReactToastify.css";
+
+const Following = lazy(() =>
+  import("@/features/feed/pages").then((module) => ({
+    default: module.Following,
+  }))
+);
+
+const Outlet = lazy(() =>
+  import("@/features/feed/pages").then((module) => ({
+    default: module.Outlet,
+  }))
+);
+
+const Favorite = lazy(() =>
+  import("@/features/feed/pages").then((module) => ({
+    default: module.Favorite,
+  }))
+);
+
+const Message = lazy(() =>
+  import("@/features/feed/pages").then((module) => ({
+    default: module.Message,
+  }))
+);
+
+const DetailsPost = lazy(() =>
+  import("@/features/feed/pages").then((module) => ({
+    default: module.DetailsPost,
+  }))
+);
+
+const Login = lazy(() =>
+  import("@/features/auth/pages").then((module) => ({
+    default: module.Login,
+  }))
+);
+
+const Register = lazy(() =>
+  import("@/features/auth/pages").then((module) => ({
+    default: module.Register,
+  }))
+);
+
+const Profile = lazy(() =>
+  import("@/features/auth/pages").then((module) => ({
+    default: module.Profile,
+  }))
+);
+
+import NotFound from "@/shared/error/index";
+
 function App() {
   return (
     <>
@@ -15,33 +63,28 @@ function App() {
         theme="colored"
       />
 
-      <Routes>
-        <Route element={<Container />}>
-          <Route path="/" element={<Following />} />
-          <Route path="/kesfet" element={<Outlet />} />
-          <Route path="/profil" element={<Profile />} />
-          <Route path="/favoriler" element={<Favorite />} />
-          <Route path="/mesajlar" element={<Message />} />
-          <Route path="/detay/:id" element={<DetailsPost />} />
-        </Route>
-        <Route path="*" element={<NotFound />} />
-        <Route
-          path="/giris-yap"
-          element={
+      <Suspense
+        fallback={
+          <div className="flex min-h-screen items-center justify-center text-gray-400">
+            Yükleniyor...
+          </div>
+        }
+      >
+        <Routes>
+          <Route element={<Container />}>
+            <Route path="/" element={<Following />} />
+            <Route path="/kesfet" element={<Outlet />} />
+            <Route path="/profil" element={<Profile />} />
+            <Route path="/favoriler" element={<Favorite />} />
+            <Route path="/mesajlar" element={<Message />} />
+            <Route path="/detay/:id" element={<DetailsPost />} />
+          </Route>
 
-              <Login />
-
-          }
-        />
-        <Route
-          path="/uye-ol"
-          element={
-
-              <Register />
-
-          }
-        />
-      </Routes>
+          <Route path="*" element={<NotFound />} />
+          <Route path="/giris-yap" element={<Login />} />
+          <Route path="/uye-ol" element={<Register />} />
+        </Routes>
+      </Suspense>
     </>
   );
 }

@@ -1,7 +1,7 @@
 import Comment from "../models/Comment.js";
 import Post from "../models/Post.js";
 
-//yorum ekle
+
 export const addComment = async (req, res) => {
   try {
     const userId = req.user.id || req.user._id;

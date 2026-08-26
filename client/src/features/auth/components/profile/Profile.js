@@ -1,16 +1,19 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, lazy, Suspense } from "react";
 import { useSearchStore } from "@/shared/store";
 import useCommentAll from "@/features/feed/hooks/comments/useComments";
 import useProfile from "@/features/auth/hooks/useUser";
 import usePostAll from "@/features/feed/hooks/post/usePost";
 import usePost from "@/features/feed/hooks/user/useUserPost";
 import { Card } from "@/shared/components/molecules";
-import { Input,Select,Heading,Button } from "@/shared/components/atoms";
-import { SalesSupport, OrganicForm, CreatePostForm } from "./salesSupport";
-import {
-  PencilIcon,
-  MagnifyingGlassIcon,
-} from "@heroicons/react/24/outline";
+import { Input, Select, Heading, Button } from "@/shared/components/atoms";
+import { SalesSupport, OrganicForm } from "./salesSupport";
+const CreatePostForm = lazy(() =>
+  import("./salesSupport").then((module) => ({
+    default: module.CreatePostForm,
+  }))
+);
+
+import { PencilIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { CheckBadgeIcon } from "@heroicons/react/24/solid";
 
 export function Profile() {
@@ -94,13 +97,13 @@ export function Profile() {
     <div className="grid grid-cols-12 h-[100vh] overflow-scroll p-4">
       <div className="col-span-12 md:col-span-4">
         <div className="bg-white dark:bg-gray-800 border border-gray-100 dark:border-gray-700 rounded-2xl shadow-md p-6 relative transition">
-        <Button
-  type="button"
-  onClick={() => setButton(!button)}
-  icon={PencilIcon}
-  iconClassName="w-4 h-4"
-  className="absolute top-4 right-4 bg-gray-100 dark:bg-yellow-400 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-500 dark:text-white p-2"
-/>
+          <Button
+            type="button"
+            onClick={() => setButton(!button)}
+            icon={PencilIcon}
+            iconClassName="w-4 h-4"
+            className="absolute top-4 right-4 bg-gray-100 dark:bg-yellow-400 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-500 dark:text-white p-2"
+          />
 
           {button ? (
             <>
@@ -152,9 +155,7 @@ export function Profile() {
                     {profileForm?.followers?.length || 0}
                   </p>
 
-                  <p className="text-gray-400 dark:text-gray-300">
-                    Takipçi
-                  </p>
+                  <p className="text-gray-400 dark:text-gray-300">Takipçi</p>
                 </div>
               </div>
             </>
@@ -234,30 +235,30 @@ export function Profile() {
                   onChange={handleChange}
                   placeholder="Email"
                 />
-<Select
-  name="role"
-  value={profileForm?.role || ""}
-  onChange={handleChange}
-  placeholder="Seçiniz"
-  options={[
-    { value: "alici", label: "Alıcı" },
-    { value: "satici", label: "Satıcı" },
-  ]}
-  className="bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-/>
+                <Select
+                  name="role"
+                  value={profileForm?.role || ""}
+                  onChange={handleChange}
+                  placeholder="Seçiniz"
+                  options={[
+                    { value: "alici", label: "Alıcı" },
+                    { value: "satici", label: "Satıcı" },
+                  ]}
+                  className="bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                />
               </div>
 
               <Button
-  type="submit"
-  disabled={loading}
-  loading={loading}
-  loadingText="Kaydediliyor..."
-  className={`w-full mt-3 py-2.5 rounded-xl font-medium ${
-    loading
-      ? "bg-gray-400 dark:bg-gray-900 text-white"
-      : "bg-[rgb(82,144,246)] dark:bg-gray-900 hover:opacity-90 text-white"
-  }`}
-/>
+                type="submit"
+                disabled={loading}
+                loading={loading}
+                loadingText="Kaydediliyor..."
+                className={`w-full mt-3 py-2.5 rounded-xl font-medium ${
+                  loading
+                    ? "bg-gray-400 dark:bg-gray-900 text-white"
+                    : "bg-[rgb(82,144,246)] dark:bg-gray-900 hover:opacity-90 text-white"
+                }`}
+              />
             </form>
           )}
 
@@ -271,12 +272,12 @@ export function Profile() {
                       : "Takipçiler"}
                   </h2>
                   <Button
-  type="button"
-  onClick={() => setOpenList(null)}
-  className="text-gray-500 hover:text-red-500 text-xl"
->
-  ×
-</Button>
+                    type="button"
+                    onClick={() => setOpenList(null)}
+                    className="text-gray-500 hover:text-red-500 text-xl"
+                  >
+                    ×
+                  </Button>
                 </div>
 
                 {(openList === "followers"
@@ -295,9 +296,7 @@ export function Profile() {
                       onClick={() => followId(user._id)}
                       className="text-sm cursor-pointer font-medium transition hover:underline dark:text-gray-400 text-blue-500"
                     >
-                      {openList === "followers"
-                        ? "Takip Et"
-                        : "Takipten Çık"}
+                      {openList === "followers" ? "Takip Et" : "Takipten Çık"}
                     </span>
                   </div>
                 ))}
@@ -308,43 +307,41 @@ export function Profile() {
       </div>
 
       <div className="col-span-12 md:col-span-8 p-3 m-3">
-
         <div className="flex border-b border-gray-200">
-  <Button
-    variant="tab"
-    active={activeTab === "posts"}
-    onClick={() => setActiveTab("posts")}
-  >
-    Gönderiler
-  </Button>
+          <Button
+            variant="tab"
+            active={activeTab === "posts"}
+            onClick={() => setActiveTab("posts")}
+          >
+            Gönderiler
+          </Button>
 
-  <Button
-    variant="tab"
-    active={activeTab === "settings"}
-    onClick={() => setActiveTab("settings")}
-    disabled={open}
-  >
-    Hesap Ayarları
-  </Button>
+          <Button
+            variant="tab"
+            active={activeTab === "settings"}
+            onClick={() => setActiveTab("settings")}
+            disabled={open}
+          >
+            Hesap Ayarları
+          </Button>
 
-  <Button
-    variant="tab"
-    active={activeTab === "organic"}
-    onClick={() => setActiveTab("organic")}
-    disabled={open}
-  >
-    Organik Sertifika Yükle
-  </Button>
+          <Button
+            variant="tab"
+            active={activeTab === "organic"}
+            onClick={() => setActiveTab("organic")}
+            disabled={open}
+          >
+            Organik Sertifika Yükle
+          </Button>
 
-  <Button
-    variant="tab"
-    active={activeTab === "backNotifications"}
-    onClick={() => setActiveTab("backNotifications")}
-    disabled={open}
-  >
-    Geri Bildirim Gönder
-  </Button>
-
+          <Button
+            variant="tab"
+            active={activeTab === "backNotifications"}
+            onClick={() => setActiveTab("backNotifications")}
+            disabled={open}
+          >
+            Geri Bildirim Gönder
+          </Button>
         </div>
 
         <div className="mt-4">
@@ -369,22 +366,24 @@ export function Profile() {
                 </div>
 
                 <Button
-  type="button"
-  onClick={() => createSetOpen(true)}
-  disabled={loading}
-  className="flex items-center gap-2 dark:bg-yellow-400 bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-md"
-/>
+                  type="button"
+                  onClick={() => createSetOpen(true)}
+                  disabled={loading}
+                  className="flex items-center gap-2 dark:bg-yellow-400 bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-md"
+                />
               </div>
 
               {createOpen && (
-                <CreatePostForm
-                  onSubmit={onSubmit}
-                  postLoading={postLoading}
-                  profileForm={profileForm}
-                  form={form}
-                  setForm={setForm}
-                  setOpen={createSetOpen}
-                />
+                <Suspense fallback={<div>Yükleniyor...</div>}>
+                  <CreatePostForm
+                    onSubmit={onSubmit}
+                    postLoading={postLoading}
+                    profileForm={profileForm}
+                    form={form}
+                    setForm={setForm}
+                    setOpen={createSetOpen}
+                  />
+                </Suspense>
               )}
 
               {loadingPost && (
@@ -414,17 +413,17 @@ export function Profile() {
                   </h2>
 
                   <p className="text-gray-400 dark:text-gray-300 text-sm mb-4 max-w-xs">
-                    Henüz paylaşılmış bir gönderi bulunamadı. İlk gönderiyi
-                    sen oluşturabilirsin.
+                    Henüz paylaşılmış bir gönderi bulunamadı. İlk gönderiyi sen
+                    oluşturabilirsin.
                   </p>
 
                   <Button
-  type="button"
-  onClick={() => createSetOpen(true)}
-  className="px-5 py-2.5 rounded-xl bg-[rgb(82,144,246)] text-white dark:bg-gray-900 font-medium shadow-sm hover:shadow-md hover:scale-105 active:scale-95"
->
-  Gönderi Paylaş
-</Button>
+                    type="button"
+                    onClick={() => createSetOpen(true)}
+                    className="px-5 py-2.5 rounded-xl bg-[rgb(82,144,246)] text-white dark:bg-gray-900 font-medium shadow-sm hover:shadow-md hover:scale-105 active:scale-95"
+                  >
+                    Gönderi Paylaş
+                  </Button>
                 </div>
               )}
 
@@ -451,38 +450,40 @@ export function Profile() {
 
           {activeTab === "settings" && (
             <div className="space-y-6">
-                            <div className="bg-white shadow-lg dark:border-gray-400 rounded-2xl p-6 border dark:bg-gray-800 border-gray-100 hover:shadow-md transition">
-              <Heading title="         Hesabı Dondur" desc=" Hesabınızı geçici olarak dondurabilirsiniz. Bu işlem sonrası
-                  giriş yapamazsınız."/>
+              <div className="bg-white shadow-lg dark:border-gray-400 rounded-2xl p-6 border dark:bg-gray-800 border-gray-100 hover:shadow-md transition">
+                <Heading
+                  title="         Hesabı Dondur"
+                  desc=" Hesabınızı geçici olarak dondurabilirsiniz. Bu işlem sonrası
+                  giriş yapamazsınız."
+                />
 
-        
-
-<Button
-  type="button"
-  onClick={() => setShowFreezeModal(true)}
-  className="text-[rgb(82,144,246)] font-medium hover:underline dark:text-yellow-400"
->
-  Hesabı Dondur
-</Button>
+                <Button
+                  type="button"
+                  onClick={() => setShowFreezeModal(true)}
+                  className="text-[rgb(82,144,246)] font-medium hover:underline dark:text-yellow-400"
+                >
+                  Hesabı Dondur
+                </Button>
               </div>
 
               <div className="bg-white rounded-2xl p-6 border shadow-lg dark:border-gray-400 dark:bg-gray-800 border-gray-100 hover:shadow-md transition">
-                <Heading title="      Hesabı Sil" desc="      Hesabınızı silerseniz tüm bilgileriniz kalıcı olarak silinir."/>
+                <Heading
+                  title="      Hesabı Sil"
+                  desc="      Hesabınızı silerseniz tüm bilgileriniz kalıcı olarak silinir."
+                />
 
                 <Button
-  type="button"
-  onClick={() => deleteProfile(user?.id)}
-  className="text-red-500 font-medium hover:underline"
->
-  Hesabı Sil
-</Button>
+                  type="button"
+                  onClick={() => deleteProfile(user?.id)}
+                  className="text-red-500 font-medium hover:underline"
+                >
+                  Hesabı Sil
+                </Button>
               </div>
             </div>
           )}
 
-          {activeTab === "organic" && (
-            <OrganicForm userUpdated={userUpdated} />
-          )}
+          {activeTab === "organic" && <OrganicForm userUpdated={userUpdated} />}
 
           {activeTab === "backNotifications" && <SalesSupport />}
         </div>
@@ -490,9 +491,7 @@ export function Profile() {
         {showFreezeModal && (
           <div className="fixed inset-0 bg-gray-900 bg-opacity-30 flex items-center justify-center z-50">
             <div className="bg-white rounded-xl p-6 max-w-sm w-full shadow-lg space-y-4">
-              <h2 className="text-xl font-bold text-gray-700">
-                Hesabı Dondur
-              </h2>
+              <h2 className="text-xl font-bold text-gray-700">Hesabı Dondur</h2>
 
               <p className="text-gray-500">
                 Hesabınızı gerçekten dondurmak istiyor musunuz? Bu işlem geçici
@@ -500,21 +499,21 @@ export function Profile() {
               </p>
 
               <div className="flex justify-end space-x-2">
-              <Button
-  type="button"
-  onClick={() => setShowFreezeModal(false)}
-  className="px-4 py-2 bg-gray-200 hover:bg-gray-300 font-medium"
->
-  İptal
-</Button>
+                <Button
+                  type="button"
+                  onClick={() => setShowFreezeModal(false)}
+                  className="px-4 py-2 bg-gray-200 hover:bg-gray-300 font-medium"
+                >
+                  İptal
+                </Button>
 
-<Button
-  type="button"
-  onClick={freezeProfile}
-  className="px-4 py-2 bg-[#B38471] text-white hover:bg-[#ce9b87] font-medium"
->
-  Onayla
-</Button>
+                <Button
+                  type="button"
+                  onClick={freezeProfile}
+                  className="px-4 py-2 bg-[#B38471] text-white hover:bg-[#ce9b87] font-medium"
+                >
+                  Onayla
+                </Button>
               </div>
             </div>
           </div>
