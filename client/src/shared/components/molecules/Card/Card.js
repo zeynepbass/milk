@@ -69,7 +69,7 @@ export function Card({
                   src={
                     item?.images?.[0]
                       ? `http://localhost:5346${item.images[0]}`
-                      : "/images/logo.png"
+                      : "/assets/logo.png"
                   }
                   alt="Post"
                   loading="lazy"

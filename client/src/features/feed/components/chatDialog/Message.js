@@ -46,7 +46,7 @@ export function MessageDialog() {
               >
                 <div className="relative">
                   <img
-                    src={otherUser?.avatar || "/images/footer-logo.png"}
+                    src={otherUser?.avatar || "/assets/footer-logo.png"}
                     className="w-12 h-12 rounded-full object-cover"
                   />
 
@@ -76,7 +76,7 @@ export function MessageDialog() {
         <div className="h-16 border-b bg-white dark:bg-gray-800 dark:border-gray-700 flex items-center px-4">
           <div className="flex items-center gap-3">
             <img
-              src={selectedUser?.avatar || "/images/footer-logo.png"}
+              src={selectedUser?.avatar || "/assets/footer-logo.png"}
               className="w-10 h-10 rounded-full"
             />
 

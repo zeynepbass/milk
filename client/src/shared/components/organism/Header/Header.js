@@ -49,13 +49,13 @@ export function Header() {
         <div className="flex shrink-0">
           <Link to="/" className="-m-1.5 p-1.5">
             <img
-              src="/images/logo.png"
+              src="/assets/logo.png"
               alt="Logo"
               className="h-16 w-auto block dark:hidden"
             />
 
             <img
-              src="/images/dark-logo.png"
+              src="/assets/dark-logo.png"
               alt="Logo Dark"
               className="h-16 w-auto hidden dark:block"
             />
