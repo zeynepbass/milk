@@ -11,6 +11,7 @@ export function Input({
   
         <input
           {...props}
+          required
           className="w-full rounded-lg border border-gray-200 px-4 py-2 text-sm
           focus:outline-none focus:ring-2 focus:ring-[rgb(82,144,246)] transition"
         />

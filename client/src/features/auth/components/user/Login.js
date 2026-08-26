@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import useUserLogin from "@/features/auth/hooks/useUser";
 import { useState } from "react";
-import {Input} from "@/shared/components/atoms"
+import {Input,Button} from "@/shared/components/atoms"
 export function Login() {
   const { handleSubmit } = useUserLogin();
 
@@ -89,15 +89,9 @@ export function Login() {
      
           </div>
 
-
-          <button
-            type="submit"
-            className="mt-6 w-full rounded-lg py-3 text-white font-semibold 
-            bg-[rgb(82,144,246)] hover:bg-[rgb(60,120,220)] transition shadow-md"
-          >
-            Giriş Yap
-          </button>
-
+          <Button type="submit" variant="primary" className="mt-6">
+  Giriş Yap
+</Button>
   
           <p className="mt-6 flex items-center gap-3 text-sm text-gray-400">
             <span className="flex-1 h-px bg-gray-200" />
