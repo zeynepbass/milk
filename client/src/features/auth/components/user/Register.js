@@ -32,7 +32,7 @@ export function Register() {
     <div className="flex h-screen">
       <div className="hidden md:block md:w-1/2 relative">
         <img
-          src="/images/wallpaper.png"
+          src="/assets/wallpaper.png"
           alt="Milk Wallpaper"
           className="h-full w-full object-cover"
         />
@@ -41,7 +41,7 @@ export function Register() {
 
         <div className="absolute bottom-6 left-6">
           <img
-            src="/images/footer-logo.png"
+            src="/assets/footer-logo.png"
             width="120"
             height="60"
             alt="Milk logo"
