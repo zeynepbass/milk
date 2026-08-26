@@ -9,7 +9,6 @@ const postSchema = new mongoose.Schema(
       index: true,
     },
 
-    // gönderi sahibi
     ownerName: {
       type: String,
       required: true,
@@ -23,7 +22,7 @@ const postSchema = new mongoose.Schema(
     },
 
     image: {
-      type: String
+      type: String,
     },
 
     ownerRole: {
@@ -62,14 +61,7 @@ const postSchema = new mongoose.Schema(
 
     category: {
       type: String,
-      enum: [
-        "sut_urunleri",
-        "bal",
-        "zeytinyagi",
-        "peynir",
-        "sebze",
-        "meyve",
-      ],
+      enum: ["sut_urunleri", "bal", "zeytinyagi", "peynir", "sebze", "meyve"],
       required: true,
       index: true,
     },
@@ -97,17 +89,9 @@ const postSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-//
-// 🚀 INDEXLER (PERFORMANCE BOOST)
-//
-
-// sort + listing hızlandırır
 postSchema.index({ createdAt: -1 });
 
-// text search (title için)
 postSchema.index({ title: "text" });
-
-// compound index (filter kombinasyonları için)
 postSchema.index({ category: 1, district: 1 });
 postSchema.index({ category: 1, province: 1 });
 

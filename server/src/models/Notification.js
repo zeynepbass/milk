@@ -5,40 +5,40 @@ const notificationSchema = new mongoose.Schema(
     userId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true
+      required: true,
     },
-    postId: { // 🔥 BURASI YOKSA GELMEZ
+    postId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Post"
+      ref: "Post",
     },
     type: {
       type: String,
       enum: ["new_post"],
-      required: true
+      required: true,
     },
 
     province: {
       type: String,
-      required: true
+      required: true,
     },
     name: {
-      type: String
+      type: String,
     },
     surname: {
-      type: String
+      type: String,
     },
     date: {
-      type: String, // YYYY-MM-DD
-      required: true
+      type: String,
+      required: true,
     },
 
     isRead: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
   },
   {
-    timestamps: true
+    timestamps: true,
   }
 );
 

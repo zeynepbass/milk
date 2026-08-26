@@ -1,9 +1,6 @@
-import {
-  XMarkIcon,
-  PhotoIcon,
-} from "@heroicons/react/24/outline";
+import { XMarkIcon, PhotoIcon } from "@heroicons/react/24/outline";
 
-import { Input,Select,Textarea,Button } from "@/shared/components/atoms";
+import { Input, Select, Textarea, Button,Heading } from "@/shared/components/atoms";
 
 export function CreatePostForm({
   onSubmit,
@@ -81,26 +78,17 @@ export function CreatePostForm({
           onSubmit={handleSubmit}
           className="w-full bg-white rounded-2xl p-8 space-y-6"
         >
-
           <div className="flex justify-between items-start border-b pb-4">
-            <div>
-              <h3 className="text-lg font-semibold text-gray-800">
-                Yeni Gönderi Oluştur
-              </h3>
+            <Heading title=" Yeni Gönderi Oluştur" desc=" Ürün bilgilerini girin ve görsellerinizi yükleyin."/>
 
-              <p className="text-gray-500 text-sm mt-1">
-                Ürün bilgilerini girin ve görsellerinizi yükleyin.
-              </p>
-            </div>
 
             <Button
-  type="button"
-  onClick={() => setOpen(false)}
-  icon={XMarkIcon}
-  className="text-gray-500 hover:text-red-500"
-/>
+              type="button"
+              onClick={() => setOpen(false)}
+              icon={XMarkIcon}
+              className="text-gray-500 hover:text-red-500"
+            />
           </div>
-
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Input
@@ -119,15 +107,15 @@ export function CreatePostForm({
           </div>
 
           <Select
-  disabled
-  value={form.ownerRole ?? profileForm?.ownerRole ?? ""}
-  placeholder="Rol seçiniz"
-  options={[
-    { value: "alici", label: "Alıcı" },
-    { value: "satici", label: "Satıcı" },
-  ]}
-  className="bg-gray-100 text-gray-600"
-/>
+            disabled
+            value={form.ownerRole ?? profileForm?.ownerRole ?? ""}
+            placeholder="Rol seçiniz"
+            options={[
+              { value: "alici", label: "Alıcı" },
+              { value: "satici", label: "Satıcı" },
+            ]}
+            className="bg-gray-100 text-gray-600"
+          />
           <Input
             name="title"
             placeholder="Başlık"
@@ -136,14 +124,14 @@ export function CreatePostForm({
             required
           />
 
-<Textarea
-  name="description"
-  placeholder="Açıklama"
-  value={form.description ?? ""}
-  onChange={handleChange}
-  rows={4}
-/>
-      
+          <Textarea
+            name="description"
+            placeholder="Açıklama"
+            value={form.description ?? ""}
+            onChange={handleChange}
+            rows={4}
+          />
+
           <div className="flex gap-4">
             <Input
               name="province"
@@ -160,22 +148,21 @@ export function CreatePostForm({
             />
           </div>
 
-
           <Select
-  name="category"
-  value={form.category ?? ""}
-  onChange={handleChange}
-  required
-  placeholder="Seçim yapınız"
-  options={[
-    { value: "sut_urunleri", label: "Süt Ürünleri" },
-    { value: "bal", label: "Bal" },
-    { value: "zeytinyagi", label: "Zeytinyağı" },
-    { value: "peynir", label: "Peynir" },
-    { value: "sebze", label: "Sebze" },
-    { value: "meyve", label: "Meyve" },
-  ]}
-/>
+            name="category"
+            value={form.category ?? ""}
+            onChange={handleChange}
+            required
+            placeholder="Seçim yapınız"
+            options={[
+              { value: "sut_urunleri", label: "Süt Ürünleri" },
+              { value: "bal", label: "Bal" },
+              { value: "zeytinyagi", label: "Zeytinyağı" },
+              { value: "peynir", label: "Peynir" },
+              { value: "sebze", label: "Sebze" },
+              { value: "meyve", label: "Meyve" },
+            ]}
+          />
           {form.images?.length > 0 && (
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
               {form.images.map((file, i) => (
@@ -185,12 +172,12 @@ export function CreatePostForm({
                     alt="preview"
                     className="w-full h-24 object-cover rounded-lg border"
                   />
-<Button
-  type="button"
-  onClick={() => removeImage(i)}
-  icon={XMarkIcon}
-  className="absolute top-1 right-1 bg-white/80 hover:bg-white text-red-500 p-1 opacity-0 group-hover:opacity-100"
-/>
+                  <Button
+                    type="button"
+                    onClick={() => removeImage(i)}
+                    icon={XMarkIcon}
+                    className="absolute top-1 right-1 bg-white/80 hover:bg-white text-red-500 p-1 opacity-0 group-hover:opacity-100"
+                  />
                 </div>
               ))}
             </div>
@@ -212,14 +199,13 @@ export function CreatePostForm({
             </p>
           </label>
 
-
           <div className="flex justify-end">
-          <Button
-  type="submit"
-  disabled={postLoading}
-  loading={postLoading}
-  className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-5 py-2"
-/>
+            <Button
+              type="submit"
+              disabled={postLoading}
+              loading={postLoading}
+              className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-5 py-2"
+            />
           </div>
         </form>
       </div>

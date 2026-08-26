@@ -21,6 +21,7 @@ export function Select({
         px-4 py-2 text-sm text-gray-500 focus:outline-none
         focus:ring-2 focus:ring-[rgb(82,144,246)] transition
         ${className}`}
+        required
       >
         <option value="" disabled>
           {placeholder}

@@ -10,14 +10,12 @@ const conversationSchema = new mongoose.Schema(
       },
     ],
 
-    // 🔥 ürün bazlı konuşma (çok önemli senin senaryoda)
     productId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Product",
       required: false,
     },
 
-    // 💬 son mesaj (liste performansı için)
     lastMessage: {
       type: String,
       default: "",

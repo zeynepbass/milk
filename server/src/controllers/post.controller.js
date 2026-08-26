@@ -8,8 +8,9 @@ export const getNotifications = async (req, res) => {
   try {
     const userId = req.user.id || req.user._id;
 
-    const notifications = await Notification.find({ userId })
-      .sort({ createdAt: -1 });
+    const notifications = await Notification.find({ userId }).sort({
+      createdAt: -1,
+    });
 
     const formatted = notifications.map((n) => {
       let message = "";
@@ -25,7 +26,7 @@ export const getNotifications = async (req, res) => {
         createdAt: n.createdAt,
         postId: n.postId,
         userId: n.senderId,
-        type: n.type // ✅ önemli
+        type: n.type,
       };
     });
 
@@ -49,7 +50,6 @@ export const createPost = async (req, res) => {
         .json({ message: "Alıcı rolündeki kullanıcı post paylaşamaz" });
     }
 
-    // 📸 MULTER FILES → URL PATH
     const images = req.files
       ? req.files.map((file) => `/uploads/${file.filename}`)
       : [];
@@ -63,7 +63,7 @@ export const createPost = async (req, res) => {
       province: req.body.province,
       title: req.body.title,
       description: req.body.description,
-      images: images, // ✅ burada düzeltildi
+      images: images,
       district: req.body.district,
       category: req.body.category,
     });
@@ -81,9 +81,7 @@ export const createPost = async (req, res) => {
       date: today,
     }).select("userId");
 
-    const sentUserIds = existingNotifications.map((n) =>
-      n.userId.toString()
-    );
+    const sentUserIds = existingNotifications.map((n) => n.userId.toString());
 
     const usersToNotify = users.filter(
       (u) => !sentUserIds.includes(u._id.toString())
@@ -113,7 +111,6 @@ export const getFollowingPosts = async (req, res) => {
   try {
     const userId = req.user._id;
 
-    // 1. Kullanıcıyı al (following listesiyle)
     const user = await User.findById(userId).select("following");
 
     if (!user) {
@@ -122,18 +119,18 @@ export const getFollowingPosts = async (req, res) => {
 
     const followingIds = user.following;
 
-    // 2. Eğer hiç following yoksa boş dön
     if (!followingIds || followingIds.length === 0) {
       return res.json([]);
     }
 
-    // 3. Postları filtrele
     const posts = await Post.find({
       user: { $in: followingIds },
       isActive: true,
     })
       .sort({ createdAt: -1 })
-      .select("title price district category createdAt user images ownerName ownerSurname ownerRole")
+      .select(
+        "title price district category createdAt user images ownerName ownerSurname ownerRole"
+      )
       .populate({
         path: "user",
         select: "name surname avatar dogrulanmisSatici",
@@ -163,7 +160,6 @@ export const getPosts = async (req, res) => {
 
     const filter = { isActive: true };
 
-    // Optional filters
     if (district) {
       filter.district = district;
     }
@@ -172,7 +168,6 @@ export const getPosts = async (req, res) => {
       filter.category = category;
     }
 
-    // Text search (MongoDB text index gerekli)
     if (title && title.trim() !== "") {
       filter.$text = { $search: title.trim() };
     }
@@ -199,8 +194,10 @@ export const getPosts = async (req, res) => {
 };
 export const getPostById = async (req, res) => {
   try {
-    const post = await Post.findById(req.params.id)
-      .populate("user", "name surname avatar");
+    const post = await Post.findById(req.params.id).populate(
+      "user",
+      "name surname avatar"
+    );
 
     if (!post || !post.isActive) {
       return res.status(404).json({ message: "Post bulunamadı" });
@@ -208,28 +205,26 @@ export const getPostById = async (req, res) => {
 
     const comments = await Comment.find({
       post: post._id,
-      isActive: true
+      isActive: true,
     })
       .populate("user", "name surname avatar")
       .sort({ createdAt: -1 });
 
     res.json({
       post,
-      comments
+      comments,
     });
   } catch (err) {
     res.status(500).json({ message: err.message });
   }
 };
 
-
 export const deletePost = async (req, res) => {
   try {
     const userId = req.user.id || req.user._id;
 
     const post = await Post.findById(req.params.id);
-    if (!post)
-      return res.status(404).json({ message: "Post bulunamadı" });
+    if (!post) return res.status(404).json({ message: "Post bulunamadı" });
 
     if (post.user.toString() !== userId)
       return res.status(403).json({ message: "Yetkisiz" });
@@ -242,7 +237,6 @@ export const deletePost = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
-
 
 export const toggleLikePost = async (req, res) => {
   try {
@@ -259,10 +253,8 @@ export const toggleLikePost = async (req, res) => {
     );
 
     if (alreadyLiked) {
-      // unlike
       post.likes.pull(userId);
     } else {
-      // like
       post.likes.push(userId);
     }
 
@@ -274,55 +266,51 @@ export const toggleLikePost = async (req, res) => {
       likesCount: post.likes.length,
       liked: !alreadyLiked,
     });
-
   } catch (error) {
     return res.status(500).json({ message: error.message });
   }
 };
 
-  //favoriler
+//favoriler
 export const toggleSavePost = async (req, res) => {
-    try {
-      const userId = req.user.id || req.user._id;
-      const post = await Post.findById(req.params.id);
-  
-      if (!post || !post.isActive)
-        return res.status(404).json({ message: "Post bulunamadı" });
-  
-      const isSaved = post.savedBy.includes(userId);
-  
-      isSaved
-        ? post.savedBy.pull(userId)
-        : post.savedBy.push(userId);
-  
-      await post.save();
-  
-      res.json({
-        saved: !isSaved,
-        savedCount: post.savedBy.length
-      });
-    } catch (err) {
-      res.status(500).json({ message: err.message });
-    }
-  };
-  
-  export const getSavedPosts = async (req, res) => {
-    try {
-      const userId = req.user.id || req.user._id;
-  
-      const posts = await Post.find({
-        savedBy: userId,
-        isActive: true
-      })
-        .populate("user", "username avatar")
-        .sort({ createdAt: -1 });
-  
-      res.json(posts);
-  
-    } catch (error) {
-      res.status(500).json({ message: error.message });
-    }
-  };
+  try {
+    const userId = req.user.id || req.user._id;
+    const post = await Post.findById(req.params.id);
+
+    if (!post || !post.isActive)
+      return res.status(404).json({ message: "Post bulunamadı" });
+
+    const isSaved = post.savedBy.includes(userId);
+
+    isSaved ? post.savedBy.pull(userId) : post.savedBy.push(userId);
+
+    await post.save();
+
+    res.json({
+      saved: !isSaved,
+      savedCount: post.savedBy.length,
+    });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+export const getSavedPosts = async (req, res) => {
+  try {
+    const userId = req.user.id || req.user._id;
+
+    const posts = await Post.find({
+      savedBy: userId,
+      isActive: true,
+    })
+      .populate("user", "username avatar")
+      .sort({ createdAt: -1 });
+
+    res.json(posts);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
 //kullanıcının postları
 export const getMyPosts = async (req, res) => {
   try {
@@ -330,12 +318,12 @@ export const getMyPosts = async (req, res) => {
 
     const posts = await Post.find({
       user: userId,
-      isActive: true
+      isActive: true,
     })
       .sort({ createdAt: -1 })
       .populate({
         path: "user",
-        select: "name surname avatar dogrulanmisSatici"
+        select: "name surname avatar dogrulanmisSatici",
       })
       .lean();
 
@@ -355,27 +343,20 @@ export const updatePost = async (req, res) => {
       return res.status(404).json({ message: "Post bulunamadı" });
     }
 
-    // sadece post sahibi güncelleyebilir
     if (post.user.toString() !== userId.toString()) {
-      return res.status(403).json({ message: "Bu postu güncelleme yetkiniz yok" });
+      return res
+        .status(403)
+        .json({ message: "Bu postu güncelleme yetkiniz yok" });
     }
 
     const { title, description } = req.body;
 
-    // 📝 text fields
     if (title !== undefined) post.title = title;
     if (description !== undefined) post.description = description;
 
-    // 📸 new uploaded images (multer)
     if (req.files && req.files.length > 0) {
-      const newImages = req.files.map(
-        file => `/uploads/${file.filename}`
-      );
+      const newImages = req.files.map((file) => `/uploads/${file.filename}`);
 
-      // İstersen replace:
-      // post.images = newImages;
-
-      // İstersen append:
       post.images = [...(post.images || []), ...newImages];
     }
 

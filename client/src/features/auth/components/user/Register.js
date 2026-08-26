@@ -2,7 +2,8 @@ import { ChevronDownIcon } from "@heroicons/react/16/solid";
 import { Link } from "react-router-dom";
 import useUserLogin from "@/features/auth/hooks/useUser";
 import { useState } from "react";
-import {Input,Select,Button} from "@/shared/components/atoms"
+import {Input,Select,Button,Heading} from "@/shared/components/atoms"
+
 
 export function Register() {
   const { handleSubmitRegister, loading } = useUserLogin();
@@ -53,14 +54,10 @@ export function Register() {
           className="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg"
           onSubmit={onSubmit}
         >
-          <div className="mb-6">
-            <h1 className="text-3xl font-semibold text-[rgb(71,92,120)]">
-              Kayıt Ol
-            </h1>
-            <p className="mt-2 text-sm text-gray-500">
-              Hesabınızı oluşturmak için bilgilerinizi giriniz.
-            </p>
-          </div>
+
+            <Heading title=" Kayıt Ol" desc="Hesabınızı oluşturmak için bilgilerinizi giriniz." className="text-3xl font-semibold text-[rgb(71,92,120)]"/>
+   
+
 
           <div className="space-y-5">
             <div className="flex gap-3">

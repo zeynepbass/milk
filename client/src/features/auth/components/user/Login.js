@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import useUserLogin from "@/features/auth/hooks/useUser";
 import { useState } from "react";
-import {Input,Button} from "@/shared/components/atoms"
+import {Input,Button,Heading} from "@/shared/components/atoms"
 export function Login() {
   const { handleSubmit } = useUserLogin();
 
@@ -54,12 +54,9 @@ export function Login() {
         >
    
           <div className="mb-6">
-            <h1 className="text-3xl font-semibold text-[rgb(71,92,120)]">
-              Giriş Yap
-            </h1>
-            <p className="mt-2 text-sm text-gray-500">
-              Seni tekrar görmek güzel! Devam etmek için giriş yap.
-            </p>
+            <Heading title="   Giriş Yap"  desc="  Seni tekrar görmek güzel! Devam etmek için giriş yap."className="text-3xl font-semibold text-[rgb(71,92,120)]"/>
+
+
           </div>
 
 
