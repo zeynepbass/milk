@@ -1,20 +1,29 @@
 import { ChevronDownIcon } from "@heroicons/react/16/solid";
 
-export function Select({ label, options = [], ...props }) {
+export function Select({
+  label,
+  options = [],
+  placeholder = "Seçim yapınız",
+  className = "",
+  ...props
+}) {
   return (
     <div className="relative">
-      <label className="block text-sm text-gray-500 pb-2">
-        {label}
-      </label>
+      {label && (
+        <label className="block text-sm text-gray-500 pb-2">
+          {label}
+        </label>
+      )}
 
       <select
         {...props}
-        className="w-full appearance-none rounded-lg border border-gray-200
+        className={`w-full appearance-none rounded-lg border border-gray-200
         px-4 py-2 text-sm text-gray-500 focus:outline-none
-        focus:ring-2 focus:ring-[rgb(82,144,246)] transition"
+        focus:ring-2 focus:ring-[rgb(82,144,246)] transition
+        ${className}`}
       >
         <option value="" disabled>
-          Rol seçiniz
+          {placeholder}
         </option>
 
         {options.map((opt) => (

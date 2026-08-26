@@ -8,6 +8,7 @@ import {
   MenuItem,
   MenuItems,
 } from "@headlessui/react";
+
 import {
   Bars3Icon,
   GlobeAltIcon,
@@ -18,26 +19,33 @@ import {
   MoonIcon,
   SunIcon,
 } from "@heroicons/react/24/outline";
+
+import { Input, Button } from "@/shared/components/atoms";
 import { useUserStore, useSearchStore } from "@/shared/store";
 import useUserLogin from "@/features/auth/hooks/useUser";
 import NotificationAlert from "@/features/feed/pages/notification";
 import { Link } from "react-router-dom";
 import { useTheme } from "@/shared/utils/useTheme";
+
 export function Header() {
   const { theme, toggleTheme } = useTheme();
+
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [input, setInput] = useState("");
   const [bellOpen, setBellOpen] = useState(false);
+
   const setSearch = useSearchStore((state) => state.setSearch);
   const user = useUserStore((state) => state.user);
 
   const { profileForm } = useUserLogin();
+
   return (
-    <header className=" dark:bg-gray-900 w-full mx-auto border-b-gray-50 dark:border-gray-800 border-b-2 transition-colors">
+    <header className="w-full mx-auto border-b-2 border-b-gray-50 dark:border-gray-800 dark:bg-gray-900 transition-colors">
       <nav
         aria-label="Global"
         className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8"
       >
+
         <div className="flex shrink-0">
           <Link to="/" className="-m-1.5 p-1.5">
             <img
@@ -45,30 +53,43 @@ export function Header() {
               alt="Logo"
               className="h-16 w-auto block dark:hidden"
             />
+
             <img
               src="/images/dark-logo.png"
               alt="Logo Dark"
               className="h-16 w-auto hidden dark:block"
-            />{" "}
+            />
           </Link>
         </div>
 
+
         <div className="flex md:hidden">
-          <button
+          <Button
             type="button"
             onClick={() => setMobileMenuOpen(true)}
-            className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+            className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700 dark:text-gray-300"
           >
             <span className="sr-only">Open main menu</span>
-            <Bars3Icon className="w-6 h-6" aria-hidden="true" />
-          </button>
+
+            <Bars3Icon
+              className="w-6 h-6"
+              aria-hidden="true"
+            />
+          </Button>
         </div>
+
+
         <PopoverGroup className="hidden md:flex flex-1 m-3">
           <div
-            className="flex w-full max-w-2xl mx-auto rounded-full border-2 border-[rgb(137,205,251)] dark:border-yellow-400
- overflow-hidden h-10"
+            className="
+              flex w-full max-w-2xl mx-auto
+              rounded-full
+              border-2 border-[rgb(137,205,251)]
+              dark:border-yellow-400
+              overflow-hidden h-10
+            "
           >
-            <input
+            <Input
               type="text"
               value={input}
               placeholder="Ürün, kategori veya ilçe ara…"
@@ -81,65 +102,88 @@ export function Header() {
               className="w-full bg-white dark:bg-gray-800 px-5 py-3 text-sm outline-none"
             />
 
-            <button
+            <Button
               type="button"
               onClick={() => setSearch(input)}
-              className="flex items-center justify-center ml-auto bg-[rgb(137,205,251)] dark:bg-yellow-400
- hover:bg-gray-100 dark:hover:bg-gray-800   px-6 transition"
+              className="
+                flex items-center justify-center ml-auto
+                bg-[rgb(137,205,251)]
+                dark:bg-yellow-400
+                hover:bg-gray-100
+                dark:hover:bg-gray-800
+                px-6
+              "
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 192.904 192.904"
                 width="18px"
-                className="fill-white "
+                className="fill-white"
               >
-                <path d="m190.707 180.101-47.078-47.077c11.702-14.072 18.752-32.142 18.752-51.831C162.381 36.423 125.959 0 81.191 0 36.422 0 0 36.423 0 81.193c0 44.767 36.422 81.187 81.191 81.187 19.688 0 37.759-7.049 51.831-18.751l47.079 47.078a7.474 7.474 0 0 0 5.303 2.197 7.498 7.498 0 0 0 5.303-12.803zM15 81.193C15 44.694 44.693 15 81.191 15c36.497 0 66.189 29.694 66.189 66.193 0 36.496-29.692 66.187-66.189 66.187C44.693 147.38 15 117.689 15 81.193z"></path>
+                <path d="m190.707 180.101-47.078-47.077c11.702-14.072 18.752-32.142 18.752-51.831C162.381 36.423 125.959 0 81.191 0 36.422 0 0 36.423 0 81.193c0 44.767 36.422 81.187 81.191 81.187 19.688 0 37.759-7.049 51.831-18.751l47.079 47.078a7.474 7.474 0 0 0 5.303 2.197 7.498 7.498 0 0 0 5.303-12.803zM15 81.193C15 44.694 44.693 15 81.191 15c36.497 0 66.189 29.694 66.189 66.193 0 36.496-29.692 66.187-66.189 66.187C44.693 147.38 15 117.689 15 81.193z" />
               </svg>
-            </button>
+            </Button>
           </div>
         </PopoverGroup>
 
+
         <div className="hidden md:flex shrink-0 items-center gap-4">
-          <button
+
+
+          <Button
+            type="button"
             onClick={toggleTheme}
-            className="p-2 rounded-full  hover:bg-gray-100 dark:hover:bg-gray-800   transition"
+            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
           >
             {theme === "light" ? (
-              <MoonIcon className="w-5 h-5 text-[rgb(137,205,251)] " />
+              <MoonIcon className="w-5 h-5 text-[rgb(137,205,251)]" />
             ) : (
               <SunIcon className="w-5 h-5 text-yellow-400" />
             )}
-          </button>
+          </Button>
+
+
           <Link
             to="/kesfet"
-            className="p-2 rounded-full  hover:bg-gray-100 dark:hover:bg-gray-800 "
+            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
           >
             <GlobeAltIcon className="w-5 h-5 text-[rgb(137,205,251)] dark:text-yellow-400" />
           </Link>
+
+
           <Link
             to="/favoriler"
-            className="p-2 rounded-full  hover:bg-gray-100 dark:hover:bg-gray-800 "
+            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
           >
             <HeartIcon className="w-5 h-5 text-[rgb(137,205,251)] dark:text-yellow-400" />
           </Link>
 
+
           <Link
             to="/mesajlar"
-            className="p-2 rounded-full  hover:bg-gray-100 dark:hover:bg-gray-800 "
+            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
           >
             <ChatBubbleLeftRightIcon className="w-5 h-5 text-[rgb(137,205,251)] dark:text-yellow-400" />
           </Link>
-          <button
-            className="p-2 rounded-full  hover:bg-gray-100 dark:hover:bg-gray-800 "
+
+
+          <Button
+            type="button"
             onClick={() => setBellOpen(!bellOpen)}
+            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
           >
             <BellAlertIcon className="w-5 h-5 text-[rgb(137,205,251)] dark:text-yellow-400" />
-          </button>
+          </Button>
+
           {bellOpen && <NotificationAlert open={bellOpen} />}
+
+   
           <Menu as="div" className="relative ml-3">
             <MenuButton className="relative flex rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
               <span className="absolute -inset-1.5" />
+
               <span className="sr-only">Menü</span>
+
               <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center bg-gray-100">
                 {user?.avatar ? (
                   <img
@@ -158,12 +202,29 @@ export function Header() {
 
             <MenuItems
               transition
-              className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white dark:bg-gray-800 py-1 shadow-lg outline outline-black/5 transition data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
+              className="
+                absolute right-0 z-10 mt-2 w-48 origin-top-right
+                rounded-md bg-white dark:bg-gray-800 py-1
+                shadow-lg outline outline-black/5
+                transition
+                data-closed:scale-95
+                data-closed:transform
+                data-closed:opacity-0
+                data-enter:duration-100
+                data-enter:ease-out
+                data-leave:duration-75
+                data-leave:ease-in
+              "
             >
               <MenuItem>
                 <Link
                   to="/profil"
-                  className="block px-4 py-2 text-sm text-gray-700 dark:text-yellow-400 data-focus:bg-gray-100 data-focus:outline-hidden"
+                  className="
+                    block px-4 py-2 text-sm
+                    text-gray-700 dark:text-yellow-400
+                    data-focus:bg-gray-100
+                    data-focus:outline-hidden
+                  "
                 >
                   Profil
                 </Link>
@@ -173,7 +234,12 @@ export function Header() {
                 <Link
                   to="/giris-yap"
                   onClick={() => localStorage.clear()}
-                  className="block px-4 py-2 text-sm dark:text-yellow-400 text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden "
+                  className="
+                    block px-4 py-2 text-sm
+                    text-gray-700 dark:text-yellow-400
+                    data-focus:bg-gray-100
+                    data-focus:outline-hidden
+                  "
                 >
                   Çıkış yap
                 </Link>
@@ -182,53 +248,97 @@ export function Header() {
           </Menu>
         </div>
       </nav>
+
+
       <Dialog
         open={mobileMenuOpen}
         onClose={setMobileMenuOpen}
         className="md:hidden"
       >
         <div className="fixed inset-0 z-50" />
-        <DialogPanel className="fixed inset-y-0 right-0 z-50 w-full overflow-y-auto bg-white dark:bg-gray-900 p-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
+
+        <DialogPanel
+          className="
+            fixed inset-y-0 right-0 z-50
+            w-full overflow-y-auto
+            bg-white dark:bg-gray-900
+            p-6 sm:max-w-sm
+            sm:ring-1 sm:ring-gray-900/10
+          "
+        >
+
           <div className="flex items-center justify-between">
-            <button
+            <Button
               type="button"
               onClick={() => setMobileMenuOpen(false)}
-              className="-m-2.5 rounded-md p-2.5 text-gray-700"
+              className="
+                -m-2.5 rounded-md p-2.5
+                text-gray-700 dark:text-gray-300
+              "
             >
               <span className="sr-only">Close menu</span>
-              <XMarkIcon className="w-6 h-6" aria-hidden="true" />
-            </button>
+
+              <XMarkIcon
+                className="w-6 h-6"
+                aria-hidden="true"
+              />
+            </Button>
           </div>
+
           <div className="mt-6 flow-root">
             <div className="-my-6 divide-y divide-gray-500/10">
+
+
               <div className="flex py-6 shrink-0 items-center justify-center gap-4">
-                <button className="p-2 rounded-full  hover:bg-gray-100 dark:hover:bg-gray-800 ">
-                  <MoonIcon className="w-5 h-5 text-[rgb(137,205,251)] dark:text-yellow-400" />
-                </button>
+
+  
+                <Button
+                  type="button"
+                  onClick={toggleTheme}
+                  className="
+                    p-2 rounded-full
+                    hover:bg-gray-100
+                    dark:hover:bg-gray-800
+                  "
+                >
+                  {theme === "light" ? (
+                    <MoonIcon className="w-5 h-5 text-[rgb(137,205,251)]" />
+                  ) : (
+                    <SunIcon className="w-5 h-5 text-yellow-400" />
+                  )}
+                </Button>
+
+ 
                 <Link
                   to="/kesfet"
-                  className="p-2 rounded-full  hover:bg-gray-100 dark:hover:bg-gray-800 "
+                  className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
                 >
                   <GlobeAltIcon className="w-5 h-5 text-[rgb(137,205,251)] dark:text-yellow-400" />
                 </Link>
+
+
                 <Link
                   to="/favoriler"
-                  className="p-2 rounded-full  hover:bg-gray-100 dark:hover:bg-gray-800 "
+                  className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
                 >
                   <HeartIcon className="w-5 h-5 text-[rgb(137,205,251)] dark:text-yellow-400" />
                 </Link>
 
+         
                 <Link
                   to="/mesajlar"
-                  className="p-2 rounded-full  hover:bg-gray-100 dark:hover:bg-gray-800 "
+                  className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
                 >
                   <ChatBubbleLeftRightIcon className="w-5 h-5 text-[rgb(137,205,251)] dark:text-yellow-400" />
                 </Link>
 
+
                 <Menu as="div" className="relative ml-3">
                   <MenuButton className="relative flex rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
                     <span className="absolute -inset-1.5" />
+
                     <span className="sr-only">Menü</span>
+
                     <div className="w-10 h-10 rounded-full overflow-hidden flex items-center justify-center bg-gray-100 dark:bg-gray-800">
                       {user?.avatar ? (
                         <img
@@ -247,28 +357,55 @@ export function Header() {
 
                   <MenuItems
                     transition
-                    className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white dark:bg-gray-800 py-1 shadow-lg outline outline-black/5 transition data-closed:scale-95 data-closed:transform data-closed:opacity-0 data-enter:duration-100 data-enter:ease-out data-leave:duration-75 data-leave:ease-in"
+                    className="
+                      absolute right-0 z-10 mt-2 w-48
+                      origin-top-right rounded-md
+                      bg-white dark:bg-gray-800 py-1
+                      shadow-lg outline outline-black/5
+                      transition
+                      data-closed:scale-95
+                      data-closed:transform
+                      data-closed:opacity-0
+                      data-enter:duration-100
+                      data-enter:ease-out
+                      data-leave:duration-75
+                      data-leave:ease-in
+                    "
                   >
                     <MenuItem>
                       <Link
                         to="/profil"
-                        className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
+                        className="
+                          block px-4 py-2 text-sm
+                          text-gray-700 dark:text-yellow-400
+                          data-focus:bg-gray-100
+                        "
                       >
                         Profil
                       </Link>
                     </MenuItem>
+
                     <MenuItem>
                       <Link
                         to="/ayarlar"
-                        className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
+                        className="
+                          block px-4 py-2 text-sm
+                          text-gray-700 dark:text-yellow-400
+                          data-focus:bg-gray-100
+                        "
                       >
                         Ayarlar
                       </Link>
                     </MenuItem>
+
                     <MenuItem>
                       <Link
                         to="/giris-yap"
-                        className="block px-4 py-2 text-sm text-gray-700 data-focus:bg-gray-100 data-focus:outline-hidden"
+                        className="
+                          block px-4 py-2 text-sm
+                          text-gray-700 dark:text-yellow-400
+                          data-focus:bg-gray-100
+                        "
                       >
                         Çıkış yap
                       </Link>
@@ -276,13 +413,19 @@ export function Header() {
                   </MenuItems>
                 </Menu>
               </div>
+
+
               <div className="space-y-2 py-6">
                 <div
-                  className="flex w-full max-w-2xl mx-auto rounded-full border-2 border-[rgb(137,205,251)]
-                  dark:border-yellow-400
- overflow-hidden h-10"
+                  className="
+                    flex w-full max-w-2xl mx-auto
+                    rounded-full
+                    border-2 border-[rgb(137,205,251)]
+                    dark:border-yellow-400
+                    overflow-hidden h-10
+                  "
                 >
-                  <input
+                  <Input
                     type="text"
                     value={input}
                     placeholder="Ürün, kategori veya ilçe ara…"
@@ -292,24 +435,33 @@ export function Header() {
                         setSearch(input);
                       }
                     }}
-                    className="w-full bg-white dark:bg-gray-800 px-5 py-3 text-sm outline-none"
+                    className="
+                      w-full bg-white dark:bg-gray-800
+                      px-5 py-3 text-sm outline-none
+                    "
                   />
 
-                  <button
+                  <Button
                     type="button"
                     onClick={() => setSearch(input)}
-                    className="flex items-center justify-center ml-auto bg-[rgb(137,205,251)]
- hover:bg-gray-100 dark:hover:bg-gray-800 dark:bg-yellow-400  px-6 transition"
+                    className="
+                      flex items-center justify-center ml-auto
+                      bg-[rgb(137,205,251)]
+                      dark:bg-yellow-400
+                      hover:bg-gray-100
+                      dark:hover:bg-gray-800
+                      px-6
+                    "
                   >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 192.904 192.904"
                       width="18px"
-                      className="fill-white "
+                      className="fill-white"
                     >
-                      <path d="m190.707 180.101-47.078-47.077c11.702-14.072 18.752-32.142 18.752-51.831C162.381 36.423 125.959 0 81.191 0 36.422 0 0 36.423 0 81.193c0 44.767 36.422 81.187 81.191 81.187 19.688 0 37.759-7.049 51.831-18.751l47.079 47.078a7.474 7.474 0 0 0 5.303 2.197 7.498 7.498 0 0 0 5.303-12.803zM15 81.193C15 44.694 44.693 15 81.191 15c36.497 0 66.189 29.694 66.189 66.193 0 36.496-29.692 66.187-66.189 66.187C44.693 147.38 15 117.689 15 81.193z"></path>
+                      <path d="m190.707 180.101-47.078-47.077c11.702-14.072 18.752-32.142 18.752-51.831C162.381 36.423 125.959 0 81.191 0 36.422 0 0 36.423 0 81.193c0 44.767 36.422 81.187 81.191 81.187 19.688 0 37.759-7.049 51.831-18.751l47.079 47.078a7.474 7.474 0 0 0 5.303 2.197 7.498 7.498 0 0 0 5.303-12.803zM15 81.193C15 44.694 44.693 15 81.191 15c36.497 0 66.189 29.694 66.189 66.193 0 36.496-29.692 66.187-66.189 66.187C44.693 147.38 15 117.689 15 81.193z" />
                     </svg>
-                  </button>
+                  </Button>
                 </div>
               </div>
             </div>

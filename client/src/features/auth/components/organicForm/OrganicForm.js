@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ArrowRightIcon, DocumentIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Heading,Button } from "@/shared/components/atoms";
 
 export function OrganicForm({ userUpdated }) {
   const [file, setFile] = useState(null);
@@ -34,15 +35,8 @@ export function OrganicForm({ userUpdated }) {
 
   return (
     <div className="max-w-full p-6 bg-white dark:bg-gray-800  dark:border-gray-400  rounded-2xl shadow-lg border space-y-6">
+ <Heading title="          Organik Form Yükleyin" desc="  Hesabınızı doğrulanmış satıcı olarak kullanmak için PDF belgenizi yükleyin."/>
 
-      <div>
-      <h3 className="text-md font-semibold text-gray-700 mb-2 dark:text-gray-400">
-          Organik Form Yükleyin
-        </h3>
-        <p className="text-gray-400 text-sm mb-4">
-          Hesabınızı doğrulanmış satıcı olarak kullanmak için PDF belgenizi yükleyin.
-        </p>
-      </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
 
@@ -73,26 +67,25 @@ export function OrganicForm({ userUpdated }) {
               {file.name}
             </span>
 
-            <button
-              type="button"
-              onClick={removeFile}
-              className="text-gray-500 hover:text-red-500"
-            >
-              <XMarkIcon className="w-5 h-5" />
-            </button>
+            <Button
+  type="button"
+  onClick={removeFile}
+  icon={XMarkIcon}
+  className="text-gray-500 hover:text-red-500"
+/>
           </div>
         )}
 
 
         <div className="flex justify-end">
-          <button
-            type="submit"
-            disabled={!file || loading}
-            className=" bg-[rgb(82,144,246)] dark:bg-gray-900 hover:opacity-90 text-white gap-2 px-5 py-2 rounded-full  transition disabled:cursor-not-allowed"
-
-          >
-            {loading ?  "Gönderiliyor..." :  <ArrowRightIcon className="w-4 h-4" /> }
-          </button>
+        <Button
+  type="submit"
+  disabled={!file || loading}
+  loading={loading}
+  loadingText="Gönderiliyor..."
+  icon={ArrowRightIcon}
+  className="bg-[rgb(82,144,246)] dark:bg-gray-900 hover:opacity-90 text-white gap-2 px-5 py-2"
+/>
         </div>
       </form>
     </div>

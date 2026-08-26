@@ -2,7 +2,7 @@ import { ChevronDownIcon } from "@heroicons/react/16/solid";
 import { Link } from "react-router-dom";
 import useUserLogin from "@/features/auth/hooks/useUser";
 import { useState } from "react";
-import {Input,Select} from "@/shared/components/atoms"
+import {Input,Select,Button} from "@/shared/components/atoms"
 
 export function Register() {
   const { handleSubmitRegister, loading } = useUserLogin();
@@ -125,19 +125,14 @@ export function Register() {
             </div>
           </div>
 
-          <button
-            type="submit"
-            disabled={loading}
-            className={`mt-6 w-full rounded-lg py-3 text-sm font-semibold text-white transition shadow-md
-            ${
-              loading
-                ? "bg-gray-300 cursor-not-allowed"
-                : "bg-[rgb(82,144,246)] hover:bg-[rgb(60,120,220)]"
-            }`}
-          >
-            {loading ? "Kayıt Olunuyor..." : "Üye Ol"}
-          </button>
-
+          <Button
+  type="submit"
+  variant="primary"
+  disabled={loading}
+  className="mt-6"
+>
+  {loading ? "Kayıt Olunuyor..." : "Üye Ol"}
+</Button>
           <p className="mt-6 flex items-center gap-3 text-sm text-gray-400">
             <span className="flex-1 h-px bg-gray-200" />
 
