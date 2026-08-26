@@ -1,15 +1,10 @@
-import { Container } from "./components/layouts/index.js";
-import Section from "./pages/section";
-import Following from "./pages/following/index";
-import Login from "./pages/login/index";
-import Register from "./pages/register/index";
-import Profile from "./pages/profile/index";
-import NotFound from "./pages/error/index";
-import Favorite from "./pages/favorite/index";
-import Message from "./pages/message/index";
-import Details from "./pages/section/details/index";
+
+import {Following,Favorite,Message,DetailsPost,Outlet} from  "@/features/feed/pages"
+import {Login,Register,Profile} from "@/features/auth/pages"
+import { Container } from "@/shared/layout";
 import { Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import NotFound from "@/shared/error/index";
 import "react-toastify/dist/ReactToastify.css";
 function App() {
   return (
@@ -23,11 +18,11 @@ function App() {
       <Routes>
         <Route element={<Container />}>
           <Route path="/" element={<Following />} />
-          <Route path="/kesfet" element={<Section />} />
+          <Route path="/kesfet" element={<Outlet />} />
           <Route path="/profil" element={<Profile />} />
           <Route path="/favoriler" element={<Favorite />} />
           <Route path="/mesajlar" element={<Message />} />
-          <Route path="/detay/:id" element={<Details />} />
+          <Route path="/detay/:id" element={<DetailsPost />} />
         </Route>
         <Route path="*" element={<NotFound />} />
         <Route

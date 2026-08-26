@@ -1,0 +1,1 @@
+export {UpdatedPostForm} from "./UpdatedPostForm"
