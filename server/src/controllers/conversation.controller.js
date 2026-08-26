@@ -6,7 +6,10 @@ export const getConversationBetweenUsers = async (req, res) => {
   try {
     const { userId, otherUserId } = req.params;
 
-    if (!mongoose.Types.ObjectId.isValid(userId) || !mongoose.Types.ObjectId.isValid(otherUserId)) {
+    if (
+      !mongoose.Types.ObjectId.isValid(userId) ||
+      !mongoose.Types.ObjectId.isValid(otherUserId)
+    ) {
       return res.status(400).json({ error: "Geçersiz kullanıcı ID" });
     }
 
@@ -15,14 +18,15 @@ export const getConversationBetweenUsers = async (req, res) => {
 
     let conversation = await Conversation.findOne({
       participants: { $all: [u1, u2] },
-    }).populate("participants", "name surname avatar"); // Kullanıcı bilgileri
+    }).populate("participants", "name surname avatar");
 
     if (!conversation) {
       return res.json({ _id: null, participants: [], messages: [] });
     }
 
-    // Mesajları çek ve sırala
-    const messages = await Message.find({ conversationId: conversation._id }).sort({ createdAt: 1 });
+    const messages = await Message.find({
+      conversationId: conversation._id,
+    }).sort({ createdAt: 1 });
 
     res.json({ ...conversation.toObject(), messages });
   } catch (err) {

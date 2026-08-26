@@ -8,7 +8,7 @@ import {
   UserPlusIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
-import { Input, Button } from "@/shared/components/atoms";
+import { Input, Button,Heading } from "@/shared/components/atoms";
 import usePost from "@/features/feed/hooks/user/useUserPost";
 import { useParams } from "react-router-dom";
 import useCommentAll from "@/features/feed/hooks/post/usePostDetails";
@@ -119,11 +119,8 @@ export function Detail() {
         </div>
 
         <div>
-          <h1 className="text-3xl font-bold">{details.title}</h1>
-
-          <p className="text-gray-500 mt-2 dark:text-gray-400">
-            {details.description}
-          </p>
+          <Heading title={details.title} desc=   {details.description} className="text-3xl font-bold"/>
+  
 
           <p className="text-orange-500 mt-2">
             {formatLocation(details.province)}-

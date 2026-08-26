@@ -27,7 +27,7 @@ export const addComment = async (req, res) => {
       text,
     });
 
-    // 🔥 populate ekledik
+
     const populatedComment = await Comment.findById(comment._id)
       .populate("user", "name surname avatar");
 
@@ -37,7 +37,7 @@ export const addComment = async (req, res) => {
     res.status(500).json({ message: err.message });
   }
 };
-  //yorum beggen
+
   export const toggleLikeComment = async (req, res) => {
     try {
       const userId = req.user.id || req.user._id;
@@ -101,7 +101,7 @@ export const addComment = async (req, res) => {
   
       const comments = await Comment.find({
         post: id,
-        isActive: true   // 🔥 SİLİNENLER GELMEZ
+        isActive: true   
       })
         .populate("user", "name surname avatar")
         .sort({ createdAt: -1 });

@@ -13,6 +13,7 @@ export function Textarea({ label, error, ...props }) {
           dark:bg-gray-700 dark:border-gray-600 dark:text-white
           focus:outline-none focus:ring-2 focus:ring-blue-300
           resize-none transition"
+          required
         />
   
         {error && (
