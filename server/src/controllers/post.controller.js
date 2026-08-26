@@ -271,7 +271,7 @@ export const toggleLikePost = async (req, res) => {
   }
 };
 
-//favoriler
+
 export const toggleSavePost = async (req, res) => {
   try {
     const userId = req.user.id || req.user._id;
@@ -311,7 +311,7 @@ export const getSavedPosts = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
-//kullanıcının postları
+
 export const getMyPosts = async (req, res) => {
   try {
     const userId = req.user.id || req.user._id;
