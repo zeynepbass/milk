@@ -1,13 +1,14 @@
 import { useEffect, useState, useRef } from "react";
-import { postService } from "@/features/feed/services/postServices";
+import { postProvider } from "@/features/feed/providers/post.provider";
 import { useUserStore } from "@/shared/store";
 import { io } from "socket.io-client";
 
 export default function useMessage() {
   const user = useUserStore((state) => state.user);
-  const token = useUserStore((state) => state.token);
 
   const userId = user?._id || user?.id;
+
+  const service = postProvider.service;
 
   const [selectedUser, setSelectedUser] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -33,10 +34,10 @@ export default function useMessage() {
     if (!userId) return;
 
     const fetchConversations = async () => {
-      console.log(userId)
       try {
         setLoading(true);
-        const res = await postService.postMessage(userId, token);
+
+        const res = await service.getConversation(userId);
 
         setConversations(res);
       } catch (err) {
@@ -47,7 +48,7 @@ export default function useMessage() {
     };
 
     fetchConversations();
-  }, [userId, token]);
+  }, [userId]);
 
 
   useEffect(() => {
@@ -69,13 +70,21 @@ export default function useMessage() {
 
     const fetchMessages = async () => {
       try {
-        const res = await postService.postMessageGet(userId, selectedUser);
-
+        const res =
+          await service.getConversationMessages(
+            userId,
+            selectedUser._id
+          );
 
         setMessages(res.messages || []);
 
         setSelectedUser((prev) =>
-          prev?.conversationId ? prev : { ...prev, conversationId: res._id }
+          prev?.conversationId
+            ? prev
+            : {
+                ...prev,
+                conversationId: res._id,
+              }
         );
       } catch (err) {
         console.error(err);
@@ -87,7 +96,11 @@ export default function useMessage() {
 
 
   useEffect(() => {
-    if (productData && selectedUser && !autoSentRef.current) {
+    if (
+      productData &&
+      selectedUser &&
+      !autoSentRef.current
+    ) {
       handleSend();
       autoSentRef.current = true;
     }
@@ -98,17 +111,23 @@ export default function useMessage() {
     if (!userId) return;
 
     const socket = io("http://localhost:5346");
+
     socketRef.current = socket;
 
     socket.emit("addUser", userId);
 
     socket.on("getUsers", (users) => {
-      setOnlineUsers(users.map((u) => u.userId));
+      setOnlineUsers(
+        users.map((u) => u.userId)
+      );
     });
 
     socket.on("getMessage", (msg) => {
       setMessages((prev) => {
-        const exists = prev.some((m) => m._id === msg._id);
+        const exists = prev.some(
+          (m) => m._id === msg._id
+        );
+
         if (exists) return prev;
 
         if (
@@ -126,63 +145,90 @@ export default function useMessage() {
       socket.disconnect();
     };
   }, [userId, selectedUser?._id]);
+
+
   const handleSend = async () => {
-    if ((!input.trim() && !productData) || !selectedUser) return;
-  
+    if (
+      (!input.trim() && !productData) ||
+      !selectedUser
+    ) {
+      return;
+    }
+
     const text = productData
       ? "Ürün hakkında bilgi alabilir miyim?"
       : input;
-  
+
     const body = {
       senderId: userId,
       receiverId: selectedUser._id,
       text,
-      conversationId: selectedUser.conversationId || null,
+      conversationId:
+        selectedUser.conversationId || null,
     };
-  
-    try {
 
-      const savedMessage = await postService.postMessageSend(body, token);
-      setMessages((prev) => [...prev, savedMessage]);
-  
+    try {
+      const savedMessage =
+        await service.sendMessage(body);
+
+      setMessages((prev) => [
+        ...prev,
+        savedMessage,
+      ]);
+
       setInput("");
-  
+
       setConversations((prev) => {
-        const exists = prev.find((c) => c._id === savedMessage.conversationId);
-  
+        const exists = prev.find(
+          (c) =>
+            c._id === savedMessage.conversationId
+        );
+
         if (exists) {
           return prev.map((c) =>
-            c._id === savedMessage.conversationId
-              ? { ...c, lastMessage: text }
+            c._id ===
+            savedMessage.conversationId
+              ? {
+                  ...c,
+                  lastMessage: text,
+                }
               : c
           );
         }
-  
+
         return [
           {
             _id: savedMessage.conversationId,
             participants: [
               { _id: userId },
-              { _id: selectedUser._id, name: selectedUser.name },
+              {
+                _id: selectedUser._id,
+                name: selectedUser.name,
+              },
             ],
             lastMessage: text,
           },
           ...prev,
         ];
       });
-  
+
       if (productData) {
         localStorage.removeItem("product");
         setProductData(null);
       }
     } catch (err) {
-      console.log("Mesaj gönderilemedi:", err);
+      console.log(
+        "Mesaj gönderilemedi:",
+        err
+      );
     }
   };
 
   const getOtherUser = (conv) =>
-    conv.participants.find((p) => p._id !== userId);
-console.log(conversations)
+    conv.participants.find(
+      (p) => p._id !== userId
+    );
+
   return {
     loading,
     conversations,
