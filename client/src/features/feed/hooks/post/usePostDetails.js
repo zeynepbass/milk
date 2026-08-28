@@ -1,20 +1,28 @@
 import { useEffect, useState } from "react";
-import { postService } from "@/features/feed/services/postServices";
 import { useUserStore } from "@/shared/store";
-import { commentService } from "@/features/feed/services/commentService";
+
+import { postProvider } from "@/features/feed/providers/post.provider";
+import { commentProvider } from "@/features/feed/providers/comment.provider";
 
 export default function usePostDetail(id) {
-  
   const [details, setDetails] = useState(null);
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(false);
-  const token = useUserStore((state) => state.token);
-  const user = useUserStore((state) => state.user);
   const [showComments, setShowComments] = useState(false);
+
+  const user = useUserStore((state) => state.user);
+
+  const postService = postProvider.service;
+  const commentService = commentProvider.service;
+
   const fetchData = async () => {
+    if (!id) return;
+
     try {
       setLoading(true);
-      const res = await postService.postDetails(id, token);
+
+      const res = await postService.getPostDetails(id);
+
       setDetails(res.post);
       setComments(res.comments);
     } catch (error) {
@@ -23,14 +31,15 @@ export default function usePostDetail(id) {
       setLoading(false);
     }
   };
+
   useEffect(() => {
-    if (!id) return;
     fetchData();
-  }, [id,token]);
+  }, [id]);
 
   const handleLike = async (commentId) => {
     try {
-      const res = await commentService.likeComment(commentId, token);
+      const res =
+        await commentService.likeComment(commentId);
 
       setComments((prev) =>
         prev.map((comment) =>
@@ -48,11 +57,17 @@ export default function usePostDetail(id) {
       console.log(error);
     }
   };
+
   const handleComment = async (postId, text) => {
-    if (!text.trim()) return;
+    if (!text?.trim()) return;
 
     try {
-      const res = await commentService.postComment(postId, text, token);
+      const res =
+        await commentService.postComment(
+          postId,
+          text
+        );
+
       setComments((prev) => [res, ...prev]);
     } catch (error) {
       console.log(error);
@@ -61,16 +76,22 @@ export default function usePostDetail(id) {
 
   const handleDelete = async (commentId) => {
     try {
-      await commentService.deleteComment(commentId, token);
+      await commentService.deleteComment(commentId);
 
-      setComments((prev) => prev.filter((item) => item._id !== commentId));
+      setComments((prev) =>
+        prev.filter(
+          (item) => item._id !== commentId
+        )
+      );
     } catch (error) {
       console.log(error);
     }
   };
+
   const handlePostLike = async (postId) => {
     try {
-      const res = await postService.postLike(postId, token);
+      const res =
+        await postService.likePost(postId);
 
       setDetails((prev) => {
         if (!prev) return prev;
@@ -85,19 +106,24 @@ export default function usePostDetail(id) {
       console.log(error);
     }
   };
+
   const handlePostSave = async (postId) => {
     try {
-await postService.postsavedBy(postId, token);
+      await postService.savePost(postId);
 
       setDetails((prev) => {
         if (!prev) return prev;
 
-        const alreadySaved = Array.isArray(prev.savedBy) && prev.savedBy.includes(user.id);
+        const alreadySaved =
+          Array.isArray(prev.savedBy) &&
+          prev.savedBy.includes(user.id);
 
         return {
           ...prev,
           savedBy: alreadySaved
-            ? prev.savedBy.filter((u) => u !== user.id)
+            ? prev.savedBy.filter(
+                (u) => u !== user.id
+              )
             : [...prev.savedBy, user.id],
         };
       });
@@ -109,14 +135,20 @@ await postService.postsavedBy(postId, token);
   return {
     details,
     loading,
+
+    comments,
+    user,
+
     handleLike,
     handleDelete,
     handleComment,
-    fetchData,
-    comments,
-    user,
+
     handlePostLike,
-    showComments, setShowComments,
     handlePostSave,
+
+    fetchData,
+
+    showComments,
+    setShowComments,
   };
 }

@@ -1,12 +1,12 @@
 import { useState, useEffect } from "react";
 import {
-  userLoginService,
-  userRegisterService,
-  userProfile,
-  userProfileUpdated,
-  userProfilFreeze,
-  userProfileDeleted,
-} from "@/features/auth/services/userServices";
+  loginService,
+  registerService,
+  profileService,
+  profileUpdated,
+  freezeServices,
+  deleteServices,
+} from "@/features/auth/repositories/repository";
 import { useUserStore } from "@/shared/store";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -55,7 +55,7 @@ export default function useUserLogin() {
     try {
       setLoading(true);
 
-      const res = await userLoginService.postService(formData);
+      const res = await loginService(formData);
 
       const { setUser, setToken } = useUserStore.getState();
 
@@ -75,7 +75,7 @@ export default function useUserLogin() {
     try {
       setLoading(true);
 
-      const res = await userRegisterService.postService(formData);
+      const res = await registerService(formData);
 
       toast.info(res.message || "Kayıt başarılı");
       navigate("/giris-yap");
@@ -90,7 +90,7 @@ export default function useUserLogin() {
 
   const getProfile = async () => {
     try {
-      const res = await userProfile.getService(token);
+      const res = await profileService();
       setProfile(res);
     } catch (error) {
       console.log(error);
@@ -101,7 +101,7 @@ export default function useUserLogin() {
     try {
       setLoading(true);
 
-      const res = await userProfileUpdated.postService(profileForm, token);
+      const res = await profileUpdated(profileForm);
 
       setUser(res.user);
 
@@ -116,7 +116,7 @@ export default function useUserLogin() {
   const userUpdated = async (formData) => {
     try {
       setLoading(true);
-      await userProfileUpdated.postService(formData, token);
+      await userProfileUpdated(formData);
     } catch (error) {
       console.log(error);
     } finally {
@@ -126,7 +126,7 @@ export default function useUserLogin() {
 
   const freezeProfile = async () => {
     try {
-      await userProfilFreeze.freezeServices(token);
+      await freezeServices();
       localStorage.clear();
       navigate("/giris-yap");
       toast.info("Tekrardan görüşmek üzere");
@@ -138,7 +138,7 @@ export default function useUserLogin() {
 
   const deleteProfile = async (id) => {
     try {
-      await userProfileDeleted.deletedServices(token, id);
+      await deleteServices(id);
       localStorage.clear();
       navigate("/uye-ol");
       toast.info("Aramızdan ayrılmana üzüldük :(");

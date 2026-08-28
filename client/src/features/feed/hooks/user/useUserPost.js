@@ -1,14 +1,23 @@
 import { useEffect, useState } from "react";
-import { postService } from "@/features/feed/services/postServices";
-import { useUserStore,useSearchStore } from "@/shared/store";
+import { postProvider } from "@/features/feed/providers/post.provider";
+import {
+  useUserStore,
+  useSearchStore,
+} from "@/shared/store";
+
 export default function usePostDetail() {
   const [details, setDetails] = useState([]);
   const [editPostId, setEditPostId] = useState(null);
   const [following, setFollowing] = useState([]);
-  const user = useUserStore((state) => state.user);
   const [loadingPost, setLoading] = useState(false);
-    const search = useSearchStore((state) => state.search);
-  const token = useUserStore((state) => state.token);
+  const [postLoading, setPostLoading] = useState(false);
+  const [feedback, setFeeback] = useState(false);
+
+  const user = useUserStore((state) => state.user);
+  const search = useSearchStore((state) => state.search);
+
+  const postService = postProvider.service;
+
   const [form, setForm] = useState({
     ownerName: user?.name,
     ownerSurname: user?.surname,
@@ -21,53 +30,62 @@ export default function usePostDetail() {
     category: "",
     images: [],
   });
-  useEffect(() => {
-    if (user) {
-      setForm((prev) => ({
-        ...prev,
-        ownerName: user?.name,
-        ownerSurname: user?.surname,
-        ownerRole: user?.role,
-        title: "",
-        description: "",
-        district: user?.district,
-        province: user?.province,
-        category: "",
-        images: [],
-      }));
-    }
-  }, [user]);
+
 
   useEffect(() => {
-    if (!token) return;
-  
+    if (!user) return;
+
+    setForm((prev) => ({
+      ...prev,
+      ownerName: user.name,
+      ownerSurname: user.surname,
+      ownerRole: user.role,
+      title: "",
+      description: "",
+      district: user.district,
+      province: user.province,
+      category: "",
+      images: [],
+    }));
+  }, [user]);
+
+
+  useEffect(() => {
     let ignore = false;
-  
+
     const timeout = setTimeout(async () => {
       setLoading(true);
-  
+
       try {
         const res = await postService.getFollowingPosts({
           search,
-          token,
         });
 
-  
-        if (!ignore) setFollowing(res);
+        if (!ignore) {
+          setFollowing(res);
+        }
+      } catch (error) {
+        console.log(error);
       } finally {
-        if (!ignore) setLoading(false);
+        if (!ignore) {
+          setLoading(false);
+        }
       }
     }, 500);
-  
+
     return () => {
       ignore = true;
       clearTimeout(timeout);
     };
-  }, [search,token]);
+  }, [search]);
+
+
   const fetchData = async () => {
     try {
       setLoading(true);
-      const res = await postService.userPostMe(token);
+
+      const res = await postService.getMyPosts();
+
       setDetails(res);
     } catch (error) {
       console.log(error);
@@ -77,18 +95,17 @@ export default function usePostDetail() {
   };
 
   useEffect(() => {
-
- fetchData();
-
+    fetchData();
   }, []);
-  const [postLoading,setPostLoading]=useState(false)
+
+
   const onSubmit = async (formData) => {
-    console.log(formData)
     try {
       setPostLoading(true);
-      const res = await postService.onSubmit(formData, token);
-      setDetails((prev) => [res, ...prev]);
 
+      const res = await postService.createPost(formData);
+
+      setDetails((prev) => [res, ...prev]);
     } catch (error) {
       console.log(error);
     } finally {
@@ -96,18 +113,27 @@ export default function usePostDetail() {
     }
   };
 
+
   const deleted = async (postId) => {
-    console.log(postId);
     try {
-      setDetails((prev) => prev.filter((item) => item._id !== postId));
-      await postService.deleted(postId, token);
+
+      setDetails((prev) =>
+        prev.filter(
+          (item) => item._id !== postId
+        )
+      );
+
+      await postService.deletePost(postId);
     } catch (error) {
       console.log(error);
     }
   };
+
+
   const handlePostLike = async (id) => {
     try {
-      const res = await postService.postLike(id, token);
+      const res =
+        await postService.likePost(id);
 
       setDetails((prev) =>
         prev.map((post) =>
@@ -124,36 +150,48 @@ export default function usePostDetail() {
       console.log(error);
     }
   };
-  const [feedback,setFeeback]=useState(false)
+
+
   const onSubmitFeedback = async (payload) => {
     try {
+      setFeeback(true);
 
-      setFeeback(true); 
-  
-      await postService.feedback(token, payload);
-  
+      await postService.sendFeedback(payload);
     } catch (error) {
-      console.log("Notification error:", error);
+      console.log(
+        "Feedback error:",
+        error
+      );
     } finally {
       setFeeback(false);
     }
   };
-  const handlePostSave = async (id, token) => {
+
+
+  const handlePostSave = async (id) => {
     try {
-      await postService.postsavedBy(id, token);
+      await postService.savePost(id);
 
       setDetails((prev) =>
         prev.map((post) => {
-          if (post._id !== id) return post;
+          if (post._id !== id) {
+            return post;
+          }
 
           const alreadySaved =
-            Array.isArray(post.savedBy) && post.savedBy.includes(user.id);
+            Array.isArray(post.savedBy) &&
+            post.savedBy.includes(user.id);
 
           return {
             ...post,
             savedBy: alreadySaved
-              ? post.savedBy.filter((u) => u !== user.id)
-              : [...post.savedBy, user.id],
+              ? post.savedBy.filter(
+                  (u) => u !== user.id
+                )
+              : [
+                  ...post.savedBy,
+                  user.id,
+                ],
           };
         })
       );
@@ -166,16 +204,22 @@ export default function usePostDetail() {
     details,
     feedback,
     following,
+
     onSubmitFeedback,
     onSubmit,
+
     postLoading,
+    loadingPost,
+
     setForm,
     form,
+
     deleted,
     handlePostLike,
     handlePostSave,
+
     user,
-    loadingPost,
+
     editPostId,
     setEditPostId,
   };
