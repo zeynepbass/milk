@@ -1,4 +1,4 @@
-🥛 MILK – Yerel Pazar Platformu
+ MILK – Yerel Pazar Platformu
 
 MILK, yerel üreticiler ile tüketicileri buluşturan, gerçek zamanlı mesajlaşma ve sosyal etkileşim özelliklerine sahip bir pazar platformudur.
 
