@@ -1,6 +1,6 @@
 import  {userApi} from "@/features/auth/api/user";
 
-export const authProvider = {
+export const userProvider = {
     loginService: userApi.loginService,
   registerService:userApi.registerService,
   profileService:userApi.profileService,

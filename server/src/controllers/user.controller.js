@@ -73,7 +73,7 @@ export const register = async (req, res) => {
     });
 
     res.status(201).json({
-      message: "Kayıt başarılı 🎉",
+      message: "Kayıt başarılı ",
 
       user: {
         id: user._id,
@@ -156,8 +156,9 @@ export const login = async (req, res) => {
     if (!isMatch) return res.status(400).json({ message: "Şifre hatalı" });
 
     const token = await generateToken({ id: user._id.toString() });
+    res.status(201).json({
+      message: "Giriş başarılı ",
 
-    res.json({
       token,
       user: {
         _id: user._id,
@@ -170,6 +171,7 @@ export const login = async (req, res) => {
         district: user.district,
       },
     });
+
   } catch (err) {
     res.status(500).json({ message: err.message });
   }

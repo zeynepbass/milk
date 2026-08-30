@@ -1,3 +1,3 @@
 export { Section } from "./Products";
 export { Detail } from "./Details";
-export { Following } from "./Following";
+export { FollowingPost } from "./Following";

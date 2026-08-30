@@ -2,6 +2,7 @@ import { lazy, Suspense } from "react";
 import { Container } from "@/shared/layout";
 import { Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import NotFound from "@/shared/error/index";
 import "react-toastify/dist/ReactToastify.css";
 
 const Following = lazy(() =>
@@ -16,15 +17,15 @@ const Outlet = lazy(() =>
   }))
 );
 
-const Favorite = lazy(() =>
+const FavoritePost = lazy(() =>
   import("@/features/feed/pages").then((module) => ({
-    default: module.Favorite,
+    default: module.FavoritePost,
   }))
 );
 
 const Message = lazy(() =>
   import("@/features/feed/pages").then((module) => ({
-    default: module.Message,
+    default: module.ProfilePost,
   }))
 );
 
@@ -36,23 +37,23 @@ const DetailsPost = lazy(() =>
 
 const Login = lazy(() =>
   import("@/features/auth/pages").then((module) => ({
-    default: module.Login,
+    default: module.LoginPost,
   }))
 );
 
 const Register = lazy(() =>
   import("@/features/auth/pages").then((module) => ({
-    default: module.Register,
+    default: module.RegisterPost,
   }))
 );
 
 const Profile = lazy(() =>
   import("@/features/auth/pages").then((module) => ({
-    default: module.Profile,
+    default: module.ProfilePost,
   }))
 );
 
-import NotFound from "@/shared/error/index";
+
 
 function App() {
   return (
@@ -75,7 +76,7 @@ function App() {
             <Route path="/" element={<Following />} />
             <Route path="/kesfet" element={<Outlet />} />
             <Route path="/profil" element={<Profile />} />
-            <Route path="/favoriler" element={<Favorite />} />
+            <Route path="/favoriler" element={<FavoritePost />} />
             <Route path="/mesajlar" element={<Message />} />
             <Route path="/detay/:id" element={<DetailsPost />} />
           </Route>

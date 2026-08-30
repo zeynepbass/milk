@@ -1,1 +1,1 @@
-export {SalesSupport} from "./SalesSupport"
+export { SalesSupports } from "./SalesSupport";

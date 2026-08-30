@@ -1,6 +1,6 @@
 import { Header, Footer } from "@/shared/components/organism";
 import { Outlet, Navigate } from "react-router-dom";
-import { GetUserFromToken } from "./shared/utils/auth";
+import { GetUserFromToken } from "@/shared/utils/auth";
 
 export function Container() {
   const user = GetUserFromToken();

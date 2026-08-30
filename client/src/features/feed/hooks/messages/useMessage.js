@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
-import { postProvider } from "@/features/feed/providers/post.provider";
-import { useUserStore } from "@/shared/store";
+import { postProvider } from "@/providers/post.provider";
+import { useUserStore } from "@/shared/store/useUserStore";
 import { io } from "socket.io-client";
 
 export default function useMessage() {

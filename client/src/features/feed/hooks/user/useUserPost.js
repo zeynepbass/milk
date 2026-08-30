@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { postProvider } from "@/features/feed/providers/post.provider";
+import { postProvider } from "@/providers/post.provider";
 import {
-  useUserStore,
-  useSearchStore,
-} from "@/shared/store";
-
+  useSearchStore
+} from "@/shared/store/useSearchStore";
+import {
+  useUserStore
+} from "@/shared/store/useUserStore";
 export default function usePostDetail() {
   const [details, setDetails] = useState([]);
   const [editPostId, setEditPostId] = useState(null);

@@ -216,7 +216,7 @@ export function Card({
                   {open && (
                     <div className="fixed inset-0 flex items-center justify-center bg-black/30 backdrop-blur-sm z-50">
                       <div className="bg-white p-6 rounded-2xl shadow-xl w-full max-w-md">
-                      <Suspense fallback={<div>Yükleniyor...</div>}>
+                      <Suspense fallback={<div className="text-white">Yükleniyor...</div>}>
                       <UpdatedPostForm
                           editPostId={editPostId}
                           setOpen={setOpen}/>

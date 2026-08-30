@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import { useUserStore, useSearchStore } from "@/shared/store";
+import { useSearchStore } from "@/shared/store/useSearchStore";
+import { useUserStore } from "@/shared/store/useUserStore";
 import { postProvider } from "@/providers/post.provider";
 
 export default function usePost() {

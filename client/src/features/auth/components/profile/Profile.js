@@ -1,21 +1,22 @@
 import { useEffect, useState, lazy, Suspense } from "react";
-import { useSearchStore } from "@/shared/store";
+import { useSearchStore } from "@/shared/store/useSearchStore";
 import useCommentAll from "@/features/feed/hooks/comments/useComments";
 import useProfile from "@/features/auth/hooks/useUser";
 import usePostAll from "@/features/feed/hooks/post/usePost";
 import usePost from "@/features/feed/hooks/user/useUserPost";
 import { Card } from "@/shared/components/molecules";
 import { Input, Select, Heading, Button } from "@/shared/components/atoms";
-import { SalesSupport, OrganicForm } from "./salesSupport";
-const CreatePostForm = lazy(() =>
-  import("./salesSupport").then((module) => ({
-    default: module.CreatePostForm,
-  }))
-);
 
-import { PencilIcon, MagnifyingGlassIcon } from "@heroicons/react/24/outline";
+import { OrganicForm } from "../organicForm";
+
+import { PencilIcon } from "@heroicons/react/24/outline";
 import { CheckBadgeIcon } from "@heroicons/react/24/solid";
 
+const Sales = lazy(() =>
+  import("../salesSupport").then((module) => ({
+    default: module.SalesSupports,
+  }))
+);
 export function Profile() {
   const [selected, setSelected] = useState(null);
   const [activeTab, setActiveTab] = useState("posts");
@@ -202,6 +203,7 @@ export function Profile() {
                   value={profileForm?.name || ""}
                   onChange={handleChange}
                   placeholder="Ad"
+                     className="py-2"
                 />
 
                 <Input
@@ -210,6 +212,7 @@ export function Profile() {
                   value={profileForm?.surname || ""}
                   onChange={handleChange}
                   placeholder="Soyad"
+                     className="py-2"
                 />
 
                 <Input
@@ -218,6 +221,7 @@ export function Profile() {
                   value={profileForm?.province || ""}
                   onChange={handleChange}
                   placeholder="İl"
+                     className="py-2"
                 />
 
                 <Input
@@ -226,6 +230,7 @@ export function Profile() {
                   value={profileForm?.district || ""}
                   onChange={handleChange}
                   placeholder="İlçe"
+                  className="py-2"
                 />
 
                 <Input
@@ -234,6 +239,7 @@ export function Profile() {
                   value={profileForm?.email || ""}
                   onChange={handleChange}
                   placeholder="Email"
+                     className="py-2"
                 />
                 <Select
                   name="role"
@@ -244,12 +250,13 @@ export function Profile() {
                     { value: "alici", label: "Alıcı" },
                     { value: "satici", label: "Satıcı" },
                   ]}
-                  className="bg-white dark:bg-gray-700 dark:border-gray-600 dark:text-white"
+                  className="bg-white mt-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                 />
               </div>
 
               <Button
                 type="submit"
+                text="Gönder"
                 disabled={loading}
                 loading={loading}
                 loadingText="Kaydediliyor..."
@@ -312,6 +319,7 @@ export function Profile() {
             variant="tab"
             active={activeTab === "posts"}
             onClick={() => setActiveTab("posts")}
+            disabled={open}
           >
             Gönderiler
           </Button>
@@ -320,7 +328,8 @@ export function Profile() {
             variant="tab"
             active={activeTab === "settings"}
             onClick={() => setActiveTab("settings")}
-            disabled={open}
+
+             disabled={open}
           >
             Hesap Ayarları
           </Button>
@@ -330,6 +339,7 @@ export function Profile() {
             active={activeTab === "organic"}
             onClick={() => setActiveTab("organic")}
             disabled={open}
+     
           >
             Organik Sertifika Yükle
           </Button>
@@ -339,6 +349,7 @@ export function Profile() {
             active={activeTab === "backNotifications"}
             onClick={() => setActiveTab("backNotifications")}
             disabled={open}
+
           >
             Geri Bildirim Gönder
           </Button>
@@ -349,8 +360,6 @@ export function Profile() {
             <div className="bg-white rounded-2xl p-5 shadow-sm border dark:bg-gray-800 dark:border-gray-400 border-gray-100 hover:shadow-md transition-all duration-300">
               <div className="flex items-center gap-1 w-full lg:justify-end">
                 <div className="relative w-full lg:w-1/3">
-                  <MagnifyingGlassIcon className="w-5 h-5 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
-
                   <Input
                     type="text"
                     value={input}
@@ -361,21 +370,32 @@ export function Profile() {
                         setSearch(input);
                       }
                     }}
-                    className="pl-10 py-2.5 text-sm rounded-xl border border-gray-100 dark:bg-gray-800 bg-gray-50 focus:bg-white focus:ring-2 dark:border-yellow-400 focus:ring-[rgb(82,144,246)] transition-all"
+                    className="p-3"
                   />
                 </div>
-
+          
                 <Button
                   type="button"
+        
                   onClick={() => createSetOpen(true)}
                   disabled={loading}
-                  className="flex items-center gap-2 dark:bg-yellow-400 bg-blue-500 hover:bg-blue-600 text-white px-5 py-2 rounded-md"
-                />
+                  className="
+                 mt-1
+         
+                  dark:bg-yellow-400
+                  hover:bg-gray-100
+                  dark:hover:bg-gray-800
+          
+                "
+                >Ekle</Button>
+                <br />
               </div>
-
+<br/>
               {createOpen && (
-                <Suspense fallback={<div>Yükleniyor...</div>}>
-                  <CreatePostForm
+                <Suspense
+                  fallback={<div className="text-white ">Yükleniyor...</div>}
+                >
+                  <Sales
                     onSubmit={onSubmit}
                     postLoading={postLoading}
                     profileForm={profileForm}
@@ -485,7 +505,7 @@ export function Profile() {
 
           {activeTab === "organic" && <OrganicForm userUpdated={userUpdated} />}
 
-          {activeTab === "backNotifications" && <SalesSupport />}
+          {activeTab === "backNotifications" && <Sales />}
         </div>
 
         {showFreezeModal && (

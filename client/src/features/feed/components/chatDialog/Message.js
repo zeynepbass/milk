@@ -1,5 +1,5 @@
 import useMessage from "@/features/feed/hooks/messages/useMessage";
-import { Input,Button } from "@/shared/components/atoms/Input";
+import { Input,Button } from "@/shared/components/atoms";
 
 export function MessageDialog() {
   const {
@@ -77,7 +77,7 @@ export function MessageDialog() {
           <div className="flex items-center gap-3">
             <img
               src={selectedUser?.avatar || "/assets/footer-logo.png"}
-              className="w-10 h-10 rounded-full"
+              className="w-10 h-10 object-contain rounded-full"
             />
 
             <div>

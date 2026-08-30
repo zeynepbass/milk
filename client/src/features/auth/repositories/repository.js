@@ -1,4 +1,4 @@
-import userProvider from "@/providers/auth.provider"
+import {userProvider} from "@/providers/auth.provider"
 export async function loginService(formData) {
     const response = await userProvider.loginService(formData);
 
