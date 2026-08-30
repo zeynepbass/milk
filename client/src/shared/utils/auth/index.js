@@ -1,6 +1,6 @@
 
 import {jwtDecode} from "jwt-decode";
-import { useUserStore } from "@/shared/store";
+import { useUserStore } from "@/shared/store/useUserStore";
 export const GetUserFromToken = () => {
     const token = useUserStore((state) => state.token);
 

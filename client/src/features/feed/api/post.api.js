@@ -1,4 +1,4 @@
-import apiClient from "@/shared/api";
+import apiClient from "@/shared/constants/apiClient";
 
 export const postApi = {
   getPosts: (params) => {

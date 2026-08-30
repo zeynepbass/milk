@@ -3,7 +3,7 @@ import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import usePost from "@/features/feed/hooks/user/useUserPost";
 import { Textarea, Heading, Button } from "@/shared/components/atoms";
 
-export function SalesSupport() {
+export function SalesSupports() {
   const { onSubmitFeedback, feedback } = usePost();
   const [type, setType] = useState("genel");
   const [message, setMessage] = useState("");

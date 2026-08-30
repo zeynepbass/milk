@@ -1,5 +1,5 @@
 import { useEffect, useState, useCallback } from "react";
-import { commentProvider } from "@/features/feed/providers/comment.provider";
+import { commentProvider } from "@/providers/comment.provider";
 
 export default function usePostComment(id) {
   const [comments, setComments] = useState([]);

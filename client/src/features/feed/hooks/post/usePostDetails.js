@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
-import { useUserStore } from "@/shared/store";
+import { useUserStore } from "@/shared/store/useUserStore";
 
-import { postProvider } from "@/features/feed/providers/post.provider";
-import { commentProvider } from "@/features/feed/providers/comment.provider";
+import { postProvider } from "@/providers/post.provider";
+import { commentProvider } from "@/providers/comment.provider";
 
 export default function usePostDetail(id) {
   const [details, setDetails] = useState(null);

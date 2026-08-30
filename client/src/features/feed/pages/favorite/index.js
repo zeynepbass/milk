@@ -1,4 +1,4 @@
 import { Favorite } from "@/features/feed/components/favorite";
-export function Favorite() {
+export function FavoritePost() {
   return <Favorite />;
 }

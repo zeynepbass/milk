@@ -1,72 +1,25 @@
 export function Button({
-    children,
-    type = "button",
-    variant = "default",
-    active = false,
-    disabled = false,
-    className = "",
-    ...props
-  }) {
-    const variants = {
-      default: `
-        px-4 py-2
-        font-semibold
-        transition-colors
-        disabled:cursor-not-allowed
-        disabled:opacity-50
-      `,
-  
-      tab: `
-        px-4 py-2
-        font-semibold
-        transition-colors
-        ${
-          active
-            ? "border-b-2 border-[rgb(82,144,246)] text-[rgb(82,144,246)] dark:border-gray-200 dark:text-gray-200"
-            : "text-gray-500"
-        }
-        disabled:cursor-not-allowed
-        disabled:opacity-50
-      `,
-  
-      outline: `
-        px-4 py-2
-        rounded-full
-        border
-        text-sm
-        transition-all
-        disabled:cursor-not-allowed
-        disabled:opacity-50
-      `,
-      primary: `
-      w-full rounded-lg py-3
-      text-white font-semibold
-      bg-[rgb(82,144,246)]
-      hover:bg-[rgb(60,120,220)]
-      transition shadow-md
-      disabled:cursor-not-allowed
-      disabled:opacity-50
-    `,
-      icon: `
-        inline-flex
-        items-center
-        justify-center
-        p-2
-        rounded-full
-        transition-colors
-        disabled:cursor-not-allowed
-        disabled:opacity-50
-      `,
-    };
-  
-    return (
-      <button
-        type={type}
-        disabled={disabled}
-        className={`${variants[variant]} ${className}`}
-        {...props}
-      >
-        {children}
-      </button>
-    );
-  }
+  children,
+  type = "button",
+  icon: Icon,
+  text,
+  className = "",
+  disabled = false,
+  active = false,
+  ...props
+}) {
+  return (
+    <button
+      type={type}
+      disabled={disabled}
+      className={`
+        px-4 py-2 rounded-full
+        ${active ? "text-gray-400" : "text-gray-500"}
+        ${className}
+      `}
+      {...props}
+    >
+      {Icon ? <Icon className="w-4 h-4" /> : text || children}
+    </button>
+  );
+}

@@ -5,7 +5,7 @@ import useCommentAll from "@/features/feed/hooks/comments/useComments";
 import { useNavigate } from "react-router-dom";
 import {Loading} from "@/shared/components/atoms"
 import {Card,Sortered} from "@/shared/components/molecules"
-export function Following() {
+export function FollowingPost() {
   const navigate = useNavigate();
   const [selected, setSelected] = useState(null);
   const handleShowed = (id) => {

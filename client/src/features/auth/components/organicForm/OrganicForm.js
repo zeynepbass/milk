@@ -78,14 +78,18 @@ export function OrganicForm({ userUpdated }) {
 
 
         <div className="flex justify-end">
-        <Button
-  type="submit"
-  disabled={!file || loading}
-  loading={loading}
-  loadingText="Gönderiliyor..."
-  icon={ArrowRightIcon}
-  className="bg-[rgb(82,144,246)] dark:bg-gray-900 hover:opacity-90 text-white gap-2 px-5 py-2"
-/>
+
+<Button
+            type="submit"
+            disabled={!file || loading}
+            className="bg-[rgb(82,144,246)] dark:bg-gray-900 hover:opacity-90 text-white gap-2 px-5 py-2 rounded-full disabled:cursor-not-allowed"
+          >
+            {loading ? (
+              "Gönderiliyor..."
+            ) : (
+              <ArrowRightIcon className="w-4 h-4" />
+            )}
+          </Button>
         </div>
       </form>
     </div>

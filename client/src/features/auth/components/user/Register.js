@@ -29,23 +29,41 @@ export function Register() {
   };
 
   return (
-    <div className="flex h-screen">
-      <div className="hidden md:block md:w-1/2 relative">
+    <div className="min-h-screen flex bg-gray-50">
+
+      <div className="hidden md:block md:w-1/2 relative overflow-hidden">
         <img
           src="/assets/wallpaper.png"
           alt="Milk Wallpaper"
-          className="h-full w-full object-cover"
+          className="absolute inset-0 h-full w-full object-cover"
         />
 
-        <div className="absolute inset-0 bg-black/30" />
+        <div className="absolute inset-0 bg-black/35" />
 
-        <div className="absolute bottom-6 left-6">
+
+
+
+
+        <div className="absolute bottom-10 left-10 right-10 z-10 text-white">
+
           <img
             src="/assets/footer-logo.png"
-            width="120"
-            height="60"
+            width="80"
+            height="40"
             alt="Milk logo"
+            className="object-contain"
           />
+
+          <h2 className="text-3xl lg:text-4xl font-semibold leading-tight pt-4">
+            İşlerinizi daha kolay
+            <br />
+            yönetmeye başlayın.
+          </h2>
+
+          <p className="mt-4 max-w-md text-sm lg:text-base text-white/75 leading-relaxed">
+            Hesabınıza giriş yaparak platformdaki tüm özelliklere
+            hızlı ve güvenli bir şekilde erişebilirsiniz.
+          </p>
         </div>
       </div>
 

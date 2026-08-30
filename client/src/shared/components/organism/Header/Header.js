@@ -21,9 +21,10 @@ import {
 } from "@heroicons/react/24/outline";
 
 import { Input, Button } from "@/shared/components/atoms";
-import { useUserStore, useSearchStore } from "@/shared/store";
+import {useSearchStore } from "@/shared/store/useSearchStore";
+import { useUserStore } from "@/shared/store/useUserStore";
 import useUserLogin from "@/features/auth/hooks/useUser";
-import NotificationAlert from "@/features/feed/pages/notification";
+import {Notification} from "@/features/feed/pages/notification";
 import { Link } from "react-router-dom";
 import { useTheme } from "@/shared/utils/useTheme";
 
@@ -84,22 +85,24 @@ export function Header() {
             className="
               flex w-full max-w-2xl mx-auto
               rounded-full
+              bg-gray-50
               border-2 border-[rgb(137,205,251)]
               dark:border-yellow-400
+              dark:bg-gray-800
               overflow-hidden h-10
             "
           >
             <Input
               type="text"
               value={input}
-              placeholder="Ürün, kategori veya ilçe ara…"
+              placeholder="Ürün, kategori, ilçe ara…"
               onChange={(e) => setInput(e.target.value)}
               onKeyDown={(e) => {
                 if (e.key === "Enter") {
                   setSearch(input);
                 }
               }}
-              className="w-full bg-white dark:bg-gray-800 px-5 py-3 text-sm outline-none"
+              className="focus:ring-0 border-0 pl-2 w-full "
             />
 
             <Button
@@ -175,7 +178,7 @@ export function Header() {
             <BellAlertIcon className="w-5 h-5 text-[rgb(137,205,251)] dark:text-yellow-400" />
           </Button>
 
-          {bellOpen && <NotificationAlert open={bellOpen} />}
+          {bellOpen && <Notification open={bellOpen} />}
 
    
           <Menu as="div" className="relative ml-3">
@@ -417,28 +420,27 @@ export function Header() {
 
               <div className="space-y-2 py-6">
                 <div
-                  className="
-                    flex w-full max-w-2xl mx-auto
-                    rounded-full
-                    border-2 border-[rgb(137,205,251)]
-                    dark:border-yellow-400
-                    overflow-hidden h-10
-                  "
+            className="
+            flex w-full max-w-2xl mx-auto
+            rounded-full
+            bg-gray-50
+            border-2 border-[rgb(137,205,251)]
+            dark:border-yellow-400
+            dark:bg-gray-800
+            overflow-hidden h-10
+          "
                 >
                   <Input
                     type="text"
                     value={input}
-                    placeholder="Ürün, kategori veya ilçe ara…"
+                    placeholder="Ürün, kategori, ilçe ara…"
                     onChange={(e) => setInput(e.target.value)}
                     onKeyDown={(e) => {
                       if (e.key === "Enter") {
                         setSearch(input);
                       }
                     }}
-                    className="
-                      w-full bg-white dark:bg-gray-800
-                      px-5 py-3 text-sm outline-none
-                    "
+  className="focus:ring-0 border-0 pl-2 w-full "
                   />
 
                   <Button

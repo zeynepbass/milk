@@ -1,5 +1,4 @@
 import dotenv from "dotenv";
-
 dotenv.config();
 
 import express from "express";
@@ -18,23 +17,31 @@ import postRoutes from "./routes/post.routes.js";
 import commentRoutes from "./routes/comment.routes.js";
 
 const app = express();
+const server = http.createServer(app);
 
+const PORT = process.env.PORT || 5346;
+const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:3000";
 
 connectDB();
 
+const corsOptions = {
+  origin: CLIENT_URL,
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+
+app.use(cors(corsOptions));
 
 app.use(express.json({ limit: "50mb" }));
-app.use(express.urlencoded({ limit: "50mb", extended: true }));
-
 app.use(
-  cors({
-    origin: process.env.CLIENT_URL,
-    credentials: true,
+  express.urlencoded({
+    limit: "50mb",
+    extended: true,
   })
 );
 
 app.use("/uploads", express.static("uploads"));
-
 
 app.use("/api/users", userRoutes);
 app.use("/api/posts", postRoutes);
@@ -42,21 +49,18 @@ app.use("/api/comments", commentRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/conversations", conversationRoutes);
 
-
-const server = http.createServer(app);
-
-
 const io = new Server(server, {
   cors: {
-    origin: process.env.CLIENT_URL,
+    origin: CLIENT_URL,
     methods: ["GET", "POST"],
+    credentials: true,
   },
 });
-
 
 const onlineUsers = new Map();
 
 io.on("connection", (socket) => {
+  console.log("✅ Socket connected:", socket.id);
 
   socket.on("addUser", (userId) => {
     if (!userId) return;
@@ -71,7 +75,6 @@ io.on("connection", (socket) => {
     io.emit("getUsers", Array.from(onlineUsers.keys()));
   });
 
-
   socket.on(
     "sendMessage",
     async ({ senderId, receiverId, text, conversationId }) => {
@@ -83,7 +86,6 @@ io.on("connection", (socket) => {
           text,
         });
 
-
         const receiverSockets = onlineUsers.get(receiverId);
 
         if (receiverSockets) {
@@ -92,12 +94,14 @@ io.on("connection", (socket) => {
           });
         }
 
-
         socket.emit("getMessage", message);
       } catch (error) {
         console.error("❌ Mesaj hatası:", error);
 
-        socket.emit("errorMessage", "Mesaj gönderilemedi");
+        socket.emit(
+          "errorMessage",
+          "Mesaj gönderilemedi"
+        );
       }
     }
   );
@@ -118,13 +122,17 @@ io.on("connection", (socket) => {
       }
     }
 
-    io.emit("getUsers", Array.from(onlineUsers.keys()));
+    io.emit(
+      "getUsers",
+      Array.from(onlineUsers.keys())
+    );
   });
 });
 
 
-const PORT = process.env.PORT || 5346;
-
 server.listen(PORT, () => {
-  console.log(`🚀 Server running on http://localhost:${PORT}`);
+  console.log("=================================");
+  console.log(`🚀 Server: http://localhost:${PORT}`);
+  console.log(`🌐 Client: ${CLIENT_URL}`);
+  console.log("=================================");
 });

@@ -7,7 +7,7 @@ import {
   freezeServices,
   deleteServices,
 } from "@/features/auth/repositories/repository";
-import { useUserStore } from "@/shared/store";
+import { useUserStore } from "@/shared/store/useUserStore";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 
@@ -62,7 +62,7 @@ export default function useUserLogin() {
       setUser(res.user);
       setToken(res.token);
 
-      toast.info(res.message || "Giriş başarılı");
+      toast.info(res.message || "Başarılı");
       navigate("/");
     } catch (err) {
       toast.error(err?.response?.data?.message || "Giriş yapılamadı");
@@ -77,7 +77,7 @@ export default function useUserLogin() {
 
       const res = await registerService(formData);
 
-      toast.info(res.message || "Kayıt başarılı");
+      toast.info(res.message || "Başarılı");
       navigate("/giris-yap");
     } catch (err) {
       toast.error(
@@ -113,16 +113,7 @@ export default function useUserLogin() {
     }
   };
 
-  const userUpdated = async (formData) => {
-    try {
-      setLoading(true);
-      await userProfileUpdated(formData);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
+
 
   const freezeProfile = async () => {
     try {
@@ -163,7 +154,7 @@ export default function useUserLogin() {
     createOpen,
     createSetOpen,
     button,
-    userUpdated,
+
     setButton,
     handleUpdated,
   };
