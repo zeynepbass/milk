@@ -1,6 +1,12 @@
 import { XMarkIcon, PhotoIcon } from "@heroicons/react/24/outline";
 
-import { Input, Select, Textarea, Button,Heading } from "@/shared/components/atoms";
+import {
+  Input,
+  Select,
+  Textarea,
+  Button,
+  Heading,
+} from "@/shared/components/atoms";
 
 export function CreatePostForm({
   onSubmit,
@@ -47,7 +53,7 @@ export function CreatePostForm({
     formData.append("province", form.province || "");
     formData.append("district", form.district || "");
     formData.append("category", form.category || "");
-
+    formData.append("ownerRole", form.ownerRole || "");
     if (form.images?.length > 0) {
       form.images.forEach((file) => {
         formData.append("images", file);
@@ -73,27 +79,30 @@ export function CreatePostForm({
         onClick={() => setOpen(false)}
       />
 
-      <div className="relative w-full max-w-4xl mx-4 bg-white rounded-2xl shadow-xl max-h-[90vh] overflow-y-auto">
+      <div className="relative w-full max-w-4xl mx-4  bg-white rounded-2xl shadow-xl max-h-[90vh] overflow-y-auto">
         <form
           onSubmit={handleSubmit}
-          className="w-full bg-white rounded-2xl p-8 space-y-6"
+          className="w-full bg-white dark:bg-gray-900 rounded-2xl p-8 space-y-6"
         >
           <div className="flex justify-between items-start border-b pb-4">
-            <Heading title=" Yeni Gönderi Oluştur" desc=" Ürün bilgilerini girin ve görsellerinizi yükleyin."/>
-
+            <Heading
+              title=" Yeni Gönderi Oluştur"
+              desc=" Ürün bilgilerini girin ve görsellerinizi yükleyin."
+            />
 
             <Button
               type="button"
               onClick={() => setOpen(false)}
               icon={XMarkIcon}
-              className="text-gray-500 hover:text-red-500"
+              variant="dark"
             />
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
             <Input
               name="ownerName"
               placeholder="Ad"
+              className="py-2"
               value={form.ownerName ?? profileForm?.ownerName ?? ""}
               disabled
             />
@@ -102,26 +111,45 @@ export function CreatePostForm({
               name="ownerSurname"
               placeholder="Soyad"
               value={form.ownerSurname ?? profileForm?.ownerSurname ?? ""}
+              className="py-2"
+              disabled
+            />
+
+            <Input
+              name="province"
+              placeholder="İl"
+              className="py-2"
+              value={form.province ?? ""}
+              disabled
+            />
+
+            <Input
+              name="district"
+              placeholder="İlçe"
+              className="py-2"
+              value={form.district ?? ""}
               disabled
             />
           </div>
 
           <Select
-            disabled
-            value={form.ownerRole ?? profileForm?.ownerRole ?? ""}
-            placeholder="Rol seçiniz"
-            options={[
-              { value: "alici", label: "Alıcı" },
-              { value: "satici", label: "Satıcı" },
-            ]}
-            className="bg-gray-100 text-gray-600"
-          />
+  name="ownerRole"
+  onChange={handleChange}
+  disabled
+  value={form.ownerRole ?? profileForm?.ownerRole ?? ""}
+  placeholder="Rol seçiniz"
+  options={[
+    { value: "alici", label: "Alıcı" },
+    { value: "satici", label: "Satıcı" },
+  ]}
+/>
           <Input
             name="title"
             placeholder="Başlık"
+            className="py-2"
             value={form.title ?? ""}
             onChange={handleChange}
-            required
+
           />
 
           <Textarea
@@ -132,27 +160,11 @@ export function CreatePostForm({
             rows={4}
           />
 
-          <div className="flex gap-4">
-            <Input
-              name="province"
-              placeholder="İl"
-              value={form.province ?? ""}
-              disabled
-            />
-
-            <Input
-              name="district"
-              placeholder="İlçe"
-              value={form.district ?? ""}
-              disabled
-            />
-          </div>
-
           <Select
             name="category"
             value={form.category ?? ""}
             onChange={handleChange}
-            required
+
             placeholder="Seçim yapınız"
             options={[
               { value: "sut_urunleri", label: "Süt Ürünleri" },
@@ -183,13 +195,14 @@ export function CreatePostForm({
             </div>
           )}
 
-          <label className="flex flex-col items-center justify-center border-2 border-dashed rounded-xl p-6 cursor-pointer hover:border-blue-400 transition bg-gray-50">
+          <label className="flex flex-col dark:bg-gray-900 items-center justify-center border-2 border-dashed rounded-xl p-6 cursor-pointer hover:border-blue-400 transition bg-gray-50">
             <input
               type="file"
               multiple
               accept="image/*"
               onChange={handleImages}
-              className="hidden"
+
+              className="hidden "
             />
 
             <PhotoIcon className="w-10 h-10 text-gray-400 mb-2" />
@@ -200,12 +213,14 @@ export function CreatePostForm({
           </label>
 
           <div className="flex justify-end">
-            <Button
-              type="submit"
-              disabled={postLoading}
-              loading={postLoading}
-              className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white px-5 py-2"
-            />
+          <Button
+  variant="primary"
+  type="submit"
+  disabled={postLoading}
+  loading={postLoading}
+  text="Gönder"
+  loadingText="Gönderiliyor..."
+/>
           </div>
         </form>
       </div>

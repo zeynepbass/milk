@@ -24,9 +24,16 @@ export const createFeedback = async (req, res) => {
       user: req.user._id,
     });
 
-    res.status(201).json(feedback);
+    res.status(201).json({
+      success: true,
+      message: "Geri bildiriminiz başarıyla gönderildi.",
+      feedback,
+    });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({
+      success: false,
+      message: err.message,
+    });
   }
 };
 export const register = async (req, res) => {
@@ -125,7 +132,7 @@ export const updateUserStatus = async (req, res) => {
     await user.save();
 
     res.status(200).json({
-      message: "Kullanıcı başarıyla güncellendi",
+      message: "Güncellendi",
       user,
     });
   } catch (error) {
@@ -224,7 +231,7 @@ export const updateUser = async (req, res) => {
       district,
       organic,
     } = req.body;
-
+console.log(req.body)
     const user = await User.findById(id);
 
     if (!user) {
@@ -248,7 +255,7 @@ export const updateUser = async (req, res) => {
     await user.save();
 
     res.status(200).json({
-      message: "Kullanıcı başarıyla güncellendi",
+      message: "Güncellendi",
       user,
     });
   } catch (error) {

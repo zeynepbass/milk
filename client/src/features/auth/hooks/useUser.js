@@ -10,8 +10,9 @@ import {
 import { useUserStore } from "@/shared/store/useUserStore";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-
+import {useTheme} from "@/shared/utils/useTheme"
 export default function useUserLogin() {
+  const { setTheme } = useTheme();
   const [showFreezeModal, setShowFreezeModal] = useState(false);
   const [createOpen, createSetOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -30,7 +31,7 @@ export default function useUserLogin() {
   });
 
   const setUser = useUserStore((state) => state.setUser);
-  const token = useUserStore((state) => state.token);
+
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -97,12 +98,15 @@ export default function useUserLogin() {
     }
   };
 
-  const handleUpdated = async (profileForm) => {
+  const handleUpdated = async (e) => {
+    e.preventDefault();
+    console.log("profileForm",profileForm)
     try {
       setLoading(true);
-
+   
       const res = await profileUpdated(profileForm);
 
+      toast.info(res.message || "Başarılı");
       setUser(res.user);
 
       setButton(true);
@@ -117,10 +121,12 @@ export default function useUserLogin() {
 
   const freezeProfile = async () => {
     try {
-      await freezeServices();
+   const res=   await freezeServices();
+      setTheme("light");
       localStorage.clear();
       navigate("/giris-yap");
-      toast.info("Tekrardan görüşmek üzere");
+      toast.info(res.message || "Tekrardan görüşmek üzere");
+
     } catch (error) {
       console.log(error);
       toast.error("Bir hata oluştu");
@@ -129,10 +135,11 @@ export default function useUserLogin() {
 
   const deleteProfile = async (id) => {
     try {
-      await deleteServices(id);
+    const res=  await deleteServices(id);
+    setTheme("light");
       localStorage.clear();
       navigate("/uye-ol");
-      toast.info("Aramızdan ayrılmana üzüldük :(");
+      toast.info(res.message || "Aramızdan ayrılmana üzüldük");
     } catch (error) {
       console.log(error);
     }

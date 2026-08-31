@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useSearchStore } from "@/shared/store/useSearchStore";
 import { useUserStore } from "@/shared/store/useUserStore";
 import { postProvider } from "@/providers/post.provider";
-
+import { toast } from "react-toastify";
 export default function usePost() {
   const [openList, setOpenList] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -112,26 +112,29 @@ export default function usePost() {
   const handleUpdatePost = async (id, formData) => {
     try {
       setLoading(true);
-
-      const updatedPost = await service.updatePost(
-        id,
-        formData
-      );
-
+  
+      const res = await service.updatePost(id, formData);
+  
       setData((prev) =>
         prev.map((post) =>
-          post._id === id ? updatedPost : post
+          post._id === id ? res.post : post
         )
       );
-
+  
+      toast.info(res.message || "Gönderi başarıyla güncellendi");
+  
       setOpen(false);
     } catch (error) {
       console.log(error);
+  
+      toast.error(
+        error.response?.data?.message ||
+          "Gönderi güncellenirken bir hata oluştu."
+      );
     } finally {
       setLoading(false);
     }
   };
-
   const followId = async (id) => {
     try {
       await service.followUser(id);

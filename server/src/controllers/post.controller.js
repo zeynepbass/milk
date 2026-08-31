@@ -40,14 +40,19 @@ export const createPost = async (req, res) => {
     const userId = req.user.id || req.user._id;
 
     const user = await User.findById(userId);
+
     if (!user) {
-      return res.status(404).json({ message: "Kullanıcı bulunamadı" });
+      return res.status(404).json({
+        success: false,
+        message: "Kullanıcı bulunamadı.",
+      });
     }
 
     if (user.role === "alici") {
-      return res
-        .status(403)
-        .json({ message: "Alıcı rolündeki kullanıcı post paylaşamaz" });
+      return res.status(403).json({
+        success: false,
+        message: "Alıcı rolündeki kullanıcı ilan paylaşamaz.",
+      });
     }
 
     const images = req.files
@@ -63,7 +68,7 @@ export const createPost = async (req, res) => {
       province: req.body.province,
       title: req.body.title,
       description: req.body.description,
-      images: images,
+      images,
       district: req.body.district,
       category: req.body.category,
     });
@@ -81,14 +86,16 @@ export const createPost = async (req, res) => {
       date: today,
     }).select("userId");
 
-    const sentUserIds = existingNotifications.map((n) => n.userId.toString());
-
-    const usersToNotify = users.filter(
-      (u) => !sentUserIds.includes(u._id.toString())
+    const sentUserIds = existingNotifications.map((notification) =>
+      notification.userId.toString()
     );
 
-    const notificationsToCreate = usersToNotify.map((u) => ({
-      userId: u._id,
+    const usersToNotify = users.filter(
+      (user) => !sentUserIds.includes(user._id.toString())
+    );
+
+    const notificationsToCreate = usersToNotify.map((user) => ({
+      userId: user._id,
       type: "new_post",
       province: post.province,
       date: today,
@@ -102,9 +109,19 @@ export const createPost = async (req, res) => {
       await Notification.insertMany(notificationsToCreate);
     }
 
-    res.status(201).json(post);
+    return res.status(201).json({
+      success: true,
+      message: "İlan başarıyla oluşturuldu.",
+      post,
+    });
   } catch (err) {
-    res.status(400).json({ message: err.message });
+    console.error("CREATE POST ERROR:", err);
+
+    return res.status(500).json({
+      success: false,
+      message: "İlan oluşturulurken bir hata oluştu.",
+      error: err.message,
+    });
   }
 };
 export const getFollowingPosts = async (req, res) => {
@@ -340,30 +357,44 @@ export const updatePost = async (req, res) => {
     const post = await Post.findById(id);
 
     if (!post || !post.isActive) {
-      return res.status(404).json({ message: "Post bulunamadı" });
+      return res.status(404).json({
+        message: "Post bulunamadı",
+      });
     }
 
     if (post.user.toString() !== userId.toString()) {
-      return res
-        .status(403)
-        .json({ message: "Bu postu güncelleme yetkiniz yok" });
+      return res.status(403).json({
+        message: "Bu postu güncelleme yetkiniz yok",
+      });
     }
 
     const { title, description } = req.body;
 
-    if (title !== undefined) post.title = title;
-    if (description !== undefined) post.description = description;
+    if (title !== undefined) {
+      post.title = title;
+    }
+
+    if (description !== undefined) {
+      post.description = description;
+    }
 
     if (req.files && req.files.length > 0) {
-      const newImages = req.files.map((file) => `/uploads/${file.filename}`);
+      const newImages = req.files.map(
+        (file) => `/uploads/${file.filename}`
+      );
 
       post.images = [...(post.images || []), ...newImages];
     }
 
     await post.save();
 
-    res.json(post);
+    res.status(200).json({
+      message: "Gönderi başarıyla güncellendi",
+      post,
+    });
   } catch (err) {
-    res.status(500).json({ message: err.message });
+    res.status(500).json({
+      message: "Gönderi güncellenirken bir hata oluştu",
+    });
   }
 };

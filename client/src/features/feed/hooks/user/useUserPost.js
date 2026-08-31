@@ -6,6 +6,7 @@ import {
 import {
   useUserStore
 } from "@/shared/store/useUserStore";
+import { toast } from "react-toastify";
 export default function usePostDetail() {
   const [details, setDetails] = useState([]);
   const [editPostId, setEditPostId] = useState(null);
@@ -103,17 +104,25 @@ export default function usePostDetail() {
   const onSubmit = async (formData) => {
     try {
       setPostLoading(true);
-
+  
       const res = await postService.createPost(formData);
-
-      setDetails((prev) => [res, ...prev]);
+  
+      console.log("mesaj:", res.message);
+  
+      toast.success(res.message || "Başarılı");
+  
+      setDetails((prev) => [res.post, ...prev]);
     } catch (error) {
       console.log(error);
+  
+      toast.error(
+        error.response?.data?.message ||
+          "Hata oluştu."
+      );
     } finally {
       setPostLoading(false);
     }
   };
-
 
   const deleted = async (postId) => {
     try {
@@ -157,7 +166,8 @@ export default function usePostDetail() {
     try {
       setFeeback(true);
 
-      await postService.sendFeedback(payload);
+      const res =  await postService.sendFeedback(payload);
+            toast.info(res.message || "Başarılı");
     } catch (error) {
       console.log(
         "Feedback error:",

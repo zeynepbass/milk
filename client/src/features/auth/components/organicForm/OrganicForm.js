@@ -2,7 +2,7 @@ import { useState } from "react";
 import { ArrowRightIcon, DocumentIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Heading,Button } from "@/shared/components/atoms";
 
-export function OrganicForm({ userUpdated }) {
+export function OrganicForm({ handleUpdated }) {
   const [file, setFile] = useState(null);
   const [loading, setLoading] = useState(false);
 
@@ -26,7 +26,7 @@ export function OrganicForm({ userUpdated }) {
     formData.append("file", file);
 
     try {
-      await userUpdated(formData);
+      await handleUpdated(formData);
       setFile("")
     } finally {
       setLoading(false);
@@ -71,25 +71,24 @@ export function OrganicForm({ userUpdated }) {
   type="button"
   onClick={removeFile}
   icon={XMarkIcon}
-  className="text-gray-500 hover:text-red-500"
+    variant="danger"
 />
           </div>
         )}
 
 
         <div className="flex justify-end">
+        <Button
+  type="submit"
+  disabled={!file}
+  loading={loading}
+  variant="primary"
+  text={<ArrowRightIcon className="w-4 h-4" />}
+  loadingText="Gönderiliyor..."
+/>
 
-<Button
-            type="submit"
-            disabled={!file || loading}
-            className="bg-[rgb(82,144,246)] dark:bg-gray-900 hover:opacity-90 text-white gap-2 px-5 py-2 rounded-full disabled:cursor-not-allowed"
-          >
-            {loading ? (
-              "Gönderiliyor..."
-            ) : (
-              <ArrowRightIcon className="w-4 h-4" />
-            )}
-          </Button>
+
+
         </div>
       </form>
     </div>
