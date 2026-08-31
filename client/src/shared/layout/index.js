@@ -8,11 +8,9 @@ export function Container() {
     return <Navigate to="/giris-yap" />;
   }
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto ">
       <Header />
-      <div className="h-[100vh]">
-        <Outlet />
-      </div>
+      <Outlet />
 
       <Footer />
     </div>

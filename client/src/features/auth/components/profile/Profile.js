@@ -256,19 +256,16 @@ export function Profile() {
                   className="bg-white mt-2 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
                 />
               </div>
-
               <Button
-  type="submit"
-  text="Gönder"
-  disabled={loading}
-  loading={loading}
-  loadingText="Kaydediliyor..."
-  className={`w-full mt-3 py-2.5 rounded-xl font-medium ${
-    loading
-      ? "bg-gray-400 dark:bg-gray-900 text-white"
-      : "bg-[rgb(82,144,246)] dark:bg-gray-900 hover:opacity-90 text-white"
-  }`}
-/>
+          type="submit"
+          variant="primary"
+          loading={loading}
+          loadingText="Kaydediliyor..."
+          text="Gönder"
+
+          disabled={loading}
+        />
+
             </form>
           )}
 
@@ -379,15 +376,12 @@ export function Profile() {
           
                 <Button
                   type="button"
-        
+                 variant="primary"
                   onClick={() => createSetOpen(true)}
                   disabled={loading}
                   className="
-                 mt-1
-         
-                  dark:bg-yellow-400
-                  hover:bg-gray-100
-                  dark:hover:bg-gray-800
+             rounded-xl
+             py-3
           
                 "
                 >Ekle</Button>

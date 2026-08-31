@@ -1,6 +1,10 @@
 import { useState } from "react";
-import { ArrowRightIcon, DocumentIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import { Heading,Button } from "@/shared/components/atoms";
+import {
+  ArrowRightIcon,
+  DocumentIcon,
+  XMarkIcon,
+} from "@heroicons/react/24/outline";
+import { Heading, Button } from "@/shared/components/atoms";
 
 export function OrganicForm({ handleUpdated }) {
   const [file, setFile] = useState(null);
@@ -8,7 +12,9 @@ export function OrganicForm({ handleUpdated }) {
 
   const handleFile = (e) => {
     const selectedFile = e.target.files[0];
+
     if (!selectedFile) return;
+
     setFile(selectedFile);
   };
 
@@ -18,6 +24,7 @@ export function OrganicForm({ handleUpdated }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!file) return;
 
     setLoading(true);
@@ -27,22 +34,28 @@ export function OrganicForm({ handleUpdated }) {
 
     try {
       await handleUpdated(formData);
-      setFile("")
+      setFile(null);
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="max-w-full p-6 bg-white dark:bg-gray-800  dark:border-gray-400  rounded-2xl shadow-lg border space-y-6">
- <Heading title="          Organik Form Yükleyin" desc="  Hesabınızı doğrulanmış satıcı olarak kullanmak için PDF belgenizi yükleyin."/>
-
+    <div className="p-6 bg-white dark:bg-gray-800 rounded-2xl shadow-lg border dark:border-gray-400 space-y-6">
+      <Heading
+        title="Organik Form Yükleyin"
+        desc="Hesabınızı doğrulanmış satıcı olarak kullanmak için PDF belgenizi yükleyin."
+      />
 
       <form onSubmit={handleSubmit} className="space-y-4">
-
-        <label className="flex flex-col items-center justify-center border-2 border-dashed rounded-xl p-6 cursor-pointer
-        dark:hover:border-gray-500
-        hover:border-blue-400 transition">
+        <label
+          className="
+            flex flex-col items-center justify-center
+            border-2 border-dashed rounded-xl p-6
+            cursor-pointer transition
+            hover:border-blue-400 dark:hover:border-gray-500
+          "
+        >
           <input
             type="file"
             accept="application/pdf"
@@ -55,11 +68,11 @@ export function OrganicForm({ handleUpdated }) {
           <p className="text-sm text-gray-500">
             PDF dosyanızı seçmek için tıklayın
           </p>
+
           <p className="text-xs text-gray-400 mt-1">
             (Sadece .pdf formatı desteklenir)
           </p>
         </label>
-
 
         {file && (
           <div className="flex items-center justify-between border rounded-lg px-4 py-2 bg-gray-50">
@@ -68,27 +81,23 @@ export function OrganicForm({ handleUpdated }) {
             </span>
 
             <Button
-  type="button"
-  onClick={removeFile}
-  icon={XMarkIcon}
-    variant="danger"
-/>
+              type="button"
+              onClick={removeFile}
+              icon={XMarkIcon}
+              variant="danger"
+            />
           </div>
         )}
 
-
         <div className="flex justify-end">
-        <Button
-  type="submit"
-  disabled={!file}
-  loading={loading}
-  variant="primary"
-  text={<ArrowRightIcon className="w-4 h-4" />}
-  loadingText="Gönderiliyor..."
-/>
-
-
-
+          <Button
+            type="submit"
+            disabled={!file}
+            loading={loading}
+            variant="primary"
+            icon={ArrowRightIcon}
+            loadingText="Gönderiliyor..."
+          />
         </div>
       </form>
     </div>
