@@ -42,26 +42,37 @@ export function CreatePostForm({
       images: prev.images.filter((_, i) => i !== index),
     }));
   };
-
   const handleSubmit = (e) => {
     e.preventDefault();
-
+  
     const formData = new FormData();
-
+  
     formData.append("title", form.title || "");
     formData.append("description", form.description || "");
-    formData.append("province", form.province || "");
-    formData.append("district", form.district || "");
+  
+    formData.append(
+      "province",
+      form.province ?? profileForm?.province ?? ""
+    );
+  
+    formData.append(
+      "district",
+      form.district ?? profileForm?.district ?? ""
+    );
+  
     formData.append("category", form.category || "");
-    formData.append("ownerRole", form.ownerRole || "");
-    if (form.images?.length > 0) {
-      form.images.forEach((file) => {
-        formData.append("images", file);
-      });
-    }
-
+  
+    formData.append(
+      "ownerRole",
+      form.ownerRole ?? profileForm?.ownerRole ?? ""
+    );
+  
+    form.images?.forEach((file) => {
+      formData.append("images", file);
+    });
+  
     onSubmit(formData);
-
+  
     setForm({
       images: [],
       title: "",
@@ -69,20 +80,21 @@ export function CreatePostForm({
       province: "",
       district: "",
       category: "",
+      ownerRole: "",
     });
   };
-
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center">
+    <div className="fixed inset-0 flex items-center justify-center bg-black/30 backdrop-blur-sm z-50">
       <div
-        className="absolute inset-0 bg-black/50"
+        className="absolute inset-0 "
         onClick={() => setOpen(false)}
       />
+            
 
       <div className="relative w-full max-w-4xl mx-4  bg-white rounded-2xl shadow-xl max-h-[90vh] overflow-y-auto">
         <form
           onSubmit={handleSubmit}
-          className="w-full bg-white dark:bg-gray-900 rounded-2xl p-8 space-y-6"
+          className="w-full bg-white dark:bg-gray-800 rounded-2xl p-8 space-y-6"
         >
           <div className="flex justify-between items-start border-b pb-4">
             <Heading

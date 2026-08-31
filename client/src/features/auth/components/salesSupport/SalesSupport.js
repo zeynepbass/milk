@@ -5,6 +5,7 @@ import { Textarea, Heading, Button } from "@/shared/components/atoms";
 
 export function SalesSupports() {
   const { onSubmitFeedback, feedback } = usePost();
+
   const [type, setType] = useState("genel");
   const [message, setMessage] = useState("");
 
@@ -19,6 +20,7 @@ export function SalesSupports() {
     };
 
     await onSubmitFeedback(payload);
+
     setMessage("");
     setType("genel");
   };
@@ -30,7 +32,7 @@ export function SalesSupports() {
   ];
 
   return (
-    <div className="max-w-full mx-auto p-6 bg-white dark:border-gray-400 dark:bg-gray-800 rounded-2xl shadow-lg border space-y-6">
+    <div className="max-w-full mx-auto p-6 bg-white dark:bg-gray-800 dark:border-gray-400 rounded-2xl shadow-lg border space-y-6">
       <Heading
         title="Görüş, Öneri veya Hata Bildir"
         desc="Geri bildirimleriniz bizim için değerlidir."
@@ -49,11 +51,11 @@ export function SalesSupports() {
                 type="button"
                 active={type === item.value}
                 onClick={() => setType(item.value)}
-                className={`rounded-full border text-sm ${
+                className={
                   type === item.value
-                    ? "bg-gray-100 text-gray-600 dark:text-gray-200 dark:bg-gray-900"
-                    : "bg-blue-500 text-white dark:bg-gray-900 dark:text-gray-400 dark:border-gray-500 border-blue-500 shadow"
-                }`}
+                    ? "bg-gray-100 text-gray-600 dark:bg-gray-900 dark:text-gray-200"
+                    : "bg-blue-500 text-white dark:bg-gray-900 dark:text-gray-400"
+                }
               >
                 {item.label}
               </Button>
@@ -70,16 +72,15 @@ export function SalesSupports() {
         />
 
         <div className="flex justify-end">
-        <Button
-  type="submit"
-  disabled={!message.trim() || !type || feedback}
-  loading={feedback}
-  variant="primary"
-  text="Gönder"
-  loadingText="Gönderiliyor..."
-  icon={ArrowRightIcon}
-/>
-
+          <Button
+            type="submit"
+            disabled={!message.trim() || feedback}
+            loading={feedback}
+            variant="primary"
+            text="Gönder"
+            loadingText="Gönderiliyor..."
+            icon={ArrowRightIcon}
+          />
         </div>
       </form>
     </div>

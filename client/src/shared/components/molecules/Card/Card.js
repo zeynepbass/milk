@@ -66,10 +66,10 @@ export function Card({
 
         return (
           <div key={item._id} className="flex flex-col">
-            <div className="flex flex-col bg-white dark:bg-gray-700 rounded-2xl rounded-b-none shadow-md w-full mt-4">
+            <div className="flex flex-col bg-white dark:bg-gray-800 shadow-md mt-4">
               <Link to={`/detay/${item._id}`}>
                 <img
-                  className="w-full h-60 object-cover rounded-t-2xl"
+                  className="w-full h-60 object-cover "
                   src={
                     item?.images?.[0]
                       ? `http://localhost:5346${item.images[0]}`
@@ -80,9 +80,9 @@ export function Card({
                 />
               </Link>
 
-              <div className="p-5 flex flex-col justify-between h-full">
+              <div className="p-5">
                 <div>
-                  <div className="flex items-center gap-3 mb-4">
+                  <div className="flex items-center gap-2 ">
                     <div className="w-10 h-10 rounded-full overflow-hidden shadow relative">
                       <img
                         src={
@@ -120,7 +120,7 @@ export function Card({
                   <Description text={item.description} maxLength={150} />
                 </div>
 
-                <div className="flex justify-between items-center border-t pt-4 mt-4 text-gray-600">
+                <div className="flex justify-between items-center border-t mt-4 text-gray-600">
                   <div className="flex items-center">
                     <Button
                       variant="icon"
@@ -201,7 +201,7 @@ export function Card({
 
                   {open && (
                     <div className="fixed inset-0 flex items-center justify-center bg-black/30 backdrop-blur-sm z-50">
-                      <div className="bg-white p-6 rounded-2xl shadow-xl w-full max-w-md">
+                      <div className="bg-white dark:bg-gray-800 p-6 rounded-2xl shadow-xl w-full max-w-xl">
                         <Suspense
                           fallback={
                             <div className="text-white">Yükleniyor...</div>
@@ -220,7 +220,7 @@ export function Card({
             </div>
 
             {selected === item._id && (
-              <div className="bg-white rounded-t-none dark:bg-gray-700 dark:border-none rounded-2xl shadow-sm border p-4 max-w-full">
+              <div className="bg-white dark:bg-gray-800 dark:border-none  shadow-sm  p-4">
                 <div className="space-y-4 max-h-60 overflow-y-auto mb-4 pr-1">
                   {comments.length === 0 ? (
                     <p className="text-gray-400 text-sm italic text-center py-4">
@@ -240,7 +240,7 @@ export function Card({
                             }
                             alt="profile"
                             loading="lazy"
-                            className="w-9 h-9 rounded-full object-cover shadow-sm"
+                            className="w-9 h-9 rounded-full object-cover  mt-2 shadow-sm"
                           />
 
                           <div className="flex flex-col w-full">
@@ -302,7 +302,7 @@ export function Card({
                     type="button"
                     variant="primary"
                     onClick={() => handleAddComment(item._id)}
-                    className="p-3 shrink-0"
+                    className="rounded-md py-3"
                   >
                     <ArrowRightIcon className="w-4 h-4" />
                   </Button>

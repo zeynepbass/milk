@@ -79,36 +79,46 @@ export default function usePost() {
       setLoading(false);
     }
   };
-
   const handlePostSave = async (id) => {
     try {
       const res = await service.savePost(id);
-
+  
       setData((prev) =>
         prev.map((post) => {
           if (post._id !== id) return post;
-
-          const alreadySaved =
-            Array.isArray(post.savedBy) &&
-            post.savedBy.includes(user.id);
-
+  
+          const savedBy = Array.isArray(post.savedBy)
+            ? post.savedBy
+            : [];
+  
+          const userId = user?.id || user?._id;
+  
+          const alreadySaved = savedBy.some(
+            (savedUser) =>
+              savedUser === userId ||
+              savedUser?._id === userId
+          );
+  
           return {
             ...post,
             savedBy: alreadySaved
-              ? post.savedBy.filter((u) => u !== user.id)
-              : [...post.savedBy, user.id],
+              ? savedBy.filter(
+                  (savedUser) =>
+                    savedUser !== userId &&
+                    savedUser?._id !== userId
+                )
+              : [...savedBy, userId],
           };
         })
       );
-
+  
       if (res.saved === false) {
-        fetchSavedPosts();
+        await fetchSavedPosts();
       }
     } catch (error) {
       console.log(error);
     }
   };
-
   const handleUpdatePost = async (id, formData) => {
     try {
       setLoading(true);
