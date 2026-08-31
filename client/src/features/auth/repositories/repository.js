@@ -15,7 +15,7 @@ export async function profileService() {
     return response.data
 }
 export async function profileUpdated(formData){
-
+   console.log("form",formData)
     const response=await userProvider.profileUpdated(formData);
     return response.data
 }

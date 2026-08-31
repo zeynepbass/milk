@@ -39,6 +39,7 @@ export function Card({
   comments = [],
   newComment,
   setNewComment,
+
   handleAddComment,
   navigate,
 }) {
@@ -132,23 +133,22 @@ export function Card({
                     <Button
                       variant="icon"
                       onClick={() => handleShowed(item._id)}
-                      className="dark:text-gray-400 dark:hover:text-gray-200"
+              className="flex items-center gap-1 dark:text-gray-400 hover:text-red-500"
                     >
                       <ChatBubbleBottomCenterIcon className="w-5 h-5 transition hover:scale-110" />
                     </Button>
 
-     
                     <Button
-                      variant="icon"
-                      onClick={() => handlePostLike(item._id)}
-                      className="gap-1 dark:text-gray-400 hover:text-red-500"
-                    >
-                      <HeartIcon className="w-5 h-5" />
+  variant="icon"
+  onClick={() => handlePostLike(item._id)}
+  className="flex items-center gap-1 dark:text-gray-400 hover:text-red-500"
+>
+  <HeartIcon className="w-5 h-5" />
 
-                      <span className="text-sm">
-                        {item.likes?.length || 0}
-                      </span>
-                    </Button>
+  <span className="text-sm">
+    {item.likes?.length || 0}
+  </span>
+</Button>
 
                     
                     {!postUserId && (
@@ -309,26 +309,25 @@ export function Card({
 
   
                 <div className="flex items-center gap-2 border-t pt-3">
-                  <Input
-                    type="text"
-                    placeholder="Yorum yap..."
-                    value={newComment}
-                    onChange={(e) =>
-                      setNewComment(e.target.value)
-                    }
-                    className="flex-1 border rounded-full dark:bg-gray-900 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[rgb(137,205,251)] transition"
-                  />
+  <div className="flex-1 min-w-0">
+    <Input
+      type="text"
+      placeholder="Yorum yap..."
+      value={newComment}
+      onChange={(e) => setNewComment(e.target.value)}
+      className="w-full rounded-full dark:bg-gray-900 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[rgb(137,205,251)] transition"
+    />
+  </div>
 
-
-                  <Button
-                    type="button"
-                    variant="primary"
-                    onClick={() => handleAddComment(item._id)}
-                    className="p-3"
-                  >
-                    <ArrowRightIcon className="w-4 h-4" />
-                  </Button>
-                </div>
+  <Button
+    type="button"
+    variant="primary"
+    onClick={() => handleAddComment(item._id)}
+    className="p-3 shrink-0"
+  >
+    <ArrowRightIcon className="w-4 h-4" />
+  </Button>
+</div>
               </div>
             )}
           </div>
