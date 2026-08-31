@@ -141,10 +141,10 @@ EKLENENLER
 ## Arayüzler
 
 <p align="center">
-  <img src="./client/public/assets/screenshots/1775502944455.jpeg" alt="Dashboards" width="900">
+  <img src="./client/public/assets/screenshots/1775502944455.png" alt="Dashboards" width="900">
 </p>
 <p align="center">
-  <img src="./client/public/assets/screenshots/1775502944246.jpeg" alt="Dashboards" width="900">
+  <img src="./client/public/assets/screenshots/1775502944246.png" alt="Dashboards" width="900">
 </p>
 <p align="center">
   <img src="./client/public/assets/screenshots/1775502942378.jpeg" alt="Dashboards" width="900">
