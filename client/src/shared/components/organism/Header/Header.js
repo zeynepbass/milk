@@ -52,7 +52,7 @@ export function Header() {
             <img
               src="/assets/logo.png"
               alt="Logo"
-              className="h-16 w-auto block dark:hidden"
+              className="h-16 w-auto block dark:hidden outline-none"
             />
 
             <img
@@ -83,6 +83,7 @@ export function Header() {
         <PopoverGroup className="hidden md:flex flex-1 m-3">
           <div
             className="
+      
               flex w-full max-w-2xl mx-auto
               rounded-full
               bg-gray-50
@@ -102,7 +103,7 @@ export function Header() {
                   setSearch(input);
                 }
               }}
-              className="focus:ring-0 border-0 pl-2 w-full "
+              className="focus:ring-0 border-0 pl-2 w-full pt-2"
             />
 
             <Button
@@ -136,7 +137,8 @@ export function Header() {
           <Button
             type="button"
             onClick={toggleTheme}
-            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+            variant="dark"
+
           >
             {theme === "light" ? (
               <MoonIcon className="w-5 h-5 text-[rgb(137,205,251)]" />
@@ -173,7 +175,8 @@ export function Header() {
           <Button
             type="button"
             onClick={() => setBellOpen(!bellOpen)}
-            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
+            variant="dark"
+
           >
             <BellAlertIcon className="w-5 h-5 text-[rgb(137,205,251)] dark:text-yellow-400" />
           </Button>

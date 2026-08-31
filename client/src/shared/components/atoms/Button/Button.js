@@ -4,22 +4,42 @@ export function Button({
   icon: Icon,
   text,
   className = "",
+  variant = "default",
   disabled = false,
   active = false,
+  loading = false,
+  loadingText = "Yükleniyor...",
   ...props
 }) {
+  const variants = {
+    default: "text-gray-500 ",
+    dark: "p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800",
+    danger: "text-gray-500 hover:text-red-500",
+    primary:
+      "bg-[rgb(82,144,246)] dark:bg-gray-900 hover:opacity-90 text-white gap-2 px-5 py-2 rounded-full disabled:cursor-not-allowed",
+tab: ""
+  };
+
   return (
     <button
       type={type}
-      disabled={disabled}
+      disabled={disabled || loading}
       className={`
         px-4 py-2 rounded-full
-        ${active ? "text-gray-400" : "text-gray-500"}
+        ${variants[variant] || variants.default}
+        ${active ? "text-blue-400 dark:text-white" : "text-gray-400 "}
         ${className}
       `}
       {...props}
     >
-      {Icon ? <Icon className="w-4 h-4" /> : text || children}
+{loading ? (
+  loadingText
+) : (
+  <>
+    {Icon && <Icon className="w-4 h-4" />}
+    {text || children}
+  </>
+)}
     </button>
   );
 }

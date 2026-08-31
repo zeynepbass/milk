@@ -48,7 +48,7 @@ export const UpdatedPostForm = ({ editPostId, setOpen }) => {
     }
   }, [details]);
   const handleSubmit = (e) => {
-    console.log(formData);
+
     e.preventDefault();
     handleUpdatePost(details?._id, formData);
     setOpen(false);
@@ -57,7 +57,7 @@ export const UpdatedPostForm = ({ editPostId, setOpen }) => {
   return (
     <form
       onSubmit={handleSubmit}
-      className="max-w-4xl mx-auto  rounded-2xl p-8 space-y-6 m-2"
+      className="max-w-4xl mx-auto  rounded-2xl p-2 space-y-6 m-2"
     >
       <div className="flex justify-between items-center">
         <h2 className="text-2xl font-bold text-gray-500">Gönderiyi Düzenle</h2>
@@ -76,22 +76,24 @@ export const UpdatedPostForm = ({ editPostId, setOpen }) => {
           name="ownerName"
           placeholder="Ad"
           value={formData?.ownerName || ""}
+          className="py-2"
           onChange={handleChange}
-          disabled
+       
         />
 
         <Input
           name="ownerSurname"
           placeholder="Soyad"
+                    className="py-2"
           value={formData?.ownerSurname || ""}
           onChange={handleChange}
-          disabled
+   
         />
       </div>
 
       <Select
   name="ownerRole"
-  disabled
+  
   value={formData?.ownerRole || ""}
   onChange={handleChange}
   placeholder="Rol seçiniz"
@@ -106,7 +108,7 @@ export const UpdatedPostForm = ({ editPostId, setOpen }) => {
         value={formData?.title || ""}
         onChange={handleChange}
         className="w-full border rounded-lg px-4 py-2"
-        disabled
+        
       />
 <Textarea
   name="description"
@@ -123,7 +125,7 @@ export const UpdatedPostForm = ({ editPostId, setOpen }) => {
         value={formData?.province || ""}
         onChange={handleChange}
         className="w-full border rounded-lg px-4 py-2"
-        disabled
+        
       />
       <Input
           name="district"
@@ -131,7 +133,7 @@ export const UpdatedPostForm = ({ editPostId, setOpen }) => {
           value={formData?.district || ""}
         onChange={handleChange}
         className="w-full border rounded-lg px-4 py-2"
-        disabled
+        
       />
   
       </div>
@@ -153,14 +155,18 @@ export const UpdatedPostForm = ({ editPostId, setOpen }) => {
       <input type="file" multiple onChange={handleImages} className="w-full" />
 
       <div className="flex justify-end">
+        
       <Button
   type="submit"
-  variant="icon"
-  disabled={loading}
-  className="bg-[rgb(137,205,251)] text-white"
->
-  {loading ? "Yükleniyor..." : <ArrowRightIcon className="w-4 h-4" />}
-</Button>
+  variant="primary"
+  loading={loading}
+  loadingText="Yükleniyor..."
+  text={<ArrowRightIcon className="w-4 h-4" />}
+
+  className="p-3"
+/>
+
+
       </div>
     </form>
   );

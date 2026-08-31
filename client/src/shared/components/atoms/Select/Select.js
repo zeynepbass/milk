@@ -1,4 +1,3 @@
-import { ChevronDownIcon } from "@heroicons/react/16/solid";
 
 export function Select({
   label,
@@ -17,10 +16,7 @@ export function Select({
 
       <select
         {...props}
-        className={`w-full appearance-none rounded-lg border border-gray-200
-        px-4 py-2 text-sm text-gray-500 focus:outline-none
-        focus:ring-2 focus:ring-[rgb(82,144,246)] transition
-        ${className}`}
+        className={`w-full px-2 py-2  dark:text-white text-sm rounded-xl border outline-none border-gray-100 dark:bg-gray-800 bg-gray-50 focus:bg-white focus:ring-2 dark:border-yellow-400 dark:focus:ring-0 focus:ring-[rgb(82,144,246)] transition-all ${className}`}
         required
       >
         <option value="" disabled>
@@ -34,10 +30,7 @@ export function Select({
         ))}
       </select>
 
-      <ChevronDownIcon
-          className="pointer-events-none absolute right-3 top-1/2
-          -translate-y-1/2 h-5 w-5 text-gray-400"
-        />
+
     </div>
   );
 }

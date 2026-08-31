@@ -123,31 +123,31 @@ export function MessageDialog() {
           })}
         </div>
 
-        <div className="p-3 border-t bg-white dark:bg-gray-800 dark:border-gray-700 flex gap-2">
-          <Input
-            type="text"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            placeholder={
-              selectedUser ? "Mesaj yaz..." : "Önce kullanıcı seç"
-            }
-            className="flex-1 px-4 py-2 rounded-full border dark:bg-gray-900 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400"
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                handleSend();
-              }
-            }}
-          />
+        <div className="p-3 border-t bg-white dark:bg-gray-800 dark:border-gray-700 flex gap-2 items-center">
+  <div className="flex-1 min-w-0">
+    <Input
+      type="text"
+      value={input}
+      onChange={(e) => setInput(e.target.value)}
+      placeholder={selectedUser ? "Mesaj yaz..." : "Önce kullanıcı seç"}
+      className="py-2"
+      onKeyDown={(e) => {
+        if (e.key === "Enter") {
+          handleSend();
+        }
+      }}
+    />
+  </div>
 
-<Button
-  type="button"
-  variant="primary"
-  onClick={handleSend}
-  className="w-auto rounded-full px-5 py-2"
->
-  Gönder
-</Button>
-        </div>
+  <Button
+    type="button"
+    variant="primary"
+    onClick={handleSend}
+    className="shrink-0 rounded-full px-5 py-2"
+  >
+    Gönder
+  </Button>
+</div>
       </div>
     </div>
   );

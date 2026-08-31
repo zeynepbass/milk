@@ -84,6 +84,7 @@ export function Register() {
                   label="Ad"
                   name="name"
                   value={formData.name}
+                  className="py-2"
                   placeholder="Adınız"
                   onChange={handleChange}
                 />
@@ -92,6 +93,7 @@ export function Register() {
               <div className="flex-1">
                 <Input
                   label="Soyad"
+                  className="py-2"
                   name="surname"
                   value={formData.surname}
                   placeholder="Soyadınız"
@@ -104,6 +106,7 @@ export function Register() {
               <Input
                 label="Email"
                 type="email"
+                className="py-2"
                 name="email"
                 value={formData.email}
                 placeholder="ornek@mail.com"
@@ -117,6 +120,7 @@ export function Register() {
                   label="Parola"
                   type="password"
                   name="password"
+                  className="py-2"
                   value={formData.password}
                   placeholder="••••••••"
                   onChange={handleChange}
@@ -135,7 +139,7 @@ export function Register() {
                   ]}
                 />
 
-                <ChevronDownIcon className="pointer-events-none absolute right-3 top-9 h-5 w-5 text-gray-400" />
+             
               </div>
             </div>
           </div>
@@ -144,7 +148,7 @@ export function Register() {
   type="submit"
   variant="primary"
   disabled={loading}
-  className="mt-6"
+              className="w-full mt-7 text-sm font-medium transition-all hover:shadow-md"
 >
   {loading ? "Kayıt Olunuyor..." : "Üye Ol"}
 </Button>

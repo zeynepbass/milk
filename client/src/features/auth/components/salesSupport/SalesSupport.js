@@ -70,17 +70,16 @@ export function SalesSupports() {
         />
 
         <div className="flex justify-end">
-          <Button
-            type="submit"
-            disabled={!message.trim() || !type || feedback}
-            className="bg-[rgb(82,144,246)] dark:bg-gray-900 hover:opacity-90 text-white gap-2 px-5 py-2 rounded-full disabled:cursor-not-allowed"
-          >
-            {feedback ? (
-              "Gönderiliyor..."
-            ) : (
-              <ArrowRightIcon className="w-4 h-4" />
-            )}
-          </Button>
+        <Button
+  type="submit"
+  disabled={!message.trim() || !type || feedback}
+  loading={feedback}
+  variant="primary"
+  text="Gönder"
+  loadingText="Gönderiliyor..."
+  icon={ArrowRightIcon}
+/>
+
         </div>
       </form>
     </div>

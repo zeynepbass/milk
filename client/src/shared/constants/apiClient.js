@@ -2,7 +2,6 @@ import axios from "axios";
 
 const apiClient = axios.create({
   baseURL: "http://localhost:3464/api",
-
   headers: {
     "Content-Type": "application/json",
   },
@@ -10,17 +9,21 @@ const apiClient = axios.create({
 
 apiClient.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem("token");
+    const authStorage = localStorage.getItem("auth-storage");
 
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
+    if (authStorage) {
+      const parsed = JSON.parse(authStorage);
+      const token = parsed?.state?.token;
+
+
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
     }
 
     return config;
   },
-  (error) => {
-    return Promise.reject(error);
-  }
+  (error) => Promise.reject(error)
 );
 
 export default apiClient;

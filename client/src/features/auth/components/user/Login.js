@@ -94,6 +94,7 @@ export function Login() {
               <Input
                 label="Email"
                 type="email"
+                className="py-2"
                 name="email"
                 value={formData.email}
                 placeholder="ornek@mail.com"
@@ -104,6 +105,7 @@ export function Login() {
                 label="Parola"
                 type="password"
                 name="password"
+                    className="py-2"
                 value={formData.password}
                 placeholder="••••••••"
                 onChange={handleChange}
@@ -113,8 +115,8 @@ export function Login() {
 
             <Button
               type="submit"
-              variant="primary"
-              className="w-full mt-7 py-3 rounded-xl text-sm font-medium transition-all hover:shadow-md"
+                   variant="primary"
+              className="w-full mt-7 text-sm font-medium transition-all hover:shadow-md"
             >
               Giriş Yap
             </Button>

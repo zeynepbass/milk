@@ -6,15 +6,18 @@ import usePostAll from "@/features/feed/hooks/post/usePost";
 import usePost from "@/features/feed/hooks/user/useUserPost";
 import { Card } from "@/shared/components/molecules";
 import { Input, Select, Heading, Button } from "@/shared/components/atoms";
-
 import { OrganicForm } from "../organicForm";
-
 import { PencilIcon } from "@heroicons/react/24/outline";
 import { CheckBadgeIcon } from "@heroicons/react/24/solid";
 
 const Sales = lazy(() =>
   import("../salesSupport").then((module) => ({
     default: module.SalesSupports,
+  }))
+);
+const CreatePostForm = lazy(() =>
+  import("../CreatePostForm").then((module) => ({
+    default: module.CreatePostForm,
   }))
 );
 export function Profile() {
@@ -34,7 +37,6 @@ export function Profile() {
     profile,
     button,
     loading,
-    handleUpdated,
     showFreezeModal,
     setShowFreezeModal,
     createOpen,
@@ -43,7 +45,7 @@ export function Profile() {
     setButton,
     freezeProfile,
     deleteProfile,
-    userUpdated,
+    handleUpdated
   } = useProfile();
 
   const { followId, openList, setOpenList, open, setOpen } = usePostAll();
@@ -63,7 +65,7 @@ export function Profile() {
     user,
   } = usePost();
 
-  const { handleComment, handleDelete, handleCommentLike, comments } =
+  const { handleComment, handleDelete, handleCommentLike,handleAddComment, comments,newComment,setNewComment } =
     useCommentAll(selected);
 
   useEffect(() => {
@@ -162,10 +164,10 @@ export function Profile() {
             </>
           ) : (
             <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                handleUpdated(profileForm);
-              }}
+            onSubmit={
+              handleUpdated
+           }
+          
             >
               <div className="flex flex-col items-center">
                 <label className="relative cursor-pointer group">
@@ -188,6 +190,7 @@ export function Profile() {
                     accept="image/*"
                     onChange={handleImages}
                     className="hidden"
+
                   />
                 </label>
 
@@ -255,17 +258,17 @@ export function Profile() {
               </div>
 
               <Button
-                type="submit"
-                text="Gönder"
-                disabled={loading}
-                loading={loading}
-                loadingText="Kaydediliyor..."
-                className={`w-full mt-3 py-2.5 rounded-xl font-medium ${
-                  loading
-                    ? "bg-gray-400 dark:bg-gray-900 text-white"
-                    : "bg-[rgb(82,144,246)] dark:bg-gray-900 hover:opacity-90 text-white"
-                }`}
-              />
+  type="submit"
+  text="Gönder"
+  disabled={loading}
+  loading={loading}
+  loadingText="Kaydediliyor..."
+  className={`w-full mt-3 py-2.5 rounded-xl font-medium ${
+    loading
+      ? "bg-gray-400 dark:bg-gray-900 text-white"
+      : "bg-[rgb(82,144,246)] dark:bg-gray-900 hover:opacity-90 text-white"
+  }`}
+/>
             </form>
           )}
 
@@ -392,18 +395,17 @@ export function Profile() {
               </div>
 <br/>
               {createOpen && (
-                <Suspense
-                  fallback={<div className="text-white ">Yükleniyor...</div>}
-                >
-                  <Sales
-                    onSubmit={onSubmit}
-                    postLoading={postLoading}
-                    profileForm={profileForm}
-                    form={form}
-                    setForm={setForm}
-                    setOpen={createSetOpen}
-                  />
-                </Suspense>
+                       <Suspense fallback={<div>Yükleniyor...</div>}>
+                       <CreatePostForm
+                         onSubmit={onSubmit}
+                         postLoading={postLoading}
+                         profileForm={profileForm}
+                         form={form}
+                         setForm={setForm}
+                         setOpen={createSetOpen}
+                       />
+                     </Suspense>
+         
               )}
 
               {loadingPost && (
@@ -449,6 +451,9 @@ export function Profile() {
 
               <Card
                 data={details || []}
+                handleAddComment={handleAddComment}
+                setNewComment={setNewComment}
+                newComment={newComment}
                 loading={loadingPost}
                 editPostId={editPostId}
                 selected={selected}
@@ -503,7 +508,7 @@ export function Profile() {
             </div>
           )}
 
-          {activeTab === "organic" && <OrganicForm userUpdated={userUpdated} />}
+          {activeTab === "organic" && <OrganicForm handleUpdated={handleUpdated} />}
 
           {activeTab === "backNotifications" && <Sales />}
         </div>
@@ -522,7 +527,8 @@ export function Profile() {
                 <Button
                   type="button"
                   onClick={() => setShowFreezeModal(false)}
-                  className="px-4 py-2 bg-gray-200 hover:bg-gray-300 font-medium"
+                  variant="dark"
+                  className="bg-gray-200"
                 >
                   İptal
                 </Button>
@@ -530,7 +536,7 @@ export function Profile() {
                 <Button
                   type="button"
                   onClick={freezeProfile}
-                  className="px-4 py-2 bg-[#B38471] text-white hover:bg-[#ce9b87] font-medium"
+variant="primary"
                 >
                   Onayla
                 </Button>

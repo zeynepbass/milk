@@ -1,4 +1,4 @@
-export function Textarea({ label, error, ...props }) {
+export function Textarea({ label, error,className, ...props }) {
     return (
       <div>
         {label && (
@@ -9,10 +9,7 @@ export function Textarea({ label, error, ...props }) {
   
         <textarea
           {...props}
-          className="w-full p-3 rounded-lg border border-gray-300
-          dark:bg-gray-700 dark:border-gray-600 dark:text-white
-          focus:outline-none focus:ring-2 focus:ring-blue-300
-          resize-none transition"
+          className={`w-full px-2  dark:text-white text-sm rounded-xl border outline-none border-gray-100 dark:bg-gray-800 bg-gray-50 focus:bg-white focus:ring-2 dark:border-yellow-400 dark:focus:ring-0 focus:ring-[rgb(82,144,246)] transition-all ${className}`}
           required
         />
   
