@@ -13,7 +13,6 @@ import {
 
 import { Description } from "@/features/auth/components";
 import { Button, Input } from "@/shared/components/atoms";
-import { Link } from "react-router-dom";
 import { Suspense, lazy } from "react";
 const UpdatedPostForm = lazy(() =>
   import("@/features/auth/components").then((module) => ({
@@ -67,18 +66,7 @@ export function Card({
         return (
           <div key={item._id} className="flex flex-col">
             <div className="flex flex-col bg-white dark:bg-gray-800 shadow-md mt-4">
-              <Link to={`/detay/${item._id}`}>
-                <img
-                  className="w-full h-60 object-cover "
-                  src={
-                    item?.images?.[0]
-                      ? `http://localhost:5346${item.images[0]}`
-                      : "/assets/logo.png"
-                  }
-                  alt="Post"
-                  loading="lazy"
-                />
-              </Link>
+ 
 
               <div className="p-5">
                 <div>

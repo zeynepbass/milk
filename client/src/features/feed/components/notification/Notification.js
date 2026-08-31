@@ -1,9 +1,9 @@
 import usePost from "@/features/feed/hooks/post/usePost";
 import { useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+
 
 export function Notifications({ open }) {
-  const navigate = useNavigate();
+
   const {
     NotificationAlerts,
     notifications,
@@ -46,7 +46,7 @@ export function Notifications({ open }) {
                   onClick={async () => {
                     if (item.postId) {
                       await markAsRead(item._id);
-                      navigate(`/detay/${item.postId}`);
+                  
                     }
                   }}
                   className={`px-4 py-3  dark:bg-dark-800 border-b dark:border-b-gray-900 dark:hover:bg-gray-400 text-sm cursor-pointer hover:bg-gray-50 transition ${
