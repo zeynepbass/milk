@@ -29,11 +29,6 @@ const Message = lazy(() =>
   }))
 );
 
-const DetailsPost = lazy(() =>
-  import("@/features/feed/pages").then((module) => ({
-    default: module.DetailsPost,
-  }))
-);
 
 const Login = lazy(() =>
   import("@/features/auth/pages").then((module) => ({
@@ -78,7 +73,7 @@ function App() {
             <Route path="/profil" element={<Profile />} />
             <Route path="/favoriler" element={<FavoritePost />} />
             <Route path="/mesajlar" element={<Message />} />
-            <Route path="/detay/:id" element={<DetailsPost />} />
+         
           </Route>
 
           <Route path="*" element={<NotFound />} />
