@@ -380,11 +380,12 @@ export function Profile() {
                   onClick={() => createSetOpen(true)}
                   disabled={loading}
                   className="
+                 
              rounded-xl
              py-3
           
                 "
-                >Ekle</Button>
+                ><span className=" text-white">+</span></Button>
                 <br />
               </div>
 <br/>

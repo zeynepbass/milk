@@ -6,7 +6,7 @@ export function Button({
   className = "",
   variant = "default",
   disabled = false,
-  active = false,
+  active,
   loading = false,
   loadingText = "Yükleniyor...",
   ...props
@@ -25,9 +25,11 @@ tab: ""
       type={type}
       disabled={disabled || loading}
       className={`
+        
         px-4 py-2 rounded-full
         ${variants[variant] || variants.default}
-        ${active ? "text-blue-400 dark:text-white" : "text-gray-400 "}
+        ${active ? "text-[#89CDFB] dark:text-white  border-[rgb(137,205,251)]"
+          : "text-gray-500"}
         ${className}
       `}
       {...props}

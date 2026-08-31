@@ -66,7 +66,7 @@ export function Login() {
       <div className="flex-1 flex items-center justify-center px-5 py-10 sm:px-8">
         <div className="w-full max-w-md">
 
-          <div className="flex justify-center mb-8 md:hidden">
+          <div className="flex justify-center mb-8  md:hidden">
             <img
               src="/assets/footer-logo.png"
               width="120"
@@ -82,11 +82,13 @@ export function Login() {
           >
 
             <div className="mb-8">
-              <Heading
-                title="Giriş Yap"
-                desc="Seni tekrar görmek güzel! Devam etmek için hesabına giriş yap."
-                className="text-3xl font-semibold text-[rgb(71,92,120)]"
-              />
+            <div className="mb-8">
+  <Heading
+    title="Giriş Yap"
+    desc="Seni tekrar görmek güzel! Devam etmek için hesabına giriş yap."
+    className="text-3xl font-semibold text-[rgb(71,92,120)]"
+  />
+</div>
             </div>
 
 
