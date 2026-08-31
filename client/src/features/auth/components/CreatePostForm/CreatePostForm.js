@@ -135,7 +135,7 @@ export function CreatePostForm({
           <Select
   name="ownerRole"
   onChange={handleChange}
-
+  disabled
   value={form.ownerRole ?? profileForm?.ownerRole ?? ""}
   placeholder="Rol seçiniz"
   options={[

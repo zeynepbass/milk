@@ -11,10 +11,10 @@ import {
   CheckBadgeIcon,
 } from "@heroicons/react/24/outline";
 
-import {  Description } from "@/features/auth/components";
+import { Description } from "@/features/auth/components";
 import { Button, Input } from "@/shared/components/atoms";
 import { Link } from "react-router-dom";
-import { Suspense,lazy } from "react";
+import { Suspense, lazy } from "react";
 const UpdatedPostForm = lazy(() =>
   import("@/features/auth/components").then((module) => ({
     default: module.UpdatedPostForm,
@@ -62,12 +62,10 @@ export function Card({
   return (
     <>
       {data.map((item) => {
-        const postUserId =
-          (item?.user?._id || item?.user) === profileForm?._id;
+        const postUserId = (item?.user?._id || item?.user) === profileForm?._id;
 
         return (
           <div key={item._id} className="flex flex-col">
-
             <div className="flex flex-col bg-white dark:bg-gray-700 rounded-2xl rounded-b-none shadow-md w-full mt-4">
               <Link to={`/detay/${item._id}`}>
                 <img
@@ -84,7 +82,6 @@ export function Card({
 
               <div className="p-5 flex flex-col justify-between h-full">
                 <div>
-    
                   <div className="flex items-center gap-3 mb-4">
                     <div className="w-10 h-10 rounded-full overflow-hidden shadow relative">
                       <img
@@ -120,42 +117,34 @@ export function Card({
                     </div>
                   </div>
 
-                  <Description
-                    text={item.description}
-                    maxLength={150}
-                  />
+                  <Description text={item.description} maxLength={150} />
                 </div>
 
-
                 <div className="flex justify-between items-center border-t pt-4 mt-4 text-gray-600">
-                  <div className="flex items-center gap-5">
-     
+                  <div className="flex items-center">
                     <Button
                       variant="icon"
                       onClick={() => handleShowed(item._id)}
-              className="flex items-center gap-1 dark:text-gray-400 hover:text-red-500"
+                      className="flex items-center  dark:text-gray-400 hover:text-red-500"
                     >
                       <ChatBubbleBottomCenterIcon className="w-5 h-5 transition hover:scale-110" />
                     </Button>
 
                     <Button
-  variant="icon"
-  onClick={() => handlePostLike(item._id)}
-  className="flex items-center gap-1 dark:text-gray-400 hover:text-red-500"
->
-  <HeartIcon className="w-5 h-5" />
+                      variant="icon"
+                      onClick={() => handlePostLike(item._id)}
+                      className="flex items-center  dark:text-gray-400 hover:text-red-500"
+                    >
+                      <HeartIcon className="w-5 h-5" />
 
-  <span className="text-sm">
-    {item.likes?.length || 0}
-  </span>
-</Button>
+                      <span className="text-sm">{item.likes?.length || 0}</span>
+                    </Button>
 
-                    
                     {!postUserId && (
                       <Button
                         variant="icon"
                         onClick={() => handlePostSave(item._id)}
-                        className={`gap-1 dark:text-gray-400 ${
+                        className={`flex items-center dark:text-gray-400 ${
                           favoruite ? "text-red-500" : ""
                         }`}
                       >
@@ -168,8 +157,7 @@ export function Card({
                     )}
                   </div>
 
-                  <div className="flex items-center gap-3">
-   
+                  <div className="flex items-center">
                     {!postUserId && (
                       <>
                         <Button
@@ -190,7 +178,6 @@ export function Card({
                       </>
                     )}
 
-            
                     {postUserId && (
                       <>
                         <Button
@@ -212,22 +199,25 @@ export function Card({
                     )}
                   </div>
 
-
                   {open && (
                     <div className="fixed inset-0 flex items-center justify-center bg-black/30 backdrop-blur-sm z-50">
                       <div className="bg-white p-6 rounded-2xl shadow-xl w-full max-w-md">
-                      <Suspense fallback={<div className="text-white">Yükleniyor...</div>}>
-                      <UpdatedPostForm
-                          editPostId={editPostId}
-                          setOpen={setOpen}/>
-</Suspense>
+                        <Suspense
+                          fallback={
+                            <div className="text-white">Yükleniyor...</div>
+                          }
+                        >
+                          <UpdatedPostForm
+                            editPostId={editPostId}
+                            setOpen={setOpen}
+                          />
+                        </Suspense>
                       </div>
                     </div>
                   )}
                 </div>
               </div>
             </div>
-
 
             {selected === item._id && (
               <div className="bg-white rounded-t-none dark:bg-gray-700 dark:border-none rounded-2xl shadow-sm border p-4 max-w-full">
@@ -242,10 +232,7 @@ export function Card({
                         profileForm?._id === comment?.user?._id;
 
                       return (
-                        <div
-                          key={comment._id}
-                          className="flex gap-3"
-                        >
+                        <div key={comment._id} className="flex gap-3">
                           <img
                             src={
                               comment?.user?.avatar ||
@@ -259,17 +246,13 @@ export function Card({
                           <div className="flex flex-col w-full">
                             <div className="flex justify-between items-center">
                               <p className="text-sm font-semibold">
-                                {comment?.user?.name}{" "}
-                                {comment?.user?.surname}
+                                {comment?.user?.name} {comment?.user?.surname}
                               </p>
 
-      
                               {isCommentOwner && (
                                 <Button
                                   variant="icon"
-                                  onClick={() =>
-                                    handleDelete(comment._id)
-                                  }
+                                  onClick={() => handleDelete(comment._id)}
                                   className="p-1"
                                 >
                                   <XMarkIcon className="w-4 h-4 hover:text-red-500" />
@@ -282,13 +265,10 @@ export function Card({
                             </p>
 
                             <div className="flex items-center gap-4 mt-1">
-      
                               <Button
                                 variant="ghost"
                                 size="sm"
-                                onClick={() =>
-                                  handleCommentLike(comment._id)
-                                }
+                                onClick={() => handleCommentLike(comment._id)}
                                 className="p-0 text-xs text-blue-500 dark:text-yellow-400 hover:underline"
                               >
                                 {comment?.liked
@@ -307,27 +287,26 @@ export function Card({
                   )}
                 </div>
 
-  
                 <div className="flex items-center gap-2 border-t pt-3">
-  <div className="flex-1 min-w-0">
-    <Input
-      type="text"
-      placeholder="Yorum yap..."
-      value={newComment}
-      onChange={(e) => setNewComment(e.target.value)}
-      className="w-full rounded-full dark:bg-gray-900 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[rgb(137,205,251)] transition"
-    />
-  </div>
+                  <div className="flex-1 min-w-0">
+                    <Input
+                      type="text"
+                      placeholder="Yorum yap..."
+                      value={newComment}
+                      onChange={(e) => setNewComment(e.target.value)}
+                      className="w-full rounded-full dark:bg-gray-900 px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-[rgb(137,205,251)] transition"
+                    />
+                  </div>
 
-  <Button
-    type="button"
-    variant="primary"
-    onClick={() => handleAddComment(item._id)}
-    className="p-3 shrink-0"
-  >
-    <ArrowRightIcon className="w-4 h-4" />
-  </Button>
-</div>
+                  <Button
+                    type="button"
+                    variant="primary"
+                    onClick={() => handleAddComment(item._id)}
+                    className="p-3 shrink-0"
+                  >
+                    <ArrowRightIcon className="w-4 h-4" />
+                  </Button>
+                </div>
               </div>
             )}
           </div>

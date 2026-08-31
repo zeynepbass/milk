@@ -113,26 +113,28 @@ export default function usePost() {
     try {
       setLoading(true);
   
-      const updatedPost = await service.updatePost(id, formData);
+      const res = await service.updatePost(id, formData);
   
       setData((prev) =>
         prev.map((post) =>
-          post._id === id ? updatedPost : post
+          post._id === id ? res.post : post
         )
       );
   
-      toast.info(updatedPost.message || "Gönderi başarıyla güncellendi.");
+      toast.info(res.message || "Gönderi başarıyla güncellendi");
+  
       setOpen(false);
     } catch (error) {
       console.log(error);
+  
       toast.error(
-        error.response?.data?.message || "Gönderi güncellenirken bir hata oluştu."
+        error.response?.data?.message ||
+          "Gönderi güncellenirken bir hata oluştu."
       );
     } finally {
       setLoading(false);
     }
   };
-
   const followId = async (id) => {
     try {
       await service.followUser(id);
