@@ -1,18 +1,13 @@
 import { useState, useEffect } from "react";
-import {
-  loginService,
-  registerService,
-  profileService,
-  profileUpdated,
-  freezeServices,
-  deleteServices,
-} from "@/features/auth/repositories/repository";
+import * as authRepository from "@/features/auth/repositories/repository";
 import { useUserStore } from "@/shared/store/useUserStore";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
-import {useTheme} from "@/shared/utils/useTheme"
+import { useTheme } from "@/shared/utils/useTheme";
+
 export default function useUserLogin() {
   const { setTheme } = useTheme();
+
   const [showFreezeModal, setShowFreezeModal] = useState(false);
   const [createOpen, createSetOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -31,7 +26,6 @@ export default function useUserLogin() {
   });
 
   const setUser = useUserStore((state) => state.setUser);
-
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -56,7 +50,7 @@ export default function useUserLogin() {
     try {
       setLoading(true);
 
-      const res = await loginService(formData);
+      const res = await authRepository.loginService(formData);
 
       const { setUser, setToken } = useUserStore.getState();
 
@@ -76,7 +70,7 @@ export default function useUserLogin() {
     try {
       setLoading(true);
 
-      const res = await registerService(formData);
+      const res = await authRepository.registerService(formData);
 
       toast.info(res.message || "Başarılı");
       navigate("/giris-yap");
@@ -91,7 +85,7 @@ export default function useUserLogin() {
 
   const getProfile = async () => {
     try {
-      const res = await profileService();
+      const res = await authRepository.profileService();
       setProfile(res);
     } catch (error) {
       console.log(error);
@@ -100,11 +94,11 @@ export default function useUserLogin() {
 
   const handleUpdated = async (e) => {
     e.preventDefault();
-    console.log("profileForm",profileForm)
+
     try {
       setLoading(true);
-   
-      const res = await profileUpdated(profileForm);
+
+      const res = await authRepository.profileUpdated(profileForm);
 
       toast.info(res.message || "Başarılı");
       setUser(res.user);
@@ -117,16 +111,15 @@ export default function useUserLogin() {
     }
   };
 
-
-
   const freezeProfile = async () => {
     try {
-   const res=   await freezeServices();
+      const res = await authRepository.freezeServices();
+
       setTheme("light");
       localStorage.clear();
       navigate("/giris-yap");
-      toast.info(res.message || "Tekrardan görüşmek üzere");
 
+      toast.info(res.message || "Tekrardan görüşmek üzere");
     } catch (error) {
       console.log(error);
       toast.error("Bir hata oluştu");
@@ -135,10 +128,12 @@ export default function useUserLogin() {
 
   const deleteProfile = async (id) => {
     try {
-    const res=  await deleteServices(id);
-    setTheme("light");
+      const res = await authRepository.deleteServices(id);
+
+      setTheme("light");
       localStorage.clear();
       navigate("/uye-ol");
+
       toast.info(res.message || "Aramızdan ayrılmana üzüldük");
     } catch (error) {
       console.log(error);
@@ -154,14 +149,12 @@ export default function useUserLogin() {
     getProfile,
     profileForm,
     deleteProfile,
-    profile,
     showFreezeModal,
     setProfileForm,
     setShowFreezeModal,
     createOpen,
     createSetOpen,
     button,
-
     setButton,
     handleUpdated,
   };
