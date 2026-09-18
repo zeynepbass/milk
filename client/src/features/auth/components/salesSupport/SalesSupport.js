@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
-import usePost from "@/features/feed/hooks/user/useUserPost";
+import usePostActions from "@/features/feed/hooks/post/usePostActions";
 import { Textarea, Heading, Button } from "@/shared/components/atoms";
 
 export function SalesSupports() {
-  const { onSubmitFeedback, feedback } = usePost();
+  const { sendFeedback, feedbackLoading } = usePostActions();
 
   const [type, setType] = useState("genel");
   const [message, setMessage] = useState("");
@@ -19,10 +19,12 @@ export function SalesSupports() {
       message,
     };
 
-    await onSubmitFeedback(payload);
+    const ok = await sendFeedback(payload);
 
-    setMessage("");
-    setType("genel");
+    if (ok) {
+      setMessage("");
+      setType("genel");
+    }
   };
 
   const types = [
@@ -74,8 +76,8 @@ export function SalesSupports() {
         <div className="flex justify-end">
           <Button
             type="submit"
-            disabled={!message.trim() || feedback}
-            loading={feedback}
+            disabled={!message.trim() || feedbackLoading}
+            loading={feedbackLoading}
             variant="primary"
             text="Gönder"
             loadingText="Gönderiliyor..."

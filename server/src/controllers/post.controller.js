@@ -3,6 +3,7 @@ import User from "../models/User.js";
 import Comment from "../models/Comment.js";
 
 import Notification from "../models/Notification.js";
+import { getLimit } from "../utils/pagination.js";
 
 export const getNotifications = async (req, res) => {
   try {
@@ -145,6 +146,7 @@ export const getFollowingPosts = async (req, res) => {
       isActive: true,
     })
       .sort({ createdAt: -1 })
+      .limit(getLimit(req))
       .select(
         "title price district category createdAt user images ownerName ownerSurname ownerRole"
       )
@@ -191,6 +193,7 @@ export const getPosts = async (req, res) => {
 
     const posts = await Post.find(filter)
       .sort({ createdAt: -1 })
+      .limit(getLimit(req))
       .select(
         "title price district category createdAt user images ownerName ownerSurname ownerRole"
       )
@@ -321,7 +324,8 @@ export const getSavedPosts = async (req, res) => {
       isActive: true,
     })
       .populate("user", "username avatar")
-      .sort({ createdAt: -1 });
+      .sort({ createdAt: -1 })
+      .limit(getLimit(req));
 
     res.json(posts);
   } catch (error) {
@@ -338,6 +342,7 @@ export const getMyPosts = async (req, res) => {
       isActive: true,
     })
       .sort({ createdAt: -1 })
+      .limit(getLimit(req))
       .populate({
         path: "user",
         select: "name surname avatar dogrulanmisSatici",

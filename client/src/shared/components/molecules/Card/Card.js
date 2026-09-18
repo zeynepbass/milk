@@ -38,13 +38,14 @@ export function Card({
   comments = [],
   newComment,
   setNewComment,
+  onUpdatePost,
 
   handleAddComment,
   navigate,
 }) {
   const handeleUpdated = (id) => {
-    setOpen(true);
-    setEditPostId(id);
+    setOpen?.(true);
+    setEditPostId?.(id);
   };
 
   const handleClick = (item) => {
@@ -170,7 +171,7 @@ export function Card({
                       <>
                         <Button
                           variant="icon"
-                          onClick={() => deleted(item._id)}
+                          onClick={() => deleted?.(item._id)}
                           className="dark:text-gray-400 hover:text-red-500"
                         >
                           <TrashIcon className="w-5 h-5" />
@@ -198,6 +199,7 @@ export function Card({
                           <UpdatedPostForm
                             editPostId={editPostId}
                             setOpen={setOpen}
+                            onUpdate={onUpdatePost}
                           />
                         </Suspense>
                       </div>

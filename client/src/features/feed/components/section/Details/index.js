@@ -9,13 +9,14 @@ import {
   TrashIcon,
 } from "@heroicons/react/24/outline";
 import { Input, Button,Heading } from "@/shared/components/atoms";
-import usePost from "@/features/feed/hooks/user/useUserPost";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import useCommentAll from "@/features/feed/hooks/post/usePostDetails";
 import usePostAll from "@/features/feed/hooks/post/usePost";
+import { SERVER_URL } from "@/shared/constants/config";
 
 export function Detail() {
   const { id } = useParams();
+  const navigate = useNavigate();
 
   const {
     handleDelete,
@@ -27,14 +28,19 @@ export function Detail() {
     comments,
     handlePostLike,
     handlePostSave,
+    handleDeletePost,
     showComments,
     setShowComments,
   } = useCommentAll(id);
 
   const { followId } = usePostAll();
-  const { deleted } = usePost();
   const [currentImage, setCurrentImage] = useState(0);
   const [newComment, setNewComment] = useState("");
+
+  const handleDeleteAndExit = async (postId) => {
+    const ok = await handleDeletePost(postId);
+    if (ok) navigate("/");
+  };
 
   if (loading) {
     return <p className="text-center text-gray-400 mb-2">Yükleniyor...</p>;
@@ -78,7 +84,7 @@ export function Detail() {
       {images.length > 0 && (
         <div className="relative w-full h-96">
           <img
-            src={`http://localhost:5346${images[currentImage]}`}
+            src={`${SERVER_URL}${images[currentImage]}`}
             alt={details.title}
             className="w-full h-full object-cover rounded-xl"
             loading="lazy"
@@ -201,7 +207,7 @@ export function Detail() {
             <Button
               variant="icon"
               type="button"
-              onClick={() => deleted(details._id)}
+              onClick={() => handleDeleteAndExit(details._id)}
               className="bg-blue-100 text-blue-500 hover:text-blue-700"
             >
               <TrashIcon className="w-5 h-5" />

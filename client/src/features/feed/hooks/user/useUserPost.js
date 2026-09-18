@@ -7,18 +7,20 @@ import {
   useUserStore
 } from "@/shared/store/useUserStore";
 import { toast } from "react-toastify";
-export default function usePostDetail() {
+import usePostActions from "@/features/feed/hooks/post/usePostActions";
+
+export default function useMyPosts() {
   const [details, setDetails] = useState([]);
   const [editPostId, setEditPostId] = useState(null);
   const [following, setFollowing] = useState([]);
   const [loadingPost, setLoading] = useState(false);
   const [postLoading, setPostLoading] = useState(false);
-  const [feedback, setFeeback] = useState(false);
 
   const user = useUserStore((state) => state.user);
   const search = useSearchStore((state) => state.search);
 
   const postService = postProvider.service;
+  const postActions = usePostActions();
 
   const [form, setForm] = useState({
     ownerName: user?.name,
@@ -32,7 +34,6 @@ export default function usePostDetail() {
     category: "",
     images: [],
   });
-
 
   useEffect(() => {
     if (!user) return;
@@ -51,7 +52,6 @@ export default function usePostDetail() {
     }));
   }, [user]);
 
-
   useEffect(() => {
     let ignore = false;
 
@@ -67,7 +67,6 @@ export default function usePostDetail() {
           setFollowing(res);
         }
       } catch (error) {
-        console.log(error);
       } finally {
         if (!ignore) {
           setLoading(false);
@@ -81,7 +80,6 @@ export default function usePostDetail() {
     };
   }, [search]);
 
-
   const fetchData = async () => {
     try {
       setLoading(true);
@@ -90,7 +88,6 @@ export default function usePostDetail() {
 
       setDetails(res);
     } catch (error) {
-      console.log(error);
     } finally {
       setLoading(false);
     }
@@ -100,21 +97,16 @@ export default function usePostDetail() {
     fetchData();
   }, []);
 
-
   const onSubmit = async (formData) => {
     try {
       setPostLoading(true);
-  
+
       const res = await postService.createPost(formData);
-  
-      console.log("mesaj:", res.message);
-  
+
       toast.success(res.message || "Başarılı");
-  
+
       setDetails((prev) => [res.post, ...prev]);
     } catch (error) {
-      console.log(error);
-  
       toast.error(
         error.response?.data?.message ||
           "Hata oluştu."
@@ -125,98 +117,78 @@ export default function usePostDetail() {
   };
 
   const deleted = async (postId) => {
-    try {
+    const ok = await postActions.deletePost(postId);
+    if (!ok) return;
 
-      setDetails((prev) =>
-        prev.filter(
-          (item) => item._id !== postId
-        )
-      );
-
-      await postService.deletePost(postId);
-    } catch (error) {
-      console.log(error);
-    }
+    setDetails((prev) => prev.filter((item) => item._id !== postId));
   };
-
 
   const handlePostLike = async (id) => {
-    try {
-      const res =
-        await postService.likePost(id);
+    const res = await postActions.likePost(id);
+    if (!res) return;
 
-      setDetails((prev) =>
-        prev.map((post) =>
-          post._id === id
-            ? {
-                ...post,
-                likes: res.likes,
-                liked: res.liked,
-              }
-            : post
-        )
-      );
-    } catch (error) {
-      console.log(error);
-    }
+    setDetails((prev) =>
+      prev.map((post) =>
+        post._id === id
+          ? {
+              ...post,
+              likes: res.likes,
+              liked: res.liked,
+            }
+          : post
+      )
+    );
   };
-
-
-  const onSubmitFeedback = async (payload) => {
-    try {
-      setFeeback(true);
-
-      const res =  await postService.sendFeedback(payload);
-            toast.info(res.message || "Başarılı");
-    } catch (error) {
-      console.log(
-        "Feedback error:",
-        error
-      );
-    } finally {
-      setFeeback(false);
-    }
-  };
-
 
   const handlePostSave = async (id) => {
-    try {
-      await postService.savePost(id);
+    const res = await postActions.savePost(id);
+    if (!res) return;
 
-      setDetails((prev) =>
-        prev.map((post) => {
-          if (post._id !== id) {
-            return post;
-          }
+    const userId = user?.id || user?._id;
 
-          const alreadySaved =
-            Array.isArray(post.savedBy) &&
-            post.savedBy.includes(user.id);
+    setDetails((prev) =>
+      prev.map((post) => {
+        if (post._id !== id) return post;
 
-          return {
-            ...post,
-            savedBy: alreadySaved
-              ? post.savedBy.filter(
-                  (u) => u !== user.id
-                )
-              : [
-                  ...post.savedBy,
-                  user.id,
-                ],
-          };
-        })
-      );
-    } catch (error) {
-      console.log(error);
-    }
+        const savedBy = Array.isArray(post.savedBy) ? post.savedBy : [];
+
+        const alreadySaved = savedBy.some(
+          (savedUser) => savedUser === userId || savedUser?._id === userId
+        );
+
+        return {
+          ...post,
+          savedBy: alreadySaved
+            ? savedBy.filter(
+                (savedUser) =>
+                  savedUser !== userId && savedUser?._id !== userId
+              )
+            : [...savedBy, userId],
+        };
+      })
+    );
+  };
+
+  const handleUpdatePost = async (id, formData) => {
+    setLoading(true);
+
+    const updatedPost = await postActions.updatePost(id, formData);
+
+    setLoading(false);
+
+    if (!updatedPost) return false;
+
+    setDetails((prev) =>
+      prev.map((post) => (post._id === id ? updatedPost : post))
+    );
+
+    return true;
   };
 
   return {
     details,
-    feedback,
     following,
 
-    onSubmitFeedback,
     onSubmit,
 
     postLoading,
@@ -228,6 +200,7 @@ export default function usePostDetail() {
     deleted,
     handlePostLike,
     handlePostSave,
+    handleUpdatePost,
 
     user,
 

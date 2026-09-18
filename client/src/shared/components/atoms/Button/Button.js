@@ -2,6 +2,7 @@ export function Button({
   children,
   type = "button",
   icon: Icon,
+  iconClassName = "w-4 h-4",
   text,
   className = "",
   variant = "default",
@@ -17,7 +18,9 @@ export function Button({
     danger: "text-gray-500 hover:text-red-500",
     primary:
       "bg-[rgb(82,144,246)] dark:bg-gray-900 hover:opacity-90 text-white gap-2 px-5 py-2 rounded-full disabled:cursor-not-allowed",
-tab: ""
+    icon: "flex items-center justify-center gap-1 text-gray-500",
+    ghost: "bg-transparent text-gray-500 hover:text-gray-700",
+    tab: "",
   };
 
   return (
@@ -38,7 +41,7 @@ tab: ""
   loadingText
 ) : (
   <>
-    {Icon && <Icon className="w-4 h-4" />}
+    {Icon && <Icon className={iconClassName} />}
     {text || children}
   </>
 )}

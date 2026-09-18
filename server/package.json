@@ -20,13 +20,13 @@
   "homepage": "https://github.com/zeynepbass/backend-milk#readme",
   "description": "",
   "dependencies": {
-    "bcrypt": "^6.0.0",
     "bcryptjs": "^3.0.3",
     "cors": "^2.8.6",
     "dotenv": "^17.3.1",
     "express": "^5.2.1",
+    "express-rate-limit": "^7.4.1",
+    "helmet": "^8.0.0",
     "jose": "^6.2.2",
-    "jsonwebtoken": "^9.0.3",
     "mongoose": "^9.3.3",
     "multer": "^2.2.0",
     "socket.io": "^4.8.3"

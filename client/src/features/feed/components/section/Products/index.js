@@ -1,6 +1,5 @@
 import { useState } from "react";
 import usePostAll from "@/features/feed/hooks/post/usePost";
-import usePost from "@/features/feed/hooks/user/useUserPost";
 import useCommentAll from "@/features/feed/hooks/comments/useComments";
 import { useNavigate } from "react-router-dom";
 import {Loading} from "@/shared/components/atoms"
@@ -8,6 +7,7 @@ import {Sortered,Card} from "@/shared/components/molecules"
 export function Section() {
   const navigate = useNavigate();
   const [selected, setSelected] = useState(null);
+  const [editPostId, setEditPostId] = useState(null);
 
   const handleShowed = (id) => {
     setSelected((prev) => (prev === id ? null : id));
@@ -20,11 +20,11 @@ export function Section() {
     followId,
     handlePostLike,
     handlePostSave,
+    handleDeletePost,
+    handleUpdatePost,
     open,
     setOpen,
   } = usePostAll();
-
-  const { deleted, editPostId, setEditPostId } = usePost();
 
   const {
     handleComment,
@@ -42,9 +42,10 @@ export function Section() {
 
   if (loading) return <Loading />;
 
- <Sortered sortedData={sortedData} />;
   return (
     <div className="h-[100vh] overflow-auto p-4">
+      <Sortered sortedData={sortedData} />
+
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
         <Card
           navigate={navigate}
@@ -57,7 +58,8 @@ export function Section() {
           setEditPostId={setEditPostId}
           followId={followId}
           setOpen={setOpen}
-          deleted={deleted}
+          deleted={handleDeletePost}
+          onUpdatePost={handleUpdatePost}
           open={open}
           handleShowed={handleShowed}
           profileForm={user || ""}

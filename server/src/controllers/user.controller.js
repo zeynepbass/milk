@@ -1,6 +1,7 @@
 import User from "../models/User.js";
 import bcrypt from "bcryptjs";
 import { generateToken } from "../config/jwt.js";
+import { getLimit } from "../utils/pagination.js";
 
 import Feedback from "../models/Feedback.js";
 export const getFeetBack = async (req, res) => {
@@ -104,7 +105,10 @@ export const register = async (req, res) => {
 };
 export const getUsers = async (req, res) => {
   try {
-    const users = await User.find().select("-password");
+    const users = await User.find()
+      .select("-password")
+      .limit(getLimit(req));
+
     res.status(200).json(users);
   } catch (err) {
     console.error(err);
@@ -152,7 +156,6 @@ export const updateUserStatus = async (req, res) => {
 export const login = async (req, res) => {
   try {
     const { email, password } = req.body;
-    console.log("BODY:", req.body);
     const user = await User.findOne({
       email,
       status: true,
@@ -231,7 +234,6 @@ export const updateUser = async (req, res) => {
       district,
       organic,
     } = req.body;
-console.log(req.body)
     const user = await User.findById(id);
 
     if (!user) {

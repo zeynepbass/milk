@@ -1,4 +1,4 @@
-import usePost from "@/features/feed/hooks/post/usePost";
+import useNotifications from "@/features/feed/hooks/notifications/useNotifications";
 import { useEffect } from "react";
 
 
@@ -9,7 +9,7 @@ export function Notifications({ open }) {
     notifications,
     markAsRead,
     loading,
-  } = usePost();
+  } = useNotifications();
 
   useEffect(() => {
     NotificationAlerts();

@@ -12,7 +12,6 @@ export const userApi = {
     return apiClient.get("/users/profile");
   },
   profileUpdated(formData){
-    console.log("formData",formData)
     return apiClient.put("/users/updateUser",formData);
   },
   freezeServices(){

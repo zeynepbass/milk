@@ -13,6 +13,11 @@ export const getConversationBetweenUsers = async (req, res) => {
       return res.status(400).json({ error: "Geçersiz kullanıcı ID" });
     }
 
+    const requesterId = (req.user.id || req.user._id).toString();
+    if (requesterId !== userId && requesterId !== otherUserId) {
+      return res.status(403).json({ error: "Yetkisiz" });
+    }
+
     const u1 = new mongoose.Types.ObjectId(userId);
     const u2 = new mongoose.Types.ObjectId(otherUserId);
 
@@ -37,6 +42,11 @@ export const getConversationBetweenUsers = async (req, res) => {
 export const getUserConversations = async (req, res) => {
   try {
     const { userId } = req.params;
+
+    const requesterId = (req.user.id || req.user._id).toString();
+    if (requesterId !== userId) {
+      return res.status(403).json({ error: "Yetkisiz" });
+    }
 
     const conversations = await Conversation.find({
       participants: userId,

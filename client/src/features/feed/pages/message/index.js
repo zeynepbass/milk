@@ -1,4 +1,4 @@
 import { MessageDialog } from "@/features/feed/components/chatDialog/index";
-export function ProfilePost() {
+export function MessagePost() {
   return <MessageDialog />;
 }

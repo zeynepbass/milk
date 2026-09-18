@@ -25,7 +25,7 @@ const FavoritePost = lazy(() =>
 
 const Message = lazy(() =>
   import("@/features/feed/pages").then((module) => ({
-    default: module.ProfilePost,
+    default: module.MessagePost,
   }))
 );
 

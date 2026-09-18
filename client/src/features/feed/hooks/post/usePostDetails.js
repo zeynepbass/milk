@@ -3,6 +3,7 @@ import { useUserStore } from "@/shared/store/useUserStore";
 
 import { postProvider } from "@/providers/post.provider";
 import { commentProvider } from "@/providers/comment.provider";
+import usePostActions from "@/features/feed/hooks/post/usePostActions";
 
 export default function usePostDetail(id) {
   const [details, setDetails] = useState(null);
@@ -14,6 +15,7 @@ export default function usePostDetail(id) {
 
   const postService = postProvider.service;
   const commentService = commentProvider.service;
+  const postActions = usePostActions();
 
   const fetchData = async () => {
     if (!id) return;
@@ -26,7 +28,6 @@ export default function usePostDetail(id) {
       setDetails(res.post);
       setComments(res.comments);
     } catch (error) {
-      console.log(error);
     } finally {
       setLoading(false);
     }
@@ -54,7 +55,6 @@ export default function usePostDetail(id) {
         )
       );
     } catch (error) {
-      console.log(error);
     }
   };
 
@@ -70,7 +70,6 @@ export default function usePostDetail(id) {
 
       setComments((prev) => [res, ...prev]);
     } catch (error) {
-      console.log(error);
     }
   };
 
@@ -84,52 +83,53 @@ export default function usePostDetail(id) {
         )
       );
     } catch (error) {
-      console.log(error);
     }
   };
 
   const handlePostLike = async (postId) => {
-    try {
-      const res =
-        await postService.likePost(postId);
+    const res = await postActions.likePost(postId);
+    if (!res) return;
 
-      setDetails((prev) => {
-        if (!prev) return prev;
+    setDetails((prev) => {
+      if (!prev) return prev;
 
-        return {
-          ...prev,
-          likes: res.likes,
-          liked: res.liked,
-        };
-      });
-    } catch (error) {
-      console.log(error);
-    }
+      return {
+        ...prev,
+        likes: res.likes,
+        liked: res.liked,
+      };
+    });
   };
 
   const handlePostSave = async (postId) => {
-    try {
-      await postService.savePost(postId);
+    const res = await postActions.savePost(postId);
+    if (!res) return;
 
-      setDetails((prev) => {
-        if (!prev) return prev;
+    const userId = user?.id || user?._id;
 
-        const alreadySaved =
-          Array.isArray(prev.savedBy) &&
-          prev.savedBy.includes(user.id);
+    setDetails((prev) => {
+      if (!prev) return prev;
 
-        return {
-          ...prev,
-          savedBy: alreadySaved
-            ? prev.savedBy.filter(
-                (u) => u !== user.id
-              )
-            : [...prev.savedBy, user.id],
-        };
-      });
-    } catch (error) {
-      console.log(error);
-    }
+      const savedBy = Array.isArray(prev.savedBy) ? prev.savedBy : [];
+
+      const alreadySaved = savedBy.some(
+        (savedUser) => savedUser === userId || savedUser?._id === userId
+      );
+
+      return {
+        ...prev,
+        savedBy: alreadySaved
+          ? savedBy.filter(
+              (savedUser) =>
+                savedUser !== userId && savedUser?._id !== userId
+            )
+          : [...savedBy, userId],
+      };
+    });
+  };
+
+  const handleDeletePost = async (postId) => {
+    return await postActions.deletePost(postId);
   };
 
   return {
@@ -145,6 +145,7 @@ export default function usePostDetail(id) {
 
     handlePostLike,
     handlePostSave,
+    handleDeletePost,
 
     fetchData,
 

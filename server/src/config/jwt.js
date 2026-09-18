@@ -1,6 +1,12 @@
 import { SignJWT, jwtVerify } from "jose";
 
 const getSecret = () => {
+  if (!process.env.JWT_SECRET) {
+    throw new Error(
+      "JWT_SECRET ortam değişkeni tanımlı değil. Sunucu .env dosyasını kontrol edin."
+    );
+  }
+
   return new TextEncoder().encode(process.env.JWT_SECRET);
 };
 

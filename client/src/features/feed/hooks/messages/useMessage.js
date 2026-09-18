@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from "react";
 import { postProvider } from "@/providers/post.provider";
 import { useUserStore } from "@/shared/store/useUserStore";
 import { io } from "socket.io-client";
+import { SERVER_URL } from "@/shared/constants/config";
 
 export default function useMessage() {
   const user = useUserStore((state) => state.user);
@@ -29,7 +30,6 @@ export default function useMessage() {
     }
   });
 
-
   useEffect(() => {
     if (!userId) return;
 
@@ -50,7 +50,6 @@ export default function useMessage() {
     fetchConversations();
   }, [userId]);
 
-
   useEffect(() => {
     if (!productData || !userId) return;
 
@@ -63,7 +62,6 @@ export default function useMessage() {
   const handleUserSelect = (u) => {
     setSelectedUser(u);
   };
-
 
   useEffect(() => {
     if (!selectedUser?._id || !userId) return;
@@ -94,7 +92,6 @@ export default function useMessage() {
     fetchMessages();
   }, [selectedUser?._id, userId]);
 
-
   useEffect(() => {
     if (
       productData &&
@@ -106,11 +103,10 @@ export default function useMessage() {
     }
   }, [productData, selectedUser]);
 
-
   useEffect(() => {
     if (!userId) return;
 
-    const socket = io("http://localhost:5346");
+    const socket = io(SERVER_URL);
 
     socketRef.current = socket;
 
@@ -145,7 +141,6 @@ export default function useMessage() {
       socket.disconnect();
     };
   }, [userId, selectedUser?._id]);
-
 
   const handleSend = async () => {
     if (
@@ -217,10 +212,6 @@ export default function useMessage() {
         setProductData(null);
       }
     } catch (err) {
-      console.log(
-        "Mesaj gönderilemedi:",
-        err
-      );
     }
   };
 

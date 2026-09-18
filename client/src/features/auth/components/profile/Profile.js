@@ -3,7 +3,7 @@ import { useSearchStore } from "@/shared/store/useSearchStore";
 import useCommentAll from "@/features/feed/hooks/comments/useComments";
 import useProfile from "@/features/auth/hooks/useUser";
 import usePostAll from "@/features/feed/hooks/post/usePost";
-import usePost from "@/features/feed/hooks/user/useUserPost";
+import useMyPosts from "@/features/feed/hooks/user/useUserPost";
 import { Card } from "@/shared/components/molecules";
 import { Input, Select, Heading, Button } from "@/shared/components/atoms";
 import { OrganicForm } from "../organicForm";
@@ -62,8 +62,9 @@ export function Profile() {
     deleted,
     setEditPostId,
     handlePostSave,
+    handleUpdatePost,
     user,
-  } = usePost();
+  } = useMyPosts();
 
   const { handleComment, handleDelete, handleCommentLike,handleAddComment, comments,newComment,setNewComment } =
     useCommentAll(selected);
@@ -461,6 +462,7 @@ export function Profile() {
                 handleCommentLike={handleCommentLike}
                 comments={comments}
                 deleted={deleted}
+                onUpdatePost={handleUpdatePost}
                 open={open}
                 setOpen={setOpen}
                 setEditPostId={setEditPostId}

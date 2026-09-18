@@ -6,7 +6,6 @@ export default function usePostComment(id) {
   const [loading, setLoading] = useState(false);
   const [newComment, setNewComment] = useState("");
 
-
   const service = commentProvider.service;
 
   const fetchComments = useCallback(async () => {
@@ -19,7 +18,6 @@ export default function usePostComment(id) {
 
       setComments(res);
     } catch (error) {
-      console.log(error);
     } finally {
       setLoading(false);
     }
@@ -40,7 +38,6 @@ export default function usePostComment(id) {
 
       setComments((prev) => [res, ...prev]);
     } catch (error) {
-      console.log(error);
     }
   };
 
@@ -55,7 +52,6 @@ export default function usePostComment(id) {
 
       setNewComment("");
     } catch (error) {
-      console.log("Yorum ekleme hatası:", error);
     }
   };
 
@@ -69,7 +65,6 @@ export default function usePostComment(id) {
         )
       );
     } catch (error) {
-      console.log(error);
     }
   };
 
@@ -91,7 +86,6 @@ export default function usePostComment(id) {
         )
       );
     } catch (error) {
-      console.log(error);
     }
   };
 

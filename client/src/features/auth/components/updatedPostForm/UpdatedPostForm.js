@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import usePostUpdated from "@/features/feed/hooks/post/usePost";
 import usePostAll from "@/features/feed/hooks/post/usePostDetails";
 import {
   Input,
@@ -12,9 +11,9 @@ import {
   ArrowRightIcon,
 } from "@heroicons/react/24/outline";
 
-export const UpdatedPostForm = ({ editPostId, setOpen }) => {
+export const UpdatedPostForm = ({ editPostId, setOpen, onUpdate }) => {
   const { details } = usePostAll(editPostId);
-  const { handleUpdatePost, loading } = usePostUpdated();
+  const [loading, setLoading] = useState(false);
 
   const [formData, setForm] = useState({
     ownerName: "",
@@ -84,7 +83,13 @@ export const UpdatedPostForm = ({ editPostId, setOpen }) => {
       }
     });
 
-    await handleUpdatePost(details?._id, formDataToSend);
+    if (!onUpdate) return;
+
+    setLoading(true);
+    const ok = await onUpdate(details?._id, formDataToSend);
+    setLoading(false);
+
+    if (ok) setOpen?.(false);
   };
 
   return (

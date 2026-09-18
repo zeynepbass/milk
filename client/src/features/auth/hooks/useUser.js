@@ -88,12 +88,11 @@ export default function useUserLogin() {
       const res = await authRepository.profileService();
       setProfile(res);
     } catch (error) {
-      console.log(error);
     }
   };
 
   const handleUpdated = async (e) => {
-    e.preventDefault();
+    e?.preventDefault?.();
 
     try {
       setLoading(true);
@@ -105,7 +104,6 @@ export default function useUserLogin() {
 
       setButton(true);
     } catch (error) {
-      console.log(error);
     } finally {
       setLoading(false);
     }
@@ -121,7 +119,6 @@ export default function useUserLogin() {
 
       toast.info(res.message || "Tekrardan görüşmek üzere");
     } catch (error) {
-      console.log(error);
       toast.error("Bir hata oluştu");
     }
   };
@@ -136,7 +133,6 @@ export default function useUserLogin() {
 
       toast.info(res.message || "Aramızdan ayrılmana üzüldük");
     } catch (error) {
-      console.log(error);
     }
   };
 

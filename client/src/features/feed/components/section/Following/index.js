@@ -1,6 +1,6 @@
 import { useState } from "react";
 import usePostAll from "@/features/feed/hooks/post/usePost";
-import usePost from "@/features/feed/hooks/user/useUserPost";
+import useMyPosts from "@/features/feed/hooks/user/useUserPost";
 import useCommentAll from "@/features/feed/hooks/comments/useComments";
 import { useNavigate } from "react-router-dom";
 import {Loading} from "@/shared/components/atoms"
@@ -22,7 +22,13 @@ export function FollowingPost() {
     open,
     setOpen,
   } = usePostAll();
-  const { deleted, editPostId, setEditPostId,following } = usePost();
+  const {
+    deleted,
+    editPostId,
+    setEditPostId,
+    following,
+    handleUpdatePost,
+  } = useMyPosts();
   const {
     handleComment,
     handleDelete,
@@ -32,14 +38,15 @@ export function FollowingPost() {
     newComment,
     setNewComment,
   } = useCommentAll(selected);
-  const sortedData = following.sort(
+  const sortedData = [...(following || [])].sort(
     (a, b) => b.user?.dogrulanmisSatici - a.user?.dogrulanmisSatici
   );
   if (loading) return <Loading />;
 
- <Sortered sortedData={sortedData} />;
   return (
     <div className="h-[100vh] overflow-auto p-4 ">
+      <Sortered sortedData={sortedData} />
+
       <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
         <Card
         navigate={navigate}
@@ -52,9 +59,10 @@ export function FollowingPost() {
           editPostId={editPostId}
           setEditPostId={setEditPostId}
           followId={followId}
-          setOpen={setOpen || true}
+          setOpen={setOpen}
           deleted={deleted}
-          open={open || false}
+          onUpdatePost={handleUpdatePost}
+          open={open}
           handleShowed={handleShowed}
           profileForm={user || ""}
           handlePostSave={handlePostSave}
