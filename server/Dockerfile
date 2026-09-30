@@ -1,4 +1,4 @@
-FROM node:22-alpine AS base
+FROM node:26-alpine AS base
 WORKDIR /app
 ENV MONGOMS_DISABLE_POSTINSTALL=1
 
@@ -13,7 +13,7 @@ FROM base AS prod-deps
 COPY package.json package-lock.json ./
 RUN npm ci --omit=dev && npm cache clean --force
 
-FROM node:22-alpine AS production
+FROM node:26-alpine AS production
 WORKDIR /app
 ENV NODE_ENV=production
 COPY --from=prod-deps /app/node_modules ./node_modules
