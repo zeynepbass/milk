@@ -43,7 +43,8 @@ export const toNotificationView = (notification) => ({
   message: MESSAGE_BUILDERS[notification.type](actorName(notification.actor), notification.count),
 });
 
-export const countUnread = (recipientId) => Notification.countDocuments({ recipient: recipientId, isRead: false });
+export const countUnread = (recipientId) =>
+  Notification.countDocuments({ recipient: recipientId, isRead: false });
 
 const publish = async (notification) => {
   const [populated, unreadCount] = await Promise.all([
@@ -123,7 +124,13 @@ export const dispatchNewPostNotifications = async (postId) => {
 const ACTIVITY_RESOLVERS = {
   post_like: async ({ postId }) => {
     const post = await Post.findById(postId).select("user").lean();
-    return post && { recipient: post.user, entity: { kind: "post", id: post._id }, groupKey: `post_like:${post._id}` };
+    return (
+      post && {
+        recipient: post.user,
+        entity: { kind: "post", id: post._id },
+        groupKey: `post_like:${post._id}`,
+      }
+    );
   },
   post_comment: async ({ postId, commentId }) => {
     const post = await Post.findById(postId).select("user").lean();
@@ -177,7 +184,10 @@ export const markAsRead = async (recipientId, notificationId) => {
 };
 
 export const markAllAsRead = async (recipientId) => {
-  const result = await Notification.updateMany({ recipient: recipientId, isRead: false }, { $set: { isRead: true } });
+  const result = await Notification.updateMany(
+    { recipient: recipientId, isRead: false },
+    { $set: { isRead: true } }
+  );
   await emitUnreadCount(recipientId);
   return { updated: result.modifiedCount };
 };

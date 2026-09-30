@@ -17,7 +17,7 @@ export function CommentItem({ comment, isOwner, onLike, onDelete }) {
               type="button"
               onClick={onDelete}
               aria-label="Yorumu sil"
-              className="p-1 text-gray-400 hover:text-red-500"
+              className="p-1 text-gray-500 hover:text-red-500"
             >
               <XMarkIcon className="w-4 h-4" aria-hidden="true" />
             </button>

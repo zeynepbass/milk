@@ -29,7 +29,12 @@ export function MessageComposer({ disabled, pending, onSend }) {
         wrapperClassName="flex-1 min-w-0 [&_label]:sr-only"
       />
 
-      <Button type="submit" variant="primary" disabled={disabled || pending} className="shrink-0 rounded-full px-5 py-2">
+      <Button
+        type="submit"
+        variant="primary"
+        disabled={disabled || pending}
+        className="shrink-0 rounded-full px-5 py-2"
+      >
         Gönder
       </Button>
     </form>

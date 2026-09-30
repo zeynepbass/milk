@@ -63,7 +63,9 @@ describe("apiClient", () => {
   it("dondurulmuş hesapta refresh denemeden oturumu kapatır", async () => {
     useAuthStore.setState({ status: "authenticated", accessToken: "eski", userId: "u1" });
 
-    server.use(http.get(`${API}/users/me`, () => HttpResponse.json({ code: "ACCOUNT_FROZEN" }, { status: 401 })));
+    server.use(
+      http.get(`${API}/users/me`, () => HttpResponse.json({ code: "ACCOUNT_FROZEN" }, { status: 401 }))
+    );
 
     await expect(apiClient.get("/users/me")).rejects.toBeTruthy();
     expect(useAuthStore.getState().status).toBe("anonymous");

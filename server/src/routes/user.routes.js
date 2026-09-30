@@ -43,15 +43,27 @@ routes.get(
   { summary: "Geri bildirimleri listele", auth: "admin", schemas: { query: paginationQuery } },
   users.getFeedbacks
 );
-routes.get("/", { summary: "Kullanıcıları listele", auth: "admin", schemas: listUsersSchema }, users.getUsers);
+routes.get(
+  "/",
+  { summary: "Kullanıcıları listele", auth: "admin", schemas: listUsersSchema },
+  users.getUsers
+);
 routes.put(
   "/organic-status",
   { summary: "Organik satıcı onayı", auth: "admin", schemas: organicStatusSchema },
   users.updateOrganicStatus
 );
-routes.patch("/:id/role", { summary: "Rol değiştir", auth: "admin", schemas: changeRoleSchema }, users.changeRole);
+routes.patch(
+  "/:id/role",
+  { summary: "Rol değiştir", auth: "admin", schemas: changeRoleSchema },
+  users.changeRole
+);
 
-routes.get("/:id", { summary: "Kullanıcı profili", auth: "optional", schemas: userIdSchema }, users.getProfile);
+routes.get(
+  "/:id",
+  { summary: "Kullanıcı profili", auth: "optional", schemas: userIdSchema },
+  users.getProfile
+);
 routes.get(
   "/:id/posts",
   { summary: "Kullanıcının gönderileri", auth: "optional", schemas: followListSchema },

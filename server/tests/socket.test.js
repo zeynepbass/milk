@@ -135,13 +135,19 @@ describe("socket mesajlaşma", () => {
     const bob = await createSession();
     const [aliceClient, bobClient] = await connectAll(alice, bob);
 
-    const { message } = await aliceClient.emitWithAck("message:send", { receiverId: bob.user._id, text: "Okudun mu?" });
+    const { message } = await aliceClient.emitWithAck("message:send", {
+      receiverId: bob.user._id,
+      text: "Okudun mu?",
+    });
     const aliceNotified = waitForEvent(aliceClient, "message:read");
 
     const ack = await bobClient.emitWithAck("conversation:read", { conversationId: message.conversationId });
 
     expect(ack).toMatchObject({ ok: true, updated: 1 });
-    expect(await aliceNotified).toMatchObject({ conversationId: message.conversationId, readerId: bob.user._id });
+    expect(await aliceNotified).toMatchObject({
+      conversationId: message.conversationId,
+      readerId: bob.user._id,
+    });
   });
 
   it("katılımcı olmayan kullanıcı konuşmayı okundu yapamaz", async () => {
@@ -150,7 +156,10 @@ describe("socket mesajlaşma", () => {
     const eve = await createSession();
     const [aliceClient, eveClient] = await connectAll(alice, eve);
 
-    const { message } = await aliceClient.emitWithAck("message:send", { receiverId: bob.user._id, text: "Gizli" });
+    const { message } = await aliceClient.emitWithAck("message:send", {
+      receiverId: bob.user._id,
+      text: "Gizli",
+    });
     const ack = await eveClient.emitWithAck("conversation:read", { conversationId: message.conversationId });
 
     expect(ack).toMatchObject({ ok: false, code: "CONVERSATION_NOT_FOUND" });

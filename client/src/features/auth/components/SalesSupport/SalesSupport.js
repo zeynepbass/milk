@@ -34,7 +34,7 @@ export function SalesSupport() {
                 key={type.value}
                 className={`cursor-pointer rounded-full px-4 py-2 text-sm focus-within:ring-2 focus-within:ring-blue-500 ${
                   selectedType === type.value
-                    ? "bg-[rgb(82,144,246)] text-white"
+                    ? "bg-blue-600 text-white"
                     : "bg-gray-100 text-gray-700 dark:bg-gray-900 dark:text-gray-300"
                 }`}
               >

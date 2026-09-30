@@ -3,25 +3,21 @@ import { Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import { Loading } from "@/shared/components/atoms";
 import { useSessionBootstrap } from "@/shared/hooks/useSessionBootstrap";
+import { GuestOnly } from "@/shared/layout/GuestOnly";
+import { LoginPage } from "@/features/auth/pages/LoginPage";
+import { RegisterPage } from "@/features/auth/pages/RegisterPage";
 import "react-toastify/dist/ReactToastify.css";
 
 const lazyNamed = (loader, name) => lazy(() => loader().then((module) => ({ default: module[name] })));
 
-const loadLayouts = () => import("@/shared/layout");
-const loadFeedPages = () => import("@/features/feed/pages");
-const loadAuthPages = () => import("@/features/auth/pages");
-
-const AppLayout = lazyNamed(loadLayouts, "AppLayout");
-const GuestOnly = lazyNamed(loadLayouts, "GuestOnly");
+const AppLayout = lazyNamed(() => import("@/shared/layout/AppLayout"), "AppLayout");
 const NotFoundPage = lazyNamed(() => import("@/shared/pages/NotFoundPage"), "NotFoundPage");
-const FollowingPage = lazyNamed(loadFeedPages, "FollowingPage");
-const ExplorePage = lazyNamed(loadFeedPages, "ExplorePage");
-const FavoritesPage = lazyNamed(loadFeedPages, "FavoritesPage");
+const FollowingPage = lazyNamed(() => import("@/features/feed/pages/FollowingPage"), "FollowingPage");
+const ExplorePage = lazyNamed(() => import("@/features/feed/pages/ExplorePage"), "ExplorePage");
+const FavoritesPage = lazyNamed(() => import("@/features/feed/pages/FavoritesPage"), "FavoritesPage");
 const MessagesPage = lazyNamed(() => import("@/features/messages/pages"), "MessagesPage");
 const PostDetailPage = lazyNamed(() => import("@/features/posts/pages"), "PostDetailPage");
-const LoginPage = lazyNamed(loadAuthPages, "LoginPage");
-const RegisterPage = lazyNamed(loadAuthPages, "RegisterPage");
-const ProfilePage = lazyNamed(loadAuthPages, "ProfilePage");
+const ProfilePage = lazyNamed(() => import("@/features/auth/pages/ProfilePage"), "ProfilePage");
 
 function App() {
   useSessionBootstrap();

@@ -34,7 +34,10 @@ describe("hesap silme", () => {
     await api().post("/api/messages").set(buyer.auth).send({ receiverId: seller.user._id, text: "Merhaba" });
     await drainJobs();
 
-    const response = await api().delete("/api/users/me").set(seller.auth).send({ password: seller.user.password });
+    const response = await api()
+      .delete("/api/users/me")
+      .set(seller.auth)
+      .send({ password: seller.user.password });
     expect(response.status).toBe(200);
 
     const stored = await User.findById(seller.user._id).select("+password").lean();
@@ -44,7 +47,9 @@ describe("hesap silme", () => {
 
     expect((await Post.findById(body.post._id).lean()).isActive).toBe(false);
     expect(await Comment.countDocuments({ user: seller.user._id, isActive: true })).toBe(0);
-    expect(await Follow.countDocuments({ $or: [{ follower: seller.user._id }, { following: seller.user._id }] })).toBe(0);
+    expect(
+      await Follow.countDocuments({ $or: [{ follower: seller.user._id }, { following: seller.user._id }] })
+    ).toBe(0);
     expect((await User.findById(buyer.user._id).lean()).followingCount).toBe(0);
     expect((await User.findById(friend.user._id).lean()).followersCount).toBe(0);
     expect(await Conversation.countDocuments({ participants: seller.user._id, hiddenAt: null })).toBe(0);

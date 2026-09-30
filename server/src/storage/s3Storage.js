@@ -18,7 +18,9 @@ export const createS3Storage = () => {
     init() {},
 
     async save({ key, buffer, contentType }) {
-      await client.send(new PutObjectCommand({ Bucket: bucket, Key: key, Body: buffer, ContentType: contentType }));
+      await client.send(
+        new PutObjectCommand({ Bucket: bucket, Key: key, Body: buffer, ContentType: contentType })
+      );
       return `${publicUrl}/${key}`;
     },
 

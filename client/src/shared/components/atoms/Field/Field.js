@@ -1,7 +1,7 @@
 import { useId } from "react";
 
 export const FIELD_VARIANTS = {
-  default: "border-gray-200 dark:border-yellow-400 focus:ring-[rgb(82,144,246)]",
+  default: "border-gray-200 dark:border-yellow-400 focus:ring-blue-600",
   error: "border-red-400 dark:border-red-400 focus:ring-red-400",
   ghost: "border-transparent bg-transparent dark:bg-transparent",
 };

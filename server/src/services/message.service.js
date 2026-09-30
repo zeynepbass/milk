@@ -135,10 +135,14 @@ export const getConversationWith = async (userId, otherUserId) => {
 export const listMessages = async (userId, conversationId, { cursor, limit }) => {
   await assertParticipant(userId, conversationId);
 
-  return paginate(Message, { conversationId: new mongoose.Types.ObjectId(conversationId.toString()) }, {
-    cursor,
-    limit,
-  });
+  return paginate(
+    Message,
+    { conversationId: new mongoose.Types.ObjectId(conversationId.toString()) },
+    {
+      cursor,
+      limit,
+    }
+  );
 };
 
 export const markConversationRead = async (userId, conversationId) => {

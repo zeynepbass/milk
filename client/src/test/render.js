@@ -9,7 +9,10 @@ export const signIn = (user) => {
   useAuthStore.setState({ status: "authenticated", accessToken: "test-token", userId: user._id });
 };
 
-export function renderWithProviders(ui, { route = "/test", path = "/test", user, queryClient = createQueryClient() } = {}) {
+export function renderWithProviders(
+  ui,
+  { route = "/test", path = "/test", user, queryClient = createQueryClient() } = {}
+) {
   if (user) {
     signIn(user);
     queryClient.setQueryData(queryKeys.me, user);

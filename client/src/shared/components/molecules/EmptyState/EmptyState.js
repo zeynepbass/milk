@@ -1,4 +1,8 @@
-export function EmptyState({ title = "Gönderi Bulunamadı", description = "Henüz paylaşılmış bir gönderi yok", action }) {
+export function EmptyState({
+  title = "Gönderi Bulunamadı",
+  description = "Henüz paylaşılmış bir gönderi yok",
+  action,
+}) {
   return (
     <div className="flex flex-col items-center justify-center text-center mt-16 px-4">
       <img

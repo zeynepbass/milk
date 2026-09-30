@@ -43,6 +43,10 @@ describe("LoginForm", () => {
 
     expect(await screen.findByText("Ana sayfa")).toBeInTheDocument();
     expect(body).toEqual({ email: "ayse@ornek.com", password: "gizli-sifre" });
-    expect(useAuthStore.getState()).toMatchObject({ status: "authenticated", accessToken: "erisim", userId: user._id });
+    expect(useAuthStore.getState()).toMatchObject({
+      status: "authenticated",
+      accessToken: "erisim",
+      userId: user._id,
+    });
   });
 });

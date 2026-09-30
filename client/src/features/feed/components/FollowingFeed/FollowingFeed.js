@@ -15,7 +15,7 @@ export function FollowingFeed() {
       />
       {query.isSuccess && (query.data?.pages[0]?.items.length ?? 0) === 0 && (
         <p className="text-center mt-4">
-          <Link to="/kesfet" className="text-[rgb(82,144,246)] dark:text-yellow-400 font-medium hover:underline">
+          <Link to="/kesfet" className="text-blue-700 dark:text-yellow-400 font-medium hover:underline">
             Keşfet sayfasına git
           </Link>
         </p>

@@ -12,8 +12,13 @@ export function ConversationList({ selectedUserId, onSelect }) {
   const conversations = query.data ?? [];
 
   return (
-    <nav aria-label="Sohbetler" className="w-full md:w-80 bg-white dark:bg-gray-800 border-r dark:border-gray-700 flex flex-col">
-      <h2 className="p-4 border-b dark:border-gray-700 font-semibold text-gray-700 dark:text-gray-300">Sohbetler</h2>
+    <nav
+      aria-label="Sohbetler"
+      className="w-full md:w-80 bg-white dark:bg-gray-800 border-r dark:border-gray-700 flex flex-col"
+    >
+      <h2 className="p-4 border-b dark:border-gray-700 font-semibold text-gray-700 dark:text-gray-300">
+        Sohbetler
+      </h2>
 
       <div className="flex-1 overflow-y-auto p-3">
         <QueryState

@@ -40,12 +40,15 @@ export const getMe = async (userId) => toSessionUser(await findUserOrThrow(userI
 
 export const getPublicProfile = async (userId, viewerId) => {
   const user = await User.findOne({ _id: userId, deletedAt: null })
-    .select("name surname avatar role province district dogrulanmisSatici followersCount followingCount createdAt")
+    .select(
+      "name surname avatar role province district dogrulanmisSatici followersCount followingCount createdAt"
+    )
     .lean();
 
   if (!user) throw userNotFound();
 
-  const following = viewerId && viewerId.toString() !== userId.toString() ? await isFollowing(viewerId, userId) : false;
+  const following =
+    viewerId && viewerId.toString() !== userId.toString() ? await isFollowing(viewerId, userId) : false;
   return { ...user, isFollowing: following };
 };
 
@@ -153,7 +156,11 @@ export const deleteMe = async (userId, { password }) => {
     await hideConversationsOf(user._id, session);
     await removeAllFollowsOf(user._id, session);
     await removeNotificationsOf(user._id, session);
-    await RefreshToken.updateMany({ user: user._id, revokedAt: null }, { $set: { revokedAt: now } }, { session });
+    await RefreshToken.updateMany(
+      { user: user._id, revokedAt: null },
+      { $set: { revokedAt: now } },
+      { session }
+    );
   });
 
   disconnectUser(user._id);

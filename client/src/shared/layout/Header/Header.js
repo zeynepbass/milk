@@ -34,8 +34,20 @@ export function Header() {
     <header className="w-full border-b-2 border-b-gray-200 dark:border-gray-800 dark:bg-gray-900">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-3 p-4 lg:px-8">
         <Link to="/" className="shrink-0 rounded focus-visible:outline-2 focus-visible:outline-blue-500">
-          <img src="/assets/logo.png" alt="Milk ana sayfa" className="h-14 w-auto block dark:hidden" />
-          <img src="/assets/dark-logo.png" alt="Milk ana sayfa" className="h-14 w-auto hidden dark:block" />
+          <img
+            src="/assets/logo-sm.png"
+            width="116"
+            height="128"
+            alt="Milk ana sayfa"
+            className="h-14 w-auto block dark:hidden"
+          />
+          <img
+            src="/assets/dark-logo-sm.png"
+            width="128"
+            height="128"
+            alt="Milk ana sayfa"
+            className="h-14 w-auto hidden dark:block"
+          />
         </Link>
 
         <div className="hidden md:flex flex-1 mx-3">{searchBox}</div>

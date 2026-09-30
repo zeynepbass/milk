@@ -44,11 +44,11 @@ export function OrganicForm() {
         >
           <input type="file" accept="application/pdf" onChange={handleFile} className="sr-only" />
 
-          <DocumentIcon className="w-10 h-10 text-gray-400 mb-2" />
+          <DocumentIcon className="w-10 h-10 text-gray-500 mb-2" />
 
           <p className="text-sm text-gray-500">PDF dosyanızı seçmek için tıklayın</p>
 
-          <p className="text-xs text-gray-400 mt-1">(Sadece .pdf formatı desteklenir)</p>
+          <p className="text-xs text-gray-500 mt-1">(Sadece .pdf formatı desteklenir)</p>
         </label>
 
         {file && (

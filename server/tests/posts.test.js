@@ -49,7 +49,10 @@ describe("gönderi sahipliği", () => {
     const { body } = await createPost(owner.auth);
     const postId = body.post._id;
 
-    const update = await api().patch(`/api/posts/${postId}`).set(intruder.auth).field("title", "Ele geçirildi");
+    const update = await api()
+      .patch(`/api/posts/${postId}`)
+      .set(intruder.auth)
+      .field("title", "Ele geçirildi");
     const remove = await api().delete(`/api/posts/${postId}`).set(intruder.auth);
 
     expect(update.status).toBe(403);
@@ -150,7 +153,13 @@ describe("beğeni ve kaydetme", () => {
     const explore = await api().get("/api/posts").set(fan.auth);
     const [item] = explore.body.items;
 
-    expect(item).toMatchObject({ likedByMe: true, savedByMe: true, likesCount: 1, savesCount: 1, isFollowingAuthor: true });
+    expect(item).toMatchObject({
+      likedByMe: true,
+      savedByMe: true,
+      likesCount: 1,
+      savesCount: 1,
+      isFollowingAuthor: true,
+    });
     expect(item.likes).toBeUndefined();
     expect(item.savedBy).toBeUndefined();
 
@@ -201,7 +210,9 @@ describe("yorumlar", () => {
 
     const comments = [];
     for (const text of ["Bir", "İki", "Üç"]) {
-      comments.push((await api().post(`/api/posts/${body.post._id}/comments`).set(commenter.auth).send({ text })).body);
+      comments.push(
+        (await api().post(`/api/posts/${body.post._id}/comments`).set(commenter.auth).send({ text })).body
+      );
     }
 
     await api().put(`/api/comments/${comments[2]._id}/like`).set(owner.auth);

@@ -22,7 +22,9 @@ export function MyPostsPanel({ canPost }) {
       <PostList
         query={query}
         emptyTitle="Gönderi Bulunamadı"
-        emptyDescription={canPost ? "İlk gönderiyi sen oluşturabilirsin." : "Alıcı hesapları gönderi paylaşamaz."}
+        emptyDescription={
+          canPost ? "İlk gönderiyi sen oluşturabilirsin." : "Alıcı hesapları gönderi paylaşamaz."
+        }
       />
 
       <CreatePostModal open={creating} onClose={() => setCreating(false)} />

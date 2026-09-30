@@ -5,7 +5,8 @@ import { useFreezeAccount } from "../../hooks/useAccountMutations";
 import { ChangePasswordForm } from "../ChangePasswordForm";
 import { DeleteAccountModal } from "../DeleteAccountModal";
 
-const CARD = "bg-white shadow-lg rounded-2xl p-6 border dark:bg-gray-800 dark:border-gray-700 border-gray-100";
+const CARD =
+  "bg-white shadow-lg rounded-2xl p-6 border dark:bg-gray-800 dark:border-gray-700 border-gray-100";
 
 export function AccountSettings() {
   const [freezeOpen, setFreezeOpen] = useState(false);
@@ -21,13 +22,20 @@ export function AccountSettings() {
           title="Hesabı Dondur"
           desc="Hesabınızı geçici olarak dondurabilirsiniz. Tekrar giriş yaptığınızda hesabınız yeniden açılır."
         />
-        <Button type="button" onClick={() => setFreezeOpen(true)} className="text-[rgb(40,100,210)] dark:text-yellow-400">
+        <Button
+          type="button"
+          onClick={() => setFreezeOpen(true)}
+          className="text-[rgb(40,100,210)] dark:text-yellow-400"
+        >
           Hesabı Dondur
         </Button>
       </div>
 
       <div className={CARD}>
-        <Heading title="Hesabı Sil" desc="Hesabınızı silerseniz tüm içerikleriniz gizlenir ve geri alınamaz." />
+        <Heading
+          title="Hesabı Sil"
+          desc="Hesabınızı silerseniz tüm içerikleriniz gizlenir ve geri alınamaz."
+        />
         <Button type="button" onClick={() => setDeleteOpen(true)} className="text-red-600">
           Hesabı Sil
         </Button>

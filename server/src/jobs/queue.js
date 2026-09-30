@@ -58,7 +58,10 @@ const runJob = async (job) => {
     await handler(job.payload);
     await completeJob(job);
   } catch (err) {
-    logger.warn({ err, jobId: job._id.toString(), type: job.type, attempts: job.attempts }, "İş başarısız oldu");
+    logger.warn(
+      { err, jobId: job._id.toString(), type: job.type, attempts: job.attempts },
+      "İş başarısız oldu"
+    );
     await failJob(job, err);
   }
 };

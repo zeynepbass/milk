@@ -35,7 +35,9 @@ const healthCheck = (req, res) => {
   const database = DB_STATES[mongoose.connection.readyState] ?? "unknown";
   const healthy = database === "connected";
 
-  res.status(healthy ? 200 : 503).json({ status: healthy ? "ok" : "degraded", database, uptime: process.uptime() });
+  res
+    .status(healthy ? 200 : 503)
+    .json({ status: healthy ? "ok" : "degraded", database, uptime: process.uptime() });
 };
 
 const mountDocs = (app) => {
@@ -43,7 +45,9 @@ const mountDocs = (app) => {
 
   app.get("/api/docs/openapi.json", (req, res) => res.json(document));
   app.get("/api/docs/init.js", (req, res) => res.type("application/javascript").send(SWAGGER_INIT_JS));
-  app.get("/api/docs", (req, res) => res.set("Content-Security-Policy", DOCS_CSP).type("html").send(SWAGGER_UI_HTML));
+  app.get("/api/docs", (req, res) =>
+    res.set("Content-Security-Policy", DOCS_CSP).type("html").send(SWAGGER_UI_HTML)
+  );
 };
 
 export const createApp = () => {

@@ -25,7 +25,9 @@ export function PostActions({ post, isOwner, commentsOpen, onToggleComments, onE
 
   const messageSeller = () =>
     navigate("/mesajlar", {
-      state: { product: { productId: post._id, title: post.title, userId: author._id, userName: authorName } },
+      state: {
+        product: { productId: post._id, title: post.title, userId: author._id, userName: authorName },
+      },
     });
 
   const handleDelete = () => {
@@ -78,7 +80,12 @@ export function PostActions({ post, isOwner, commentsOpen, onToggleComments, onE
       <div className="flex items-center">
         {!isOwner && author._id && (
           <>
-            <FollowButton userId={author._id} following={Boolean(post.isFollowingAuthor)} userName={authorName} compact />
+            <FollowButton
+              userId={author._id}
+              following={Boolean(post.isFollowingAuthor)}
+              userName={authorName}
+              compact
+            />
             <button
               type="button"
               className={`${ICON_BUTTON} hover:text-blue-500`}
@@ -92,7 +99,12 @@ export function PostActions({ post, isOwner, commentsOpen, onToggleComments, onE
 
         {isOwner && (
           <>
-            <button type="button" className={`${ICON_BUTTON} hover:text-yellow-500`} aria-label="Düzenle" onClick={onEdit}>
+            <button
+              type="button"
+              className={`${ICON_BUTTON} hover:text-yellow-500`}
+              aria-label="Düzenle"
+              onClick={onEdit}
+            >
               <PencilIcon className="w-5 h-5" aria-hidden="true" />
             </button>
             <button

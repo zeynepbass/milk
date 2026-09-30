@@ -82,9 +82,11 @@ const listRelations = async (filter, relationField, { cursor, limit }) => {
   };
 };
 
-export const listFollowers = (userId, pagination) => listRelations({ following: userId }, "follower", pagination);
+export const listFollowers = (userId, pagination) =>
+  listRelations({ following: userId }, "follower", pagination);
 
-export const listFollowing = (userId, pagination) => listRelations({ follower: userId }, "following", pagination);
+export const listFollowing = (userId, pagination) =>
+  listRelations({ follower: userId }, "following", pagination);
 
 export const removeAllFollowsOf = async (userId, session) => {
   const relations = await Follow.find({ $or: [{ follower: userId }, { following: userId }] }, null, {

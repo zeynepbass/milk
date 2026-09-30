@@ -1,7 +1,9 @@
 import { postRepository } from "../repositories/post.repository";
 
 const compactParams = (params) =>
-  Object.fromEntries(Object.entries(params).filter(([, value]) => value !== undefined && value !== null && value !== ""));
+  Object.fromEntries(
+    Object.entries(params).filter(([, value]) => value !== undefined && value !== null && value !== "")
+  );
 
 const appendIfPresent = (formData, key, value) => {
   if (value !== undefined && value !== null) formData.append(key, value);

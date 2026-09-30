@@ -17,7 +17,9 @@ export function Modal({ open, onClose, title, size = "md", children }) {
           className={`w-full ${SIZES[size]} max-h-[90vh] overflow-y-auto rounded-2xl bg-white dark:bg-gray-800 shadow-xl p-6`}
         >
           <div className="flex items-start justify-between mb-4">
-            <DialogTitle className="text-lg font-semibold text-gray-700 dark:text-gray-100">{title}</DialogTitle>
+            <DialogTitle className="text-lg font-semibold text-gray-700 dark:text-gray-100">
+              {title}
+            </DialogTitle>
             <button
               type="button"
               onClick={onClose}

@@ -111,7 +111,9 @@ describe("etkileşim bildirimleri", () => {
 
     const { items } = await listFor(seller);
     expect(items.map((item) => item.type).sort()).toEqual(["follow", "post_comment", "post_like"]);
-    expect(items.find((item) => item.type === "follow").message).toBe("Zeynep Kara seni takip etmeye başladı");
+    expect(items.find((item) => item.type === "follow").message).toBe(
+      "Zeynep Kara seni takip etmeye başladı"
+    );
     expect(await unreadFor(seller)).toBe(3);
   });
 
@@ -181,7 +183,9 @@ describe("okundu işlemleri", () => {
     await drainJobs();
 
     const first = await api().get("/api/notifications?limit=2").set(seller.auth);
-    const second = await api().get(`/api/notifications?limit=2&cursor=${first.body.nextCursor}`).set(seller.auth);
+    const second = await api()
+      .get(`/api/notifications?limit=2&cursor=${first.body.nextCursor}`)
+      .set(seller.auth);
 
     expect(first.body.items).toHaveLength(2);
     expect(second.body.items).toHaveLength(1);

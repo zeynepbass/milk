@@ -18,7 +18,11 @@ routes.post(
 );
 routes.post(
   "/refresh",
-  { summary: "Refresh cookie ile oturumu yenile", auth: false, before: [refreshLimiter, requireAllowedOrigin] },
+  {
+    summary: "Refresh cookie ile oturumu yenile",
+    auth: false,
+    before: [refreshLimiter, requireAllowedOrigin],
+  },
   refresh
 );
 routes.post(

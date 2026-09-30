@@ -20,7 +20,9 @@ const start = async () => {
 
   const httpServer = http.createServer(createApp());
   const sockets = await createSocketServer(httpServer, { redisUrl: env.redisUrl });
-  const stopWorker = env.jobs.enabled ? startJobWorker({ pollIntervalMs: env.jobs.pollIntervalMs }) : async () => {};
+  const stopWorker = env.jobs.enabled
+    ? startJobWorker({ pollIntervalMs: env.jobs.pollIntervalMs })
+    : async () => {};
 
   httpServer.listen(env.port, () => {
     logger.info({ port: env.port, clientUrls: env.clientUrls }, "Sunucu başlatıldı");

@@ -37,9 +37,20 @@ services:
       timeout: 10s
       retries: 20
 
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
   server:
-    build: ./server
-    command: npm run dev
+    build:
+      context: ./server
+      target: dev
     environment:
       NODE_ENV: development
       PORT: 5346
@@ -47,6 +58,7 @@ services:
       JWT_SECRET: ${JWT_SECRET:-local-development-secret-change-me-now}
       CLIENT_URLS: http://localhost:3000
       UPLOAD_DIR: /app/uploads
+      REDIS_URL: redis://redis:6379
     ports:
       - "5346:5346"
     volumes:
@@ -56,9 +68,13 @@ services:
     depends_on:
       mongo:
         condition: service_healthy
+      redis:
+        condition: service_healthy
 
   client:
-    build: ./client
+    build:
+      context: ./client
+      target: dev
     environment:
       REACT_APP_SERVER_URL: http://localhost:5346
       WATCHPACK_POLLING: "true"

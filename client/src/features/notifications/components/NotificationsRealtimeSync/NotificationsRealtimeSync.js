@@ -17,7 +17,9 @@ export function NotificationsRealtimeSync() {
   const queryClient = useQueryClient();
 
   useSocketEvent("notification:new", ({ notification, unreadCount }) => {
-    queryClient.setQueryData(queryKeys.notifications.list(), (data) => upsertNotification(data, notification));
+    queryClient.setQueryData(queryKeys.notifications.list(), (data) =>
+      upsertNotification(data, notification)
+    );
     queryClient.setQueryData(queryKeys.notifications.unreadCount(), unreadCount);
   });
 

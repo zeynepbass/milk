@@ -12,7 +12,10 @@ export const replaceMessageInCache = (queryClient, conversationId, pendingId, me
     if (!data) return data;
     const withoutPending = {
       ...data,
-      pages: data.pages.map((page) => ({ ...page, items: page.items.filter((item) => item._id !== pendingId) })),
+      pages: data.pages.map((page) => ({
+        ...page,
+        items: page.items.filter((item) => item._id !== pendingId),
+      })),
     };
     return prependInfiniteItem(withoutPending, message);
   });
@@ -43,7 +46,10 @@ export const applyMessageToConversations = (queryClient, message, { incrementUnr
     unreadCount: incrementUnread ? (existing.unreadCount ?? 0) + 1 : existing.unreadCount,
   };
 
-  queryClient.setQueryData(key, [updated, ...conversations.filter((conversation) => conversation._id !== existing._id)]);
+  queryClient.setQueryData(key, [
+    updated,
+    ...conversations.filter((conversation) => conversation._id !== existing._id),
+  ]);
 };
 
 export const resetUnreadInCache = (queryClient, conversationId) => {

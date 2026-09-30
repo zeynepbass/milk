@@ -66,7 +66,11 @@ export function NotificationList({ onNavigate }) {
           empty={<p className="text-center text-gray-500 py-6 text-sm">Bildirimin yok</p>}
         >
           {notifications.map((notification) => (
-            <NotificationItem key={notification._id} notification={notification} onOpen={() => open(notification)} />
+            <NotificationItem
+              key={notification._id}
+              notification={notification}
+              onOpen={() => open(notification)}
+            />
           ))}
           <LoadMore query={query} label="Daha eski bildirimler" />
         </QueryState>

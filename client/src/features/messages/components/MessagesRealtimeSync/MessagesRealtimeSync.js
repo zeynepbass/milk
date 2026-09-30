@@ -1,7 +1,11 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useSocketEvent } from "@/shared/socket/SocketProvider";
 import { useAuthStore } from "@/shared/store/useAuthStore";
-import { addMessageToCache, applyMessageToConversations, markMessagesReadInCache } from "../../hooks/messageCache";
+import {
+  addMessageToCache,
+  applyMessageToConversations,
+  markMessagesReadInCache,
+} from "../../hooks/messageCache";
 
 export function MessagesRealtimeSync() {
   const queryClient = useQueryClient();

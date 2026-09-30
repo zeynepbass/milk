@@ -90,6 +90,14 @@ export default [
     },
   },
   {
+    files: ["e2e/**/*.{js,mjs}", "playwright.config.js", "client/vitest.config.mjs"],
+    languageOptions: {
+      ecmaVersion: "latest",
+      sourceType: "module",
+      globals: { ...globals.node, ...globals.browser },
+    },
+  },
+  {
     files: ["*.js", "*.cjs", "client/*.js"],
     languageOptions: {
       globals: { ...globals.node },

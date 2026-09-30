@@ -11,7 +11,12 @@ export function MobileMenu({ open, onClose, search, onLogout }) {
       <DialogPanel className="fixed inset-y-0 right-0 w-full sm:max-w-sm overflow-y-auto bg-white dark:bg-gray-900 p-6">
         <div className="flex items-center justify-between">
           <DialogTitle className="font-semibold text-gray-700 dark:text-gray-200">Menü</DialogTitle>
-          <button type="button" onClick={onClose} aria-label="Menüyü kapat" className="p-2 text-gray-700 dark:text-gray-300">
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Menüyü kapat"
+            className="p-2 text-gray-700 dark:text-gray-300"
+          >
             <XMarkIcon className="w-6 h-6" aria-hidden="true" />
           </button>
         </div>

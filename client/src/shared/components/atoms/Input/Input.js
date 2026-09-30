@@ -1,6 +1,15 @@
 import { FIELD_BASE_CLASS, FIELD_VARIANTS, Field, fieldAccessibility, useFieldIds } from "../Field/Field";
 
-export function Input({ label, error, variant = "default", className = "", wrapperClassName, id, ref, ...props }) {
+export function Input({
+  label,
+  error,
+  variant = "default",
+  className = "",
+  wrapperClassName,
+  id,
+  ref,
+  ...props
+}) {
   const { fieldId, errorId } = useFieldIds(id);
   const appliedVariant = error ? "error" : variant;
 

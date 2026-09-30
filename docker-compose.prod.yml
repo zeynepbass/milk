@@ -1,0 +1,22 @@
+services:
+  server:
+    build:
+      context: ./server
+      target: production
+    environment:
+      NODE_ENV: production
+      CLIENT_URLS: http://localhost:8080
+      TRUST_PROXY: "true"
+    volumes: !override
+      - uploads:/app/uploads
+
+  client:
+    build:
+      context: ./client
+      target: production
+      args:
+        REACT_APP_SERVER_URL: http://localhost:5346
+    ports: !override
+      - "8080:80"
+    volumes: !reset []
+    environment: !reset {}

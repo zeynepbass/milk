@@ -48,7 +48,11 @@ describe("iş kuyruğu", () => {
   });
 
   it("takılı kalan işleri serbest bırakır", async () => {
-    const job = await Job.create({ type: "test:ok", status: "running", lockedAt: new Date(Date.now() - 60 * 60 * 1000) });
+    const job = await Job.create({
+      type: "test:ok",
+      status: "running",
+      lockedAt: new Date(Date.now() - 60 * 60 * 1000),
+    });
 
     await releaseStaleJobs();
     expect((await Job.findById(job._id).lean()).status).toBe("pending");

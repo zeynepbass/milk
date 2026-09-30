@@ -14,7 +14,7 @@ export function PostCardHeader({ post }) {
           <p className="text-sm font-semibold text-gray-700 dark:text-gray-300 truncate">
             {author.name} {author.surname}
           </p>
-          <span className="text-xs text-[rgb(82,144,246)] dark:text-yellow-400">{ROLE_LABELS[author.role]}</span>
+          <span className="text-xs text-blue-700 dark:text-yellow-400">{ROLE_LABELS[author.role]}</span>
         </div>
 
         <Link

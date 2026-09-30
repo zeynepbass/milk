@@ -12,7 +12,9 @@ export function ExploreFeed() {
         query={query}
         prioritizeVerified
         emptyTitle={search ? "Sonuç bulunamadı" : "Gönderi Bulunamadı"}
-        emptyDescription={search ? `"${search}" için eşleşen gönderi yok.` : "Henüz paylaşılmış bir gönderi yok."}
+        emptyDescription={
+          search ? `"${search}" için eşleşen gönderi yok.` : "Henüz paylaşılmış bir gönderi yok."
+        }
       />
     </section>
   );

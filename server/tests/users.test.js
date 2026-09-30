@@ -140,7 +140,10 @@ describe("admin işlemleri", () => {
     const target = await createSession();
     const { auth } = await createSession();
 
-    const response = await api().patch(`/api/users/${target.user._id}/role`).set(auth).send({ role: "admin" });
+    const response = await api()
+      .patch(`/api/users/${target.user._id}/role`)
+      .set(auth)
+      .send({ role: "admin" });
     expect(response.status).toBe(403);
   });
 

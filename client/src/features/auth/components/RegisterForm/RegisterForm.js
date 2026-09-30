@@ -34,7 +34,13 @@ export function RegisterForm() {
 
         <div className="space-y-5">
           <div className="flex gap-3">
-            <Input {...register("name")} label="Ad" autoComplete="given-name" error={errors.name?.message} wrapperClassName="flex-1" />
+            <Input
+              {...register("name")}
+              label="Ad"
+              autoComplete="given-name"
+              error={errors.name?.message}
+              wrapperClassName="flex-1"
+            />
             <Input
               {...register("surname")}
               label="Soyad"

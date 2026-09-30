@@ -7,7 +7,9 @@ const resolveActor = async (db, notification) => {
 
   if (!notification.postId) return null;
 
-  const post = await db.collection("posts").findOne({ _id: notification.postId }, { projection: { user: 1 } });
+  const post = await db
+    .collection("posts")
+    .findOne({ _id: notification.postId }, { projection: { user: 1 } });
   return post?.user ?? null;
 };
 

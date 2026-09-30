@@ -17,7 +17,8 @@ export const restorePosts = (queryClient, snapshot = []) => {
 export const updatePostEverywhere = (queryClient, postId, update) => {
   queryClient.setQueriesData(POST_QUERIES, (data) => {
     if (!data) return data;
-    if (isInfinite(data)) return mapInfiniteItems(data, (post) => (post._id === postId ? update(post) : post));
+    if (isInfinite(data))
+      return mapInfiniteItems(data, (post) => (post._id === postId ? update(post) : post));
     return data._id === postId ? update(data) : data;
   });
 };

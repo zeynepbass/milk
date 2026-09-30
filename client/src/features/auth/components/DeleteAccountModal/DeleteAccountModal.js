@@ -14,9 +14,14 @@ export function DeleteAccountModal({ open, onClose }) {
 
   return (
     <Modal open={open} onClose={onClose} title="Hesabı Sil" size="sm">
-      <form noValidate onSubmit={handleSubmit(({ password }) => deleteAccount.mutate(password))} className="space-y-4">
+      <form
+        noValidate
+        onSubmit={handleSubmit(({ password }) => deleteAccount.mutate(password))}
+        className="space-y-4"
+      >
         <p className="text-gray-600 dark:text-gray-300 text-sm">
-          Gönderilerin, yorumların ve sohbetlerin gizlenir; bu işlem geri alınamaz. Devam etmek için şifreni gir.
+          Gönderilerin, yorumların ve sohbetlerin gizlenir; bu işlem geri alınamaz. Devam etmek için şifreni
+          gir.
         </p>
 
         <Input

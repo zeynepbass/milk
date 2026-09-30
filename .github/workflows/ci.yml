@@ -1,0 +1,146 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  NODE_VERSION: 22
+  MONGOMS_VERSION: 7.0.14
+
+jobs:
+  quality:
+    name: Lint ve hijyen
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            server/package-lock.json
+            client/package-lock.json
+      - run: npm ci
+      - run: npm ci --prefix server
+      - run: npm ci --prefix client
+      - run: npm run lint
+      - run: npm run format:check
+      - run: npm run hygiene
+      - name: Commit mesajları
+        if: github.event_name == 'pull_request'
+        run: npx commitlint --from ${{ github.event.pull_request.base.sha }} --to ${{ github.event.pull_request.head.sha }}
+
+  server:
+    name: Server testleri
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: server/package-lock.json
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/mongodb-binaries
+          key: mongodb-${{ env.MONGOMS_VERSION }}
+      - run: npm ci --prefix server
+      - run: npm --prefix server run test:coverage
+        env:
+          MONGOMS_VERSION: ${{ env.MONGOMS_VERSION }}
+      - uses: actions/upload-artifact@v4
+        with:
+          name: server-coverage
+          path: server/coverage/lcov.info
+
+  client:
+    name: Client testleri ve build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: client/package-lock.json
+      - run: npm ci --prefix client
+      - run: npm --prefix client test
+      - run: npm --prefix client run build
+        env:
+          CI: true
+          REACT_APP_SERVER_URL: http://localhost:5346
+      - name: Bundle boyutu
+        run: |
+          {
+            echo "### Gzip bundle boyutları"
+            echo "| Dosya | Boyut |"
+            echo "| --- | --- |"
+            for file in client/build/static/js/*.js; do
+              echo "| $(basename "$file") | $(gzip -c "$file" | wc -c | awk '{printf "%.1f KB", $1/1024}') |"
+            done
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  e2e:
+    name: Uçtan uca testler
+    runs-on: ubuntu-latest
+    needs: [quality, server, client]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: |
+            package-lock.json
+            server/package-lock.json
+            client/package-lock.json
+      - uses: actions/cache@v4
+        with:
+          path: ~/.cache/mongodb-binaries
+          key: mongodb-${{ env.MONGOMS_VERSION }}
+      - run: npm ci
+      - run: npm ci --prefix server
+      - run: npm ci --prefix client
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+        env:
+          CI: true
+          MONGOMS_VERSION: ${{ env.MONGOMS_VERSION }}
+      - uses: actions/upload-artifact@v4
+        if: failure()
+        with:
+          name: playwright-report
+          path: playwright-report
+
+  docker:
+    name: Docker imajları
+    runs-on: ubuntu-latest
+    needs: [server, client]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - uses: docker/build-push-action@v6
+        with:
+          context: server
+          target: production
+          push: false
+          tags: milk-server:ci
+      - uses: docker/build-push-action@v6
+        with:
+          context: client
+          target: production
+          push: false
+          tags: milk-client:ci
+          build-args: REACT_APP_SERVER_URL=https://api.example.com

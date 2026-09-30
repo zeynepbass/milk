@@ -16,12 +16,22 @@ const imageUpload = uploadImages("images", RULES.postImages.max);
 const imageFiles = { field: "images", multiple: true };
 
 routes.get("/", { summary: "Keşfet akışı", schemas: listPostsSchema }, posts.getPosts);
-routes.get("/following", { summary: "Takip edilenlerin gönderileri", schemas: feedSchema }, posts.getFollowingPosts);
+routes.get(
+  "/following",
+  { summary: "Takip edilenlerin gönderileri", schemas: feedSchema },
+  posts.getFollowingPosts
+);
 routes.get("/saved", { summary: "Kaydedilen gönderiler", schemas: feedSchema }, posts.getSavedPosts);
 routes.get("/mine", { summary: "Kendi gönderilerim", schemas: feedSchema }, posts.getMyPosts);
 routes.post(
   "/",
-  { summary: "Gönderi oluştur", before: imageUpload, schemas: createPostSchema, files: imageFiles, status: 201 },
+  {
+    summary: "Gönderi oluştur",
+    before: imageUpload,
+    schemas: createPostSchema,
+    files: imageFiles,
+    status: 201,
+  },
   posts.createPost
 );
 

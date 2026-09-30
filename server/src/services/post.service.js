@@ -175,7 +175,10 @@ export const likePost = async (userId, postId) => {
 
 export const unlikePost = async (userId, postId) => {
   await findActivePost(postId);
-  await Post.updateOne({ _id: postId, likes: userId }, { $pull: { likes: userId }, $inc: { likesCount: -1 } });
+  await Post.updateOne(
+    { _id: postId, likes: userId },
+    { $pull: { likes: userId }, $inc: { likesCount: -1 } }
+  );
 
   const state = await reactionState(postId, userId);
   return { postId, liked: state.likedByMe, likesCount: state.likesCount };

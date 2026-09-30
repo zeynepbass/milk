@@ -7,13 +7,14 @@
   },
   "scripts": {
     "prepare": "husky",
-    "lint": "eslint client/src server/src server/tests server/migrations",
-    "lint:fix": "eslint --fix client/src server/src server/tests server/migrations",
+    "lint": "eslint client/src client/vitest.config.mjs server e2e playwright.config.js",
+    "lint:fix": "eslint --fix client/src server e2e",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "hygiene": "sh scripts/check-hygiene.sh",
     "test": "npm --prefix server test",
-    "build": "npm --prefix client run build"
+    "build": "npm --prefix client run build",
+    "test:e2e": "playwright test"
   },
   "lint-staged": {
     "*.{js,jsx}": [
@@ -28,6 +29,7 @@
     "@commitlint/cli": "^21.2.3",
     "@commitlint/config-conventional": "^21.2.3",
     "@eslint/js": "^9.39.5",
+    "@playwright/test": "^1.63.0",
     "eslint": "^9.39.5",
     "eslint-plugin-import": "^2.32.0",
     "eslint-plugin-jsx-a11y": "^6.10.2",

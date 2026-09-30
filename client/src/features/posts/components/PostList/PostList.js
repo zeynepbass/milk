@@ -4,7 +4,9 @@ import { useAuthStore } from "@/shared/store/useAuthStore";
 import { PostCard } from "../PostCard";
 
 const byVerifiedSellerFirst = (posts) =>
-  [...posts].sort((a, b) => Number(Boolean(b.user?.dogrulanmisSatici)) - Number(Boolean(a.user?.dogrulanmisSatici)));
+  [...posts].sort(
+    (a, b) => Number(Boolean(b.user?.dogrulanmisSatici)) - Number(Boolean(a.user?.dogrulanmisSatici))
+  );
 
 export function PostList({ query, emptyTitle, emptyDescription, prioritizeVerified = false }) {
   const currentUserId = useAuthStore((state) => state.userId);

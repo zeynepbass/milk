@@ -36,7 +36,9 @@ const useOptimisticRead = (mutationFn, markItem, adjustCount) => {
       await queryClient.cancelQueries({ queryKey: queryKeys.notifications.all });
       const previous = { list: queryClient.getQueryData(listKey), count: queryClient.getQueryData(countKey) };
 
-      queryClient.setQueryData(listKey, (data) => mapInfiniteItems(data, (item) => markItem(item, variables)));
+      queryClient.setQueryData(listKey, (data) =>
+        mapInfiniteItems(data, (item) => markItem(item, variables))
+      );
       queryClient.setQueryData(countKey, (count) => adjustCount(count ?? 0, previous.list, variables));
 
       return previous;

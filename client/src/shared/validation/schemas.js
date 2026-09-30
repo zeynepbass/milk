@@ -1,23 +1,31 @@
-import { z } from "zod";
+import { z } from "zod/mini";
 import { FEEDBACK_TYPES, POST_CATEGORIES, RULES, SELF_ASSIGNABLE_ROLES } from "./rules";
 
-z.config(z.locales.tr());
+const trimmed = (...checks) => z.string().check(z.trim(), ...checks);
 
 const requiredText = (max, label) =>
-  z.string().trim().min(1, `${label} zorunludur`).max(max, `${label} en fazla ${max} karakter olabilir`);
+  trimmed(
+    z.minLength(1, `${label} zorunludur`),
+    z.maxLength(max, `${label} en fazla ${max} karakter olabilir`)
+  );
 
-const optionalText = (max, label) => z.string().trim().max(max, `${label} en fazla ${max} karakter olabilir`);
+const optionalText = (max, label) => trimmed(z.maxLength(max, `${label} en fazla ${max} karakter olabilir`));
 
-const email = z.string().trim().toLowerCase().pipe(z.email("Geçerli bir e-posta adresi giriniz"));
+const email = z.pipe(
+  z.string().check(z.trim(), z.toLowerCase()),
+  z.email("Geçerli bir e-posta adresi giriniz")
+);
 
-const password = z
-  .string()
-  .min(RULES.password.min, `Şifre en az ${RULES.password.min} karakter olmalıdır`)
-  .refine((value) => new TextEncoder().encode(value).length <= RULES.password.maxBytes, "Şifre çok uzun");
+const password = z.string().check(
+  z.minLength(RULES.password.min, `Şifre en az ${RULES.password.min} karakter olmalıdır`),
+  z.refine((value) => new TextEncoder().encode(value).length <= RULES.password.maxBytes, "Şifre çok uzun")
+);
+
+const requiredSecret = (message) => z.string().check(z.minLength(1, message));
 
 export const loginSchema = z.object({
   email,
-  password: z.string().min(1, "Şifre zorunludur"),
+  password: requiredSecret("Şifre zorunludur"),
 });
 
 export const registerSchema = z.object({
@@ -25,7 +33,7 @@ export const registerSchema = z.object({
   surname: requiredText(RULES.name.max, "Soyad"),
   email,
   password,
-  role: z.enum(SELF_ASSIGNABLE_ROLES),
+  role: z.enum(SELF_ASSIGNABLE_ROLES, { error: "Üyelik türü seçiniz" }),
 });
 
 export const profileSchema = z
@@ -38,18 +46,20 @@ export const profileSchema = z
     currentPassword: z.string(),
     originalEmail: z.string(),
   })
-  .refine((values) => values.email === values.originalEmail || values.currentPassword.length > 0, {
-    path: ["currentPassword"],
-    message: "E-posta değişikliği için mevcut şifre gerekli",
-  });
+  .check(
+    z.refine((values) => values.email === values.originalEmail || values.currentPassword.length > 0, {
+      path: ["currentPassword"],
+      message: "E-posta değişikliği için mevcut şifre gerekli",
+    })
+  );
 
 export const changePasswordSchema = z.object({
-  currentPassword: z.string().min(1, "Mevcut şifre zorunludur"),
+  currentPassword: requiredSecret("Mevcut şifre zorunludur"),
   newPassword: password,
 });
 
 export const deleteAccountSchema = z.object({
-  password: z.string().min(1, "Şifre zorunludur"),
+  password: requiredSecret("Şifre zorunludur"),
 });
 
 export const postSchema = z.object({
@@ -65,7 +75,7 @@ export const commentSchema = z.object({ text: requiredText(RULES.comment.max, "Y
 export const messageSchema = z.object({ text: requiredText(RULES.message.max, "Mesaj") });
 
 export const feedbackSchema = z.object({
-  type: z.enum(FEEDBACK_TYPES),
+  type: z.enum(FEEDBACK_TYPES, { error: "Tür seçiniz" }),
   message: requiredText(RULES.feedback.max, "Mesaj"),
 });
 

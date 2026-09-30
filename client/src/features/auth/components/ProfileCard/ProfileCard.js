@@ -74,7 +74,9 @@ export function ProfileCard({ user }) {
 
       {editing && <ProfileEditForm user={user} onDone={() => setEditing(false)} />}
 
-      {relation && <FollowListModal userId={user._id} relation={relation} onClose={() => setRelation(null)} />}
+      {relation && (
+        <FollowListModal userId={user._id} relation={relation} onClose={() => setRelation(null)} />
+      )}
     </section>
   );
 }

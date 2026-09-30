@@ -3,6 +3,7 @@ import { API_BASE_URL } from "@/shared/config/env";
 import { useAuthStore } from "@/shared/store/useAuthStore";
 import { queryClient } from "@/shared/query/queryClient";
 import { queryKeys } from "@/shared/query/queryKeys";
+import { forgetSessionHint, rememberSessionHint } from "./sessionHint";
 
 const REFRESH_LOCK = "milk-session-refresh";
 const RACE_RETRY_DELAY_MS = 150;
@@ -30,11 +31,13 @@ const requestRefresh = async (attempt = 0) => {
 };
 
 export const startSession = (session) => {
+  rememberSessionHint();
   queryClient.setQueryData(queryKeys.me, session.user);
   useAuthStore.getState().setSession(session);
 };
 
 export const clearLocalSession = () => {
+  forgetSessionHint();
   useAuthStore.getState().clearSession();
   queryClient.clear();
 };

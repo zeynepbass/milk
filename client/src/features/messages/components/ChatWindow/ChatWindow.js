@@ -19,7 +19,10 @@ export function ChatWindow({ partner, initialMessage, onInitialMessageSent }) {
   const conversation = useConversationWith(partner?._id);
   const conversationId = conversation.data?._id ?? null;
   const messagesQuery = useConversationMessages(conversationId);
-  const { mutate: sendMessage, isPending: sending } = useSendMessage({ conversationId, receiverId: partner?._id });
+  const { mutate: sendMessage, isPending: sending } = useSendMessage({
+    conversationId,
+    receiverId: partner?._id,
+  });
   const { mutate: markRead, isPending: markingRead } = useMarkConversationRead();
   const initialSentRef = useRef(false);
   const bottomRef = useRef(null);
@@ -48,14 +51,19 @@ export function ChatWindow({ partner, initialMessage, onInitialMessageSent }) {
 
   if (!partner) {
     return (
-      <section className="flex-1 flex items-center justify-center text-gray-500">Mesajlaşmak için bir sohbet seç</section>
+      <section className="flex-1 flex items-center justify-center text-gray-500">
+        Mesajlaşmak için bir sohbet seç
+      </section>
     );
   }
 
   const displayPartner = conversation.data?.participants?.find((item) => item._id === partner._id) ?? partner;
 
   return (
-    <section aria-label={`${displayPartner.name ?? "Kullanıcı"} ile sohbet`} className="flex-1 flex flex-col min-h-0">
+    <section
+      aria-label={`${displayPartner.name ?? "Kullanıcı"} ile sohbet`}
+      className="flex-1 flex flex-col min-h-0"
+    >
       <header className="h-16 border-b bg-white dark:bg-gray-800 dark:border-gray-700 flex items-center gap-3 px-4">
         <Avatar user={displayPartner} />
         <div>

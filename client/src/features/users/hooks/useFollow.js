@@ -16,7 +16,8 @@ export function useUserProfile(userId) {
 
 export function useFollowList(userId, relation) {
   return useInfiniteQuery({
-    queryKey: relation === "followers" ? queryKeys.users.followers(userId) : queryKeys.users.following(userId),
+    queryKey:
+      relation === "followers" ? queryKeys.users.followers(userId) : queryKeys.users.following(userId),
     queryFn: ({ pageParam }) => userService.getRelations(userId, relation, { cursor: pageParam }),
     enabled: Boolean(userId && relation),
     ...pageParamsFromCursor,

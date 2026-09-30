@@ -11,7 +11,9 @@ const id = () => new mongoose.Types.ObjectId();
 
 describe("migration'lar", () => {
   it("e-postaları normalize eder, çakışmada durur", async () => {
-    await db().collection("users").insertMany([{ email: " Ali@Ornek.COM " }]);
+    await db()
+      .collection("users")
+      .insertMany([{ email: " Ali@Ornek.COM " }]);
     await normalizeEmails(db());
     expect((await db().collection("users").findOne({})).email).toBe("ali@ornek.com");
 
@@ -21,8 +23,12 @@ describe("migration'lar", () => {
 
   it("mükerrer konuşmaları birleştirir", async () => {
     const [a, b] = [id(), id()];
-    const first = await db().collection("conversations").insertOne({ participants: [a, b] });
-    const second = await db().collection("conversations").insertOne({ participants: [b, a] });
+    const first = await db()
+      .collection("conversations")
+      .insertOne({ participants: [a, b] });
+    const second = await db()
+      .collection("conversations")
+      .insertOne({ participants: [b, a] });
     await db()
       .collection("messages")
       .insertMany([
@@ -62,7 +68,13 @@ describe("migration'lar", () => {
   it("gönderi sayaçlarını hesaplar ve kopyalanmış sahip alanlarını kaldırır", async () => {
     await db()
       .collection("posts")
-      .insertOne({ likes: [id(), id()], savedBy: [id()], ownerName: "Eski", ownerRole: "satici", image: "x" });
+      .insertOne({
+        likes: [id(), id()],
+        savedBy: [id()],
+        ownerName: "Eski",
+        ownerRole: "satici",
+        image: "x",
+      });
 
     await migratePosts(db());
 

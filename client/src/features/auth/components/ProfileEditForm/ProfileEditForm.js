@@ -29,12 +29,23 @@ export function ProfileEditForm({ user, onDone }) {
     <form noValidate onSubmit={handleSubmit(submit)} className="space-y-4">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <Input {...register("name")} label="Ad" autoComplete="given-name" error={errors.name?.message} />
-        <Input {...register("surname")} label="Soyad" autoComplete="family-name" error={errors.surname?.message} />
+        <Input
+          {...register("surname")}
+          label="Soyad"
+          autoComplete="family-name"
+          error={errors.surname?.message}
+        />
         <Input {...register("province")} label="İl" error={errors.province?.message} />
         <Input {...register("district")} label="İlçe" error={errors.district?.message} />
       </div>
 
-      <Input {...register("email")} label="E-posta" type="email" autoComplete="email" error={errors.email?.message} />
+      <Input
+        {...register("email")}
+        label="E-posta"
+        type="email"
+        autoComplete="email"
+        error={errors.email?.message}
+      />
 
       {emailChanged && (
         <Input
@@ -50,7 +61,13 @@ export function ProfileEditForm({ user, onDone }) {
         <Button type="button" variant="ghost" onClick={onDone}>
           Vazgeç
         </Button>
-        <Button type="submit" variant="primary" loading={saveProfile.isPending} loadingText="Kaydediliyor..." text="Kaydet" />
+        <Button
+          type="submit"
+          variant="primary"
+          loading={saveProfile.isPending}
+          loadingText="Kaydediliyor..."
+          text="Kaydet"
+        />
       </div>
     </form>
   );

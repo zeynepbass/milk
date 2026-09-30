@@ -68,8 +68,10 @@ export function ImagePicker({ existing = [], files, onFilesChange, onRemoveExist
             onChange={handleSelect}
             className="sr-only"
           />
-          <PhotoIcon className="w-10 h-10 text-gray-400 mb-2" aria-hidden="true" />
-          <span className="text-sm text-gray-500">Görsel eklemek için tıklayın (en fazla {remaining} adet)</span>
+          <PhotoIcon className="w-10 h-10 text-gray-500 mb-2" aria-hidden="true" />
+          <span className="text-sm text-gray-500">
+            Görsel eklemek için tıklayın (en fazla {remaining} adet)
+          </span>
         </label>
       )}
     </div>

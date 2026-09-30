@@ -14,7 +14,7 @@ export function Search({ initialValue = "", onSearch }) {
     <form
       role="search"
       onSubmit={handleSubmit}
-      className="flex w-full max-w-2xl mx-auto rounded-full bg-gray-50 border-2 border-[rgb(137,205,251)] dark:border-yellow-400 dark:bg-gray-800 overflow-hidden h-10"
+      className="flex w-full max-w-2xl mx-auto rounded-full bg-gray-50 border-2 border-blue-600 dark:border-yellow-400 dark:bg-gray-800 overflow-hidden h-10"
     >
       <label htmlFor={inputId} className="sr-only">
         Ürün ara
@@ -30,7 +30,7 @@ export function Search({ initialValue = "", onSearch }) {
       <button
         type="submit"
         aria-label="Ara"
-        className="flex items-center justify-center px-6 bg-[rgb(137,205,251)] dark:bg-yellow-400 hover:opacity-90"
+        className="flex items-center justify-center px-6 bg-blue-600 dark:bg-yellow-500 hover:opacity-90"
       >
         <MagnifyingGlassIcon className="w-5 h-5 text-white" aria-hidden="true" />
       </button>

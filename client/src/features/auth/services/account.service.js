@@ -22,8 +22,9 @@ export const accountService = {
     }
 
     if (values.email && values.email !== current.email) {
-      user = (await accountRepository.changeEmail({ email: values.email, currentPassword: values.currentPassword }))
-        .user;
+      user = (
+        await accountRepository.changeEmail({ email: values.email, currentPassword: values.currentPassword })
+      ).user;
     }
 
     return user;

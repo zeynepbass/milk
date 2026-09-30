@@ -11,10 +11,15 @@ import { PostActions } from "../PostActions";
 import { CommentsPanel } from "../CommentsPanel";
 import { EditPostModal } from "../EditPostModal";
 
-const categoryLabel = (value) => POST_CATEGORY_OPTIONS.find((option) => option.value === value)?.label ?? value;
+const categoryLabel = (value) =>
+  POST_CATEGORY_OPTIONS.find((option) => option.value === value)?.label ?? value;
 
 function Tag({ children }) {
-  return <span className="px-4 py-1 bg-gray-100 dark:bg-gray-700 dark:text-gray-200 rounded-full text-sm">{children}</span>;
+  return (
+    <span className="px-4 py-1 bg-gray-100 dark:bg-gray-700 dark:text-gray-200 rounded-full text-sm">
+      {children}
+    </span>
+  );
 }
 
 export function PostDetails() {

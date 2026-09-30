@@ -9,7 +9,14 @@ import { logger } from "../src/utils/logger.js";
 export const DEMO_PASSWORD = "Demo12345!";
 
 const DEMO_USERS = [
-  { key: "admin", name: "Ada", surname: "Yönetici", email: "admin@milk.demo", role: "admin", province: "İzmir" },
+  {
+    key: "admin",
+    name: "Ada",
+    surname: "Yönetici",
+    email: "admin@milk.demo",
+    role: "admin",
+    province: "İzmir",
+  },
   {
     key: "seller",
     name: "Mehmet",
@@ -21,11 +28,22 @@ const DEMO_USERS = [
     organicStatus: true,
     dogrulanmisSatici: true,
   },
-  { key: "buyer", name: "Ayşe", surname: "Alıcı", email: "alici@milk.demo", role: "alici", province: "İzmir" },
+  {
+    key: "buyer",
+    name: "Ayşe",
+    surname: "Alıcı",
+    email: "alici@milk.demo",
+    role: "alici",
+    province: "İzmir",
+  },
 ];
 
 const DEMO_POSTS = [
-  { title: "Günlük inek sütü", category: "sut_urunleri", description: "Sabah sağımı, soğuk zincirle teslim." },
+  {
+    title: "Günlük inek sütü",
+    category: "sut_urunleri",
+    description: "Sabah sağımı, soğuk zincirle teslim.",
+  },
   { title: "Süzme çiçek balı", category: "bal", description: "Tire yaylalarından, 850 gramlık cam kavanoz." },
   { title: "Soğuk sıkım zeytinyağı", category: "zeytinyagi", description: "Erken hasat, 5 litrelik teneke." },
   { title: "Tulum peyniri", category: "peynir", description: "Altı ay olgunlaştırılmış keçi tulumu." },

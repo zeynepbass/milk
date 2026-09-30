@@ -48,7 +48,10 @@ export function CommentsPanel({ postId }) {
         <LoadMore query={query} label="Önceki yorumlar" />
       </QueryState>
 
-      <form onSubmit={handleSubmit(onSubmit)} className="flex items-start gap-2 border-t dark:border-gray-700 pt-3">
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="flex items-start gap-2 border-t dark:border-gray-700 pt-3"
+      >
         <Input
           {...register("text")}
           label="Yorum"
@@ -61,7 +64,7 @@ export function CommentsPanel({ postId }) {
         <button
           type="submit"
           aria-label="Yorumu gönder"
-          className="rounded-full p-3 bg-[rgb(82,144,246)] dark:bg-gray-900 text-white"
+          className="rounded-full p-3 bg-blue-600 dark:bg-gray-900 text-white"
         >
           <ArrowRightIcon className="w-4 h-4" aria-hidden="true" />
         </button>

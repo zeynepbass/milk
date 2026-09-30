@@ -7,7 +7,8 @@ const ENTITY_PATHS = {
 };
 
 export const notificationService = {
-  getNotifications: ({ cursor } = {}) => notificationRepository.getNotifications(cursor ? { cursor } : undefined),
+  getNotifications: ({ cursor } = {}) =>
+    notificationRepository.getNotifications(cursor ? { cursor } : undefined),
   getUnreadCount: async () => (await notificationRepository.getUnreadCount()).unreadCount,
   markAsRead: (notificationId) => notificationRepository.markAsRead(notificationId),
   markAllAsRead: () => notificationRepository.markAllAsRead(),

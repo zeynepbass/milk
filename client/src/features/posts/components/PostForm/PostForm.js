@@ -52,7 +52,13 @@ export function PostForm({ post, fallbackLocation, submitLabel, pending, onSubmi
       />
 
       <div className="flex justify-end">
-        <Button type="submit" variant="primary" loading={pending} loadingText="Kaydediliyor..." text={submitLabel} />
+        <Button
+          type="submit"
+          variant="primary"
+          loading={pending}
+          loadingText="Kaydediliyor..."
+          text={submitLabel}
+        />
       </div>
     </form>
   );

@@ -40,12 +40,16 @@ const getCommentView = async (commentId, viewerId) => {
 export const listComments = async (postId, viewerId, { cursor, limit }) => {
   await assertActivePost(postId);
 
-  return paginate(Comment, { post: new mongoose.Types.ObjectId(postId.toString()), isActive: true }, {
-    cursor,
-    limit,
-    projection: viewerProjection(viewerId),
-    populate: { path: "user", select: AUTHOR_FIELDS },
-  });
+  return paginate(
+    Comment,
+    { post: new mongoose.Types.ObjectId(postId.toString()), isActive: true },
+    {
+      cursor,
+      limit,
+      projection: viewerProjection(viewerId),
+      populate: { path: "user", select: AUTHOR_FIELDS },
+    }
+  );
 };
 
 export const addComment = async (userId, postId, text) => {
@@ -79,7 +83,10 @@ export const likeComment = async (userId, commentId) => {
 
 export const unlikeComment = async (userId, commentId) => {
   await assertActiveComment(commentId);
-  await Comment.updateOne({ _id: commentId, likes: userId }, { $pull: { likes: userId }, $inc: { likesCount: -1 } });
+  await Comment.updateOne(
+    { _id: commentId, likes: userId },
+    { $pull: { likes: userId }, $inc: { likesCount: -1 } }
+  );
 
   const view = await getCommentView(commentId, userId);
   return { commentId, liked: view.likedByMe, likesCount: view.likesCount };

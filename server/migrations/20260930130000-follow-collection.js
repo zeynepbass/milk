@@ -34,7 +34,9 @@ const copyFollowArrays = async (db) => {
 const recomputeCounts = async (db, groupField, counterField) => {
   await db.collection("users").updateMany({}, { $set: { [counterField]: 0 } });
 
-  const counts = db.collection("follows").aggregate([{ $group: { _id: `$${groupField}`, count: { $sum: 1 } } }]);
+  const counts = db
+    .collection("follows")
+    .aggregate([{ $group: { _id: `$${groupField}`, count: { $sum: 1 } } }]);
 
   for await (const row of counts) {
     await db.collection("users").updateOne({ _id: row._id }, { $set: { [counterField]: row.count } });
@@ -55,7 +57,11 @@ export const down = async (db) => {
   const follows = db.collection("follows").find({});
 
   for await (const relation of follows) {
-    await db.collection("users").updateOne({ _id: relation.follower }, { $addToSet: { following: relation.following } });
-    await db.collection("users").updateOne({ _id: relation.following }, { $addToSet: { followers: relation.follower } });
+    await db
+      .collection("users")
+      .updateOne({ _id: relation.follower }, { $addToSet: { following: relation.following } });
+    await db
+      .collection("users")
+      .updateOne({ _id: relation.following }, { $addToSet: { followers: relation.follower } });
   }
 };

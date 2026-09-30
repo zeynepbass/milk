@@ -15,7 +15,10 @@ import {
 } from "./messageCache";
 
 export function useConversations() {
-  return useQuery({ queryKey: queryKeys.conversations.list(), queryFn: () => messageService.getConversations() });
+  return useQuery({
+    queryKey: queryKeys.conversations.list(),
+    queryFn: () => messageService.getConversations(),
+  });
 }
 
 export function useConversationWith(userId) {

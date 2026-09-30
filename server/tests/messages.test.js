@@ -2,7 +2,8 @@ import { describe, expect, it } from "vitest";
 import Conversation from "../src/models/Conversation.js";
 import { api, createSession } from "./helpers.js";
 
-const send = (from, to, text) => api().post("/api/messages").set(from.auth).send({ receiverId: to.user._id, text });
+const send = (from, to, text) =>
+  api().post("/api/messages").set(from.auth).send({ receiverId: to.user._id, text });
 
 describe("mesajlaşma", () => {
   it("konuşmalar yalnızca katılımcılara görünür", async () => {
@@ -14,10 +15,14 @@ describe("mesajlaşma", () => {
 
     expect((await api().get("/api/conversations").set(eve.auth)).body).toHaveLength(0);
 
-    const forbidden = await api().get(`/api/conversations/${message.body.conversationId}/messages`).set(eve.auth);
+    const forbidden = await api()
+      .get(`/api/conversations/${message.body.conversationId}/messages`)
+      .set(eve.auth);
     expect(forbidden.status).toBe(404);
 
-    const bobView = await api().get(`/api/conversations/${message.body.conversationId}/messages`).set(bob.auth);
+    const bobView = await api()
+      .get(`/api/conversations/${message.body.conversationId}/messages`)
+      .set(bob.auth);
     expect(bobView.body.items).toHaveLength(1);
     expect(bobView.body.items[0].senderId).toBe(alice.user._id);
   });
@@ -83,7 +88,9 @@ describe("mesajlaşma", () => {
     const [afterRead] = (await api().get("/api/conversations").set(bob.auth)).body;
     expect(afterRead.unreadCount).toBe(0);
 
-    const messages = await api().get(`/api/conversations/${last.body.conversationId}/messages`).set(alice.auth);
+    const messages = await api()
+      .get(`/api/conversations/${last.body.conversationId}/messages`)
+      .set(alice.auth);
     expect(messages.body.items.every((message) => message.readAt)).toBe(true);
   });
 

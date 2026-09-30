@@ -17,7 +17,12 @@ export function Avatar({ user, size = "md", showBadge = false }) {
   return (
     <span className={`relative inline-flex shrink-0 ${SIZES[size]}`}>
       {source ? (
-        <img src={source} alt={label} loading="lazy" className="w-full h-full rounded-full object-cover shadow" />
+        <img
+          src={source}
+          alt={label}
+          loading="lazy"
+          className="w-full h-full rounded-full object-cover shadow"
+        />
       ) : (
         <span
           role="img"
