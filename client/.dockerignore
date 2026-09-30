@@ -1,0 +1,7 @@
+node_modules
+build
+coverage
+uploads
+.env
+.env.*
+!.env.example

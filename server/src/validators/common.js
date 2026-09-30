@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { RULES } from "./rules.js";
 
 z.config(z.locales.tr());
 
@@ -12,13 +13,19 @@ export const email = z.string().trim().toLowerCase().pipe(z.email("Geçerli bir 
 
 export const password = z
   .string()
-  .min(8, "Şifre en az 8 karakter olmalıdır")
-  .refine((value) => Buffer.byteLength(value, "utf8") <= 72, "Şifre çok uzun");
+  .min(RULES.password.min, `Şifre en az ${RULES.password.min} karakter olmalıdır`)
+  .refine((value) => Buffer.byteLength(value, "utf8") <= RULES.password.maxBytes, "Şifre çok uzun");
 
-export const requiredText = (max) => z.string().trim().min(1).max(max);
+export const requiredText = (max, min = 1) => z.string().trim().min(min).max(max);
 
 export const optionalText = (max) => z.string().trim().max(max).optional();
 
-export const limitQuery = z.object({
-  limit: z.coerce.number().int().positive().optional(),
+export const paginationQuery = z.object({
+  cursor: z.string().max(200).optional(),
+  limit: z.coerce.number().int().min(1).max(RULES.pageSize.max).default(RULES.pageSize.default),
 });
+
+export const paginatedResponse = (item) =>
+  z.object({ items: z.array(item), nextCursor: z.string().nullable() });
+
+export const messageResponse = z.object({ message: z.string() });

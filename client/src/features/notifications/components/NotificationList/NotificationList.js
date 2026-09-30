@@ -1,23 +1,15 @@
-import useNotifications from "@/features/feed/hooks/notifications/useNotifications";
 import { useEffect } from "react";
+import { useNotifications } from "../../hooks/useNotifications";
 
-
-export function Notifications({ open }) {
-
-  const {
-    NotificationAlerts,
-    notifications,
-    markAsRead,
-    loading,
-  } = useNotifications();
+export function NotificationList({ open }) {
+  const { fetchNotifications, notifications, markAsRead, loading } = useNotifications();
 
   useEffect(() => {
-    NotificationAlerts();
-  }, []);
+    fetchNotifications();
+  }, [fetchNotifications]);
 
   return (
     <div className="relative">
-
       {notifications?.some((n) => !n.isRead) && (
         <span className="absolute -top-4 right-4 w-2.5 h-2.5 bg-red-500 rounded-full" />
       )}
@@ -29,27 +21,21 @@ export function Notifications({ open }) {
           </div>
 
           <div className="max-h-80 overflow-y-auto dark:bg-dark-800">
-
             {loading ? (
-              <p className="text-center text-gray-400 py-6 text-sm">
-                Yükleniyor...
-              </p>
+              <p className="text-center text-gray-400 py-6 text-sm">Yükleniyor...</p>
             ) : notifications?.length === 0 ? (
-   
-              <p className="text-center text-gray-400 py-6 text-sm">
-                Bildirimin yok
-              </p>
+              <p className="text-center text-gray-400 py-6 text-sm">Bildirimin yok</p>
             ) : (
               notifications.map((item) => (
-                <div
+                <button
+                  type="button"
                   key={item._id}
                   onClick={async () => {
                     if (item.postId) {
                       await markAsRead(item._id);
-                  
                     }
                   }}
-                  className={`px-4 py-3  dark:bg-dark-800 border-b dark:border-b-gray-900 dark:hover:bg-gray-400 text-sm cursor-pointer hover:bg-gray-50 transition ${
+                  className={`block w-full text-left px-4 py-3  dark:bg-dark-800 border-b dark:border-b-gray-900 dark:hover:bg-gray-400 text-sm cursor-pointer hover:bg-gray-50 transition ${
                     !item.isRead ? " dark:bg-dark-800" : ""
                   }`}
                 >
@@ -58,7 +44,7 @@ export function Notifications({ open }) {
                   <span className="text-xs text-gray-400 mt-1 block">
                     {new Date(item.createdAt).toLocaleString("tr-TR")}
                   </span>
-                </div>
+                </button>
               ))
             )}
           </div>

@@ -1,15 +1,23 @@
-import { useEffect, useState, useRef } from "react";
-import { postProvider } from "@/providers/post.provider";
-import { useUserStore } from "@/shared/store/useUserStore";
-import { io } from "socket.io-client";
-import { SERVER_URL } from "@/shared/constants/config";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { getErrorMessage } from "@/shared/api/apiClient";
+import { createAuthenticatedSocket } from "@/shared/api/socket";
+import { useAuthStore } from "@/shared/store/useAuthStore";
+import { messageService } from "../services/message.service";
 
-export default function useMessage() {
-  const user = useUserStore((state) => state.user);
+const appendUnique = (messages, message) =>
+  messages.some((item) => item._id === message._id) ? messages : [...messages, message];
 
-  const userId = user?._id || user?.id;
+const buildProductQuestion = (product) =>
+  product.title ? `"${product.title}" hakkında bilgi alabilir miyim?` : "Ürün hakkında bilgi alabilir miyim?";
 
-  const service = postProvider.service;
+export function useMessages() {
+  const user = useAuthStore((state) => state.user);
+  const userId = user?._id;
+  const location = useLocation();
+  const navigate = useNavigate();
+  const product = location.state?.product ?? null;
 
   const [selectedUser, setSelectedUser] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -19,213 +27,140 @@ export default function useMessage() {
   const [onlineUsers, setOnlineUsers] = useState([]);
 
   const socketRef = useRef(null);
-  const autoSentRef = useRef(false);
+  const selectedUserIdRef = useRef(null);
+  const productSentRef = useRef(false);
 
-  const [productData, setProductData] = useState(() => {
+  useEffect(() => {
+    selectedUserIdRef.current = selectedUser?._id ?? null;
+  }, [selectedUser?._id]);
+
+  const loadConversations = useCallback(async () => {
+    setLoading(true);
     try {
-      const data = localStorage.getItem("product");
-      return data ? JSON.parse(data) : null;
-    } catch {
-      return null;
+      setConversations(await messageService.getConversations());
+    } catch (error) {
+      toast.error(getErrorMessage(error, "Sohbetler alınamadı"));
+    } finally {
+      setLoading(false);
     }
-  });
+  }, []);
+
+  const conversationIdsRef = useRef(new Set());
 
   useEffect(() => {
-    if (!userId) return;
+    conversationIdsRef.current = new Set(conversations.map((conversation) => conversation._id));
+  }, [conversations]);
 
-    const fetchConversations = async () => {
-      try {
-        setLoading(true);
-
-        const res = await service.getConversation(userId);
-
-        setConversations(res);
-      } catch (err) {
-        console.error(err);
-      } finally {
-        setLoading(false);
+  const applyMessageToConversations = useCallback(
+    (message) => {
+      if (!conversationIdsRef.current.has(message.conversationId)) {
+        loadConversations();
+        return;
       }
-    };
 
-    fetchConversations();
-  }, [userId]);
+      setConversations((prev) => {
+        const existing = prev.find((conversation) => conversation._id === message.conversationId);
+        if (!existing) return prev;
 
-  useEffect(() => {
-    if (!productData || !userId) return;
-
-    setSelectedUser({
-      _id: productData.userId,
-      name: "Kullanıcı",
-    });
-  }, [productData, userId]);
-
-  const handleUserSelect = (u) => {
-    setSelectedUser(u);
-  };
+        const updated = { ...existing, lastMessage: message.text, lastMessageAt: message.createdAt };
+        return [updated, ...prev.filter((conversation) => conversation._id !== existing._id)];
+      });
+    },
+    [loadConversations]
+  );
 
   useEffect(() => {
-    if (!selectedUser?._id || !userId) return;
-
-    const fetchMessages = async () => {
-      try {
-        const res =
-          await service.getConversationMessages(
-            userId,
-            selectedUser._id
-          );
-
-        setMessages(res.messages || []);
-
-        setSelectedUser((prev) =>
-          prev?.conversationId
-            ? prev
-            : {
-                ...prev,
-                conversationId: res._id,
-              }
-        );
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    fetchMessages();
-  }, [selectedUser?._id, userId]);
+    if (userId) loadConversations();
+  }, [userId, loadConversations]);
 
   useEffect(() => {
-    if (
-      productData &&
-      selectedUser &&
-      !autoSentRef.current
-    ) {
-      handleSend();
-      autoSentRef.current = true;
-    }
-  }, [productData, selectedUser]);
+    if (!userId) return undefined;
 
-  useEffect(() => {
-    if (!userId) return;
-
-    const socket = io(SERVER_URL);
-
+    const socket = createAuthenticatedSocket();
     socketRef.current = socket;
 
-    socket.emit("addUser", userId);
+    socket.on("presence:list", setOnlineUsers);
 
-    socket.on("getUsers", (users) => {
-      setOnlineUsers(
-        users.map((u) => u.userId)
-      );
-    });
+    socket.on("message:new", (message) => {
+      const otherUserId = message.senderId === userId ? message.receiverId : message.senderId;
 
-    socket.on("getMessage", (msg) => {
-      setMessages((prev) => {
-        const exists = prev.some(
-          (m) => m._id === msg._id
-        );
+      if (otherUserId === selectedUserIdRef.current) {
+        setMessages((prev) => appendUnique(prev, message));
+      }
 
-        if (exists) return prev;
-
-        if (
-          msg.senderId === selectedUser?._id ||
-          msg.receiverId === selectedUser?._id
-        ) {
-          return [...prev, msg];
-        }
-
-        return prev;
-      });
+      applyMessageToConversations(message);
     });
 
     return () => {
       socket.disconnect();
+      socketRef.current = null;
     };
-  }, [userId, selectedUser?._id]);
+  }, [userId, applyMessageToConversations]);
 
-  const handleSend = async () => {
-    if (
-      (!input.trim() && !productData) ||
-      !selectedUser
-    ) {
-      return;
+  useEffect(() => {
+    if (product?.userId) {
+      setSelectedUser({ _id: product.userId, name: product.userName || "Satıcı" });
     }
+  }, [product?.userId, product?.userName]);
 
-    const text = productData
-      ? "Ürün hakkında bilgi alabilir miyim?"
-      : input;
+  useEffect(() => {
+    if (!selectedUser?._id) return undefined;
 
-    const body = {
-      senderId: userId,
-      receiverId: selectedUser._id,
-      text,
-      conversationId:
-        selectedUser.conversationId || null,
-    };
+    let ignore = false;
 
-    try {
-      const savedMessage =
-        await service.sendMessage(body);
-
-      setMessages((prev) => [
-        ...prev,
-        savedMessage,
-      ]);
-
-      setInput("");
-
-      setConversations((prev) => {
-        const exists = prev.find(
-          (c) =>
-            c._id === savedMessage.conversationId
-        );
-
-        if (exists) {
-          return prev.map((c) =>
-            c._id ===
-            savedMessage.conversationId
-              ? {
-                  ...c,
-                  lastMessage: text,
-                }
-              : c
-          );
-        }
-
-        return [
-          {
-            _id: savedMessage.conversationId,
-            participants: [
-              { _id: userId },
-              {
-                _id: selectedUser._id,
-                name: selectedUser.name,
-              },
-            ],
-            lastMessage: text,
-          },
-          ...prev,
-        ];
+    messageService
+      .getConversationWith(selectedUser._id)
+      .then((conversation) => {
+        if (!ignore) setMessages(conversation.messages || []);
+      })
+      .catch((error) => {
+        if (!ignore) toast.error(getErrorMessage(error, "Mesajlar alınamadı"));
       });
 
-      if (productData) {
-        localStorage.removeItem("product");
-        setProductData(null);
-      }
-    } catch (err) {
+    return () => {
+      ignore = true;
+    };
+  }, [selectedUser?._id]);
+
+  const sendText = useCallback(
+    async (text, receiverId) => {
+      const message = await messageService.sendMessage({ socket: socketRef.current, receiverId, text });
+      setMessages((prev) => appendUnique(prev, message));
+      applyMessageToConversations(message);
+    },
+    [applyMessageToConversations]
+  );
+
+  useEffect(() => {
+    if (!product?.userId || selectedUser?._id !== product.userId || productSentRef.current) return;
+
+    productSentRef.current = true;
+
+    sendText(buildProductQuestion(product), product.userId)
+      .catch((error) => toast.error(getErrorMessage(error, error.message || "Mesaj gönderilemedi")))
+      .finally(() => navigate(location.pathname, { replace: true, state: null }));
+  }, [product, selectedUser?._id, sendText, navigate, location.pathname]);
+
+  const handleSend = async () => {
+    if (!input.trim() || !selectedUser) return;
+
+    try {
+      await sendText(input, selectedUser._id);
+      setInput("");
+    } catch (error) {
+      toast.error(getErrorMessage(error, error.message || "Mesaj gönderilemedi"));
     }
   };
 
-  const getOtherUser = (conv) =>
-    conv.participants.find(
-      (p) => p._id !== userId
-    );
+  const getOtherUser = (conversation) =>
+    conversation.participants.find((participant) => participant && participant._id !== userId);
 
   return {
     loading,
     conversations,
     getOtherUser,
     onlineUsers,
-    handleUserSelect,
+    handleUserSelect: setSelectedUser,
     messages,
     input,
     user,

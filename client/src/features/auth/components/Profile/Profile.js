@@ -73,8 +73,15 @@ export function Profile() {
     handleUpdatePost,
   } = useMyPosts();
 
-  const { handleComment, handleDelete, handleCommentLike,handleAddComment, comments,newComment,setNewComment } =
-    useComments(selected);
+  const {
+    handleComment,
+    handleDelete,
+    handleCommentLike,
+    handleAddComment,
+    comments,
+    newComment,
+    setNewComment,
+  } = useComments(selected);
 
   useEffect(() => {
     getProfile();
@@ -113,7 +120,9 @@ export function Profile() {
                       toAssetUrl(profileForm?.avatar) ||
                       "https://cdn-icons-png.flaticon.com/512/9131/9131478.png"
                     }
-                    alt={`${profileForm?.name ?? ""} ${profileForm?.surname ?? ""}`.trim() || "Profil fotoğrafı"}
+                    alt={
+                      `${profileForm?.name ?? ""} ${profileForm?.surname ?? ""}`.trim() || "Profil fotoğrafı"
+                    }
                     className="w-24 h-24 rounded-full object-cover"
                   />
 
@@ -128,44 +137,31 @@ export function Profile() {
                   {profileForm?.name} {profileForm?.surname}
                 </h2>
 
-                <p className="text-gray-400 text-sm capitalize">
-                  {profileForm?.role}
-                </p>
+                <p className="text-gray-400 text-sm capitalize">{profileForm?.role}</p>
               </div>
 
               <hr />
 
               <div className="flex justify-center gap-8 mt-4 text-sm">
-                <div
-                  className="cursor-pointer"
-                  onClick={() => setOpenList("following")}
-                >
-                  <p className="font-semibold text-center dark:text-gray-300">
+                <button type="button" className="cursor-pointer" onClick={() => setOpenList("following")}>
+                  <span className="block font-semibold text-center dark:text-gray-300">
                     {profileForm?.following?.length || 0}
-                  </p>
+                  </span>
 
-                  <p className="text-gray-400 dark:text-gray-300">Takip</p>
-                </div>
+                  <span className="block text-gray-400 dark:text-gray-300">Takip</span>
+                </button>
 
-                <div
-                  className="cursor-pointer"
-                  onClick={() => setOpenList("followers")}
-                >
-                  <p className="font-semibold text-center dark:text-gray-300">
+                <button type="button" className="cursor-pointer" onClick={() => setOpenList("followers")}>
+                  <span className="block font-semibold text-center dark:text-gray-300">
                     {profileForm?.followers?.length || 0}
-                  </p>
+                  </span>
 
-                  <p className="text-gray-400 dark:text-gray-300">Takipçi</p>
-                </div>
+                  <span className="block text-gray-400 dark:text-gray-300">Takipçi</span>
+                </button>
               </div>
             </>
           ) : (
-            <form
-            onSubmit={
-              handleUpdated
-           }
-          
-            >
+            <form onSubmit={handleUpdated}>
               <div className="flex flex-col items-center">
                 <label className="relative cursor-pointer group">
                   <img
@@ -188,13 +184,10 @@ export function Profile() {
                     aria-label="Profil fotoğrafı seç"
                     onChange={handleImages}
                     className="hidden"
-
                   />
                 </label>
 
-                <p className="text-sm text-gray-400 mt-2">
-                  Profil fotoğrafını güncelle
-                </p>
+                <p className="text-sm text-gray-400 mt-2">Profil fotoğrafını güncelle</p>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
@@ -204,7 +197,7 @@ export function Profile() {
                   value={profileForm?.name || ""}
                   onChange={handleChange}
                   placeholder="Ad"
-                     className="py-2"
+                  className="py-2"
                 />
 
                 <Input
@@ -213,7 +206,7 @@ export function Profile() {
                   value={profileForm?.surname || ""}
                   onChange={handleChange}
                   placeholder="Soyad"
-                     className="py-2"
+                  className="py-2"
                 />
 
                 <Input
@@ -222,7 +215,7 @@ export function Profile() {
                   value={profileForm?.province || ""}
                   onChange={handleChange}
                   placeholder="İl"
-                     className="py-2"
+                  className="py-2"
                 />
 
                 <Input
@@ -240,7 +233,7 @@ export function Profile() {
                   value={profileForm?.email || ""}
                   onChange={handleChange}
                   placeholder="Email"
-                     className="py-2"
+                  className="py-2"
                 />
                 {emailChanged && (
                   <Input
@@ -255,15 +248,14 @@ export function Profile() {
                 )}
               </div>
               <Button
-          type="submit"
-          variant="primary"
-          loading={loading}
-          loadingText="Kaydediliyor..."
-          text="Gönder"
+                type="submit"
+                variant="primary"
+                loading={loading}
+                loadingText="Kaydediliyor..."
+                text="Gönder"
 
-          disabled={loading}
-        />
-
+                disabled={loading}
+              />
             </form>
           )}
 
@@ -272,9 +264,7 @@ export function Profile() {
               <div className="bg-white dark:bg-gray-800 w-[400px] max-h-[500px] rounded-2xl shadow-2xl p-6 relative overflow-y-auto">
                 <div className="flex justify-between items-center mb-4">
                   <h2 className="text-lg font-semibold dark:text-gray-400">
-                    {openList === "following"
-                      ? "Takip Ettiklerin"
-                      : "Takipçiler"}
+                    {openList === "following" ? "Takip Ettiklerin" : "Takipçiler"}
                   </h2>
                   <Button
                     type="button"
@@ -285,24 +275,19 @@ export function Profile() {
                   </Button>
                 </div>
 
-                {(openList === "followers"
-                  ? profileForm?.followers
-                  : profileForm?.following
-                )?.map((user) => (
-                  <div
-                    key={user._id}
-                    className="flex justify-between items-center py-3 border-b"
-                  >
+                {(openList === "followers" ? profileForm?.followers : profileForm?.following)?.map((user) => (
+                  <div key={user._id} className="flex justify-between items-center py-3 border-b">
                     <span className="font-medium dark:text-gray-200">
                       {user.name} {user.surname}
                     </span>
 
-                    <span
+                    <button
+                      type="button"
                       onClick={() => followId(user._id)}
                       className="text-sm cursor-pointer font-medium transition hover:underline dark:text-gray-400 text-blue-500"
                     >
                       {openList === "followers" ? "Takip Et" : "Takipten Çık"}
-                    </span>
+                    </button>
                   </div>
                 ))}
               </div>
@@ -327,7 +312,7 @@ export function Profile() {
             active={activeTab === "settings"}
             onClick={() => setActiveTab("settings")}
 
-             disabled={open}
+            disabled={open}
           >
             Hesap Ayarları
           </Button>
@@ -337,7 +322,6 @@ export function Profile() {
             active={activeTab === "organic"}
             onClick={() => setActiveTab("organic")}
             disabled={open}
-     
           >
             Organik Sertifika Yükle
           </Button>
@@ -347,7 +331,6 @@ export function Profile() {
             active={activeTab === "backNotifications"}
             onClick={() => setActiveTab("backNotifications")}
             disabled={open}
-
           >
             Geri Bildirim Gönder
           </Button>
@@ -371,10 +354,10 @@ export function Profile() {
                     className="p-3"
                   />
                 </div>
-          
+
                 <Button
                   type="button"
-                 variant="primary"
+                  variant="primary"
                   onClick={() => createSetOpen(true)}
                   disabled={loading}
                   className="
@@ -383,22 +366,23 @@ export function Profile() {
              py-3
           
                 "
-                ><span className=" text-white">+</span></Button>
+                >
+                  <span className=" text-white">+</span>
+                </Button>
                 <br />
               </div>
-<br/>
+              <br />
               {createOpen && (
-                       <Suspense fallback={<div>Yükleniyor...</div>}>
-                       <CreatePostForm
-                         onSubmit={onSubmit}
-                         postLoading={postLoading}
-                         profileForm={profileForm}
-                         form={form}
-                         setForm={setForm}
-                         setOpen={createSetOpen}
-                       />
-                     </Suspense>
-         
+                <Suspense fallback={<div>Yükleniyor...</div>}>
+                  <CreatePostForm
+                    onSubmit={onSubmit}
+                    postLoading={postLoading}
+                    profileForm={profileForm}
+                    form={form}
+                    setForm={setForm}
+                    setOpen={createSetOpen}
+                  />
+                </Suspense>
               )}
 
               {loadingPost && (
@@ -428,8 +412,7 @@ export function Profile() {
                   </h2>
 
                   <p className="text-gray-400 dark:text-gray-300 text-sm mb-4 max-w-xs">
-                    Henüz paylaşılmış bir gönderi bulunamadı. İlk gönderiyi sen
-                    oluşturabilirsin.
+                    Henüz paylaşılmış bir gönderi bulunamadı. İlk gönderiyi sen oluşturabilirsin.
                   </p>
 
                   <Button
@@ -518,8 +501,8 @@ export function Profile() {
               <h2 className="text-xl font-bold text-gray-700">Hesabı Dondur</h2>
 
               <p className="text-gray-500">
-                Hesabınızı gerçekten dondurmak istiyor musunuz? Bu işlem geçici
-                olarak hesabınızı devre dışı bırakır.
+                Hesabınızı gerçekten dondurmak istiyor musunuz? Bu işlem geçici olarak hesabınızı devre dışı
+                bırakır.
               </p>
 
               <div className="flex justify-end space-x-2">
@@ -532,11 +515,7 @@ export function Profile() {
                   İptal
                 </Button>
 
-                <Button
-                  type="button"
-                  onClick={freezeProfile}
-variant="primary"
-                >
+                <Button type="button" onClick={freezeProfile} variant="primary">
                   Onayla
                 </Button>
               </div>

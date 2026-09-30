@@ -6,6 +6,11 @@ const extractBearerToken = (header) => {
   return header.slice("Bearer ".length).trim() || null;
 };
 
+const attachUser = (req, user) => {
+  req.user = user;
+  req.userId = user.id;
+};
+
 export const authMiddleware = async (req, res, next) => {
   const token = extractBearerToken(req.headers.authorization);
 
@@ -13,10 +18,17 @@ export const authMiddleware = async (req, res, next) => {
     return next(unauthorized("Oturum açmanız gerekiyor", "TOKEN_MISSING"));
   }
 
-  const user = await authenticateAccessToken(token);
+  attachUser(req, await authenticateAccessToken(token));
+  return next();
+};
 
-  req.user = user;
-  req.userId = user.id;
+export const optionalAuth = async (req, res, next) => {
+  const token = extractBearerToken(req.headers.authorization);
+
+  if (token) {
+    attachUser(req, await authenticateAccessToken(token));
+  }
+
   return next();
 };
 

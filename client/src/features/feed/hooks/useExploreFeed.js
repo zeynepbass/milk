@@ -1,20 +1,23 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { getErrorMessage } from "@/shared/api/apiClient";
 import { useSearchStore } from "@/shared/store/useSearchStore";
-import { useUserStore } from "@/shared/store/useUserStore";
-import { postProvider } from "@/providers/post.provider";
-import usePostActions from "@/features/feed/hooks/post/usePostActions";
+import { useAuthStore } from "@/shared/store/useAuthStore";
+import { postService } from "@/features/posts/services/post.service";
+import { toggleSavedBy, usePostActions } from "@/features/posts/hooks/usePostActions";
+import { accountService } from "@/features/auth/services/account.service";
 
-export default function usePost() {
+const SEARCH_DEBOUNCE_MS = 500;
+
+export function useExploreFeed() {
   const [openList, setOpenList] = useState(null);
   const [loading, setLoading] = useState(false);
   const [data, setData] = useState([]);
-  const [favoruite, setfavoruite] = useState([]);
+  const [favorites, setFavorites] = useState([]);
   const [open, setOpen] = useState(false);
 
   const search = useSearchStore((state) => state.search);
-  const user = useUserStore((state) => state.user);
-
-  const service = postProvider.service;
+  const user = useAuthStore((state) => state.user);
   const postActions = usePostActions();
 
   useEffect(() => {
@@ -24,20 +27,14 @@ export default function usePost() {
       setLoading(true);
 
       try {
-        const res = await service.getPosts({
-          search,
-        });
-
-        if (!ignore) {
-          setData(res);
-        }
+        const posts = await postService.getPosts({ search });
+        if (!ignore) setData(posts);
       } catch (error) {
+        if (!ignore) toast.error(getErrorMessage(error, "Gönderiler alınamadı"));
       } finally {
-        if (!ignore) {
-          setLoading(false);
-        }
+        if (!ignore) setLoading(false);
       }
-    }, 500);
+    }, SEARCH_DEBOUNCE_MS);
 
     return () => {
       ignore = true;
@@ -45,118 +42,79 @@ export default function usePost() {
     };
   }, [search]);
 
-  const handlePostLike = async (id) => {
-    const res = await postActions.likePost(id);
-    if (!res) return;
+  const fetchSavedPosts = useCallback(async () => {
+    setLoading(true);
 
-    setData((prev) =>
-      prev.map((post) =>
-        post._id === id
-          ? {
-              ...post,
-              likes: res.likes,
-              liked: res.liked,
-            }
-          : post
-      )
-    );
-  };
-
-  const fetchSavedPosts = async () => {
     try {
-      setLoading(true);
-
-      const res = await service.getSavedPosts();
-
-      setfavoruite(res);
+      setFavorites(await postService.getSavedPosts());
     } catch (error) {
+      toast.error(getErrorMessage(error, "Kaydedilen gönderiler alınamadı"));
     } finally {
       setLoading(false);
     }
+  }, []);
+
+  const handlePostLike = async (id) => {
+    const result = await postActions.likePost(id);
+    if (!result) return;
+
+    const applyLike = (post) =>
+      post._id === id ? { ...post, likes: result.likes, liked: result.liked } : post;
+    setData((prev) => prev.map(applyLike));
+    setFavorites((prev) => prev.map(applyLike));
   };
 
   const handlePostSave = async (id) => {
-    const res = await postActions.savePost(id);
-    if (!res) return;
+    const result = await postActions.savePost(id);
+    if (!result) return;
 
-    setData((prev) =>
-      prev.map((post) => {
-        if (post._id !== id) return post;
+    setData((prev) => prev.map((post) => (post._id === id ? toggleSavedBy(post, user?._id) : post)));
 
-        const savedBy = Array.isArray(post.savedBy) ? post.savedBy : [];
-        const userId = user?.id || user?._id;
-
-        const alreadySaved = savedBy.some(
-          (savedUser) => savedUser === userId || savedUser?._id === userId
-        );
-
-        return {
-          ...post,
-          savedBy: alreadySaved
-            ? savedBy.filter(
-                (savedUser) =>
-                  savedUser !== userId && savedUser?._id !== userId
-              )
-            : [...savedBy, userId],
-        };
-      })
-    );
-
-    if (res.saved === false) {
+    if (result.saved === false) {
       await fetchSavedPosts();
     }
   };
 
   const handleUpdatePost = async (id, formData) => {
     setLoading(true);
-
     const updatedPost = await postActions.updatePost(id, formData);
-
     setLoading(false);
 
     if (!updatedPost) return false;
 
-    setData((prev) =>
-      prev.map((post) => (post._id === id ? updatedPost : post))
-    );
-
+    setData((prev) => prev.map((post) => (post._id === id ? updatedPost : post)));
     setOpen(false);
     return true;
   };
 
   const handleDeletePost = async (id) => {
     const ok = await postActions.deletePost(id);
-    if (!ok) return;
-
-    setData((prev) => prev.filter((post) => post._id !== id));
+    if (ok) setData((prev) => prev.filter((post) => post._id !== id));
   };
 
   const followId = async (id) => {
     try {
-      await service.followUser(id);
+      const result = await accountService.toggleFollow(id);
+      toast.info(result.message);
       setOpenList(false);
-    } catch (error) {}
+    } catch (error) {
+      toast.error(getErrorMessage(error, "Takip işlemi başarısız oldu."));
+    }
   };
 
   return {
     data,
     loading,
     user,
-
     handlePostLike,
     handlePostSave,
     fetchSavedPosts,
-
-    favoruite,
-
+    favorites,
     followId,
-
     handleUpdatePost,
     handleDeletePost,
-
     openList,
     open,
-
     setOpen,
     setOpenList,
   };

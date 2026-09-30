@@ -1,78 +1,58 @@
-import { useState } from "react";
-import { postProvider } from "@/providers/post.provider";
 import { toast } from "react-toastify";
+import { getErrorMessage } from "@/shared/api/apiClient";
+import { postService } from "../services/post.service";
 
-export default function usePostActions() {
-  const [feedbackLoading, setFeedbackLoading] = useState(false);
+const likePost = async (id) => {
+  try {
+    return await postService.likePost(id);
+  } catch (error) {
+    toast.error(getErrorMessage(error, "Beğeni işlemi başarısız oldu."));
+    return null;
+  }
+};
 
-  const service = postProvider.service;
+const savePost = async (id) => {
+  try {
+    return await postService.savePost(id);
+  } catch (error) {
+    toast.error(getErrorMessage(error, "Kaydetme işlemi başarısız oldu."));
+    return null;
+  }
+};
 
-  const likePost = async (id) => {
-    try {
-      return await service.likePost(id);
-    } catch (error) {
-      toast.error("Beğeni işlemi başarısız oldu.");
-      return null;
-    }
-  };
+const deletePost = async (id) => {
+  try {
+    await postService.deletePost(id);
+    return true;
+  } catch (error) {
+    toast.error(getErrorMessage(error, "Gönderi silinirken bir hata oluştu."));
+    return false;
+  }
+};
 
-  const savePost = async (id) => {
-    try {
-      return await service.savePost(id);
-    } catch (error) {
-      toast.error("Kaydetme işlemi başarısız oldu.");
-      return null;
-    }
-  };
+const updatePost = async (id, formData) => {
+  try {
+    const result = await postService.updatePost(id, formData);
+    toast.info(result.message || "Gönderi başarıyla güncellendi");
+    return result.post;
+  } catch (error) {
+    toast.error(getErrorMessage(error, "Gönderi güncellenirken bir hata oluştu."));
+    return null;
+  }
+};
 
-  const deletePost = async (id) => {
-    try {
-      await service.deletePost(id);
-      return true;
-    } catch (error) {
-      toast.error("Gönderi silinirken bir hata oluştu.");
-      return false;
-    }
-  };
+const postActions = { likePost, savePost, deletePost, updatePost };
 
-  const updatePost = async (id, formData) => {
-    try {
-      const res = await service.updatePost(id, formData);
-      toast.info(res.message || "Gönderi başarıyla güncellendi");
-      return res.post;
-    } catch (error) {
-      toast.error(
-        error.response?.data?.message ||
-          "Gönderi güncellenirken bir hata oluştu."
-      );
-      return null;
-    }
-  };
+export function usePostActions() {
+  return postActions;
+}
 
-  const sendFeedback = async (payload) => {
-    try {
-      setFeedbackLoading(true);
-
-      const res = await service.sendFeedback(payload);
-
-      toast.info(res.message || "Başarılı");
-      return true;
-    } catch (error) {
-      toast.error(
-        error.response?.data?.message || "Geri bildirim gönderilemedi."
-      );
-      return false;
-    } finally {
-      setFeedbackLoading(false);
-    }
-  };
+export const toggleSavedBy = (post, userId) => {
+  const savedBy = Array.isArray(post.savedBy) ? post.savedBy : [];
+  const matches = (saved) => saved === userId || saved?._id === userId;
 
   return {
-    likePost,
-    savePost,
-    deletePost,
-    updatePost,
-    sendFeedback,
-    feedbackLoading,
+    ...post,
+    savedBy: savedBy.some(matches) ? savedBy.filter((saved) => !matches(saved)) : [...savedBy, userId],
   };
-}
+};

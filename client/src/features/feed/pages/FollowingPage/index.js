@@ -1,0 +1,1 @@
+export { FollowingPage } from "./FollowingPage";

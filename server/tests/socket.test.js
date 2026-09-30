@@ -78,7 +78,9 @@ describe("socket mesajlaşma", () => {
     const bob = await createSession();
     const eve = await createSession();
 
-    const [aliceClient, bobClient, eveClient] = [alice, bob, eve].map((session) => connect(session.accessToken));
+    const [aliceClient, bobClient, eveClient] = [alice, bob, eve].map((session) =>
+      connect(session.accessToken)
+    );
     await Promise.all([aliceClient, bobClient, eveClient].map(waitForConnection));
 
     const bobReceives = waitForEvent(bobClient, "message:new");

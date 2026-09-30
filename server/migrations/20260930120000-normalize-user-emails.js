@@ -3,7 +3,13 @@ const findCollidingEmails = (db) =>
     .collection("users")
     .aggregate([
       { $match: { email: { $type: "string" } } },
-      { $group: { _id: { $toLower: { $trim: { input: "$email" } } }, ids: { $push: "$_id" }, count: { $sum: 1 } } },
+      {
+        $group: {
+          _id: { $toLower: { $trim: { input: "$email" } } },
+          ids: { $push: "$_id" },
+          count: { $sum: 1 },
+        },
+      },
       { $match: { count: { $gt: 1 } } },
     ])
     .toArray();
@@ -18,7 +24,9 @@ export const up = async (db) => {
 
   await db
     .collection("users")
-    .updateMany({ email: { $type: "string" } }, [{ $set: { email: { $toLower: { $trim: { input: "$email" } } } } }]);
+    .updateMany({ email: { $type: "string" } }, [
+      { $set: { email: { $toLower: { $trim: { input: "$email" } } } } },
+    ]);
 };
 
 export const down = async () => {};

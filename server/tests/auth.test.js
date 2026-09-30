@@ -2,9 +2,21 @@ import { describe, expect, it, vi } from "vitest";
 import RefreshToken from "../src/models/RefreshToken.js";
 import User from "../src/models/User.js";
 import { REFRESH_RACE_GRACE_MS } from "../src/services/token.service.js";
-import { ORIGIN, PASSWORD, api, createSession, extractRefreshCookie, login, registerUser } from "./helpers.js";
+import {
+  ORIGIN,
+  PASSWORD,
+  api,
+  createSession,
+  extractRefreshCookie,
+  login,
+  registerUser,
+} from "./helpers.js";
 
-const refresh = (cookie) => api().post("/api/auth/refresh").set("Origin", ORIGIN).set("Cookie", cookie ?? "");
+const refresh = (cookie) =>
+  api()
+    .post("/api/auth/refresh")
+    .set("Origin", ORIGIN)
+    .set("Cookie", cookie ?? "");
 
 describe("kayıt", () => {
   it("e-postayı normalize eder ve şifre hash'ini döndürmez", async () => {
@@ -50,8 +62,12 @@ describe("giriş", () => {
 
   it("olmayan kullanıcı ve yanlış şifre için aynı yanıtı verir", async () => {
     const user = await registerUser();
-    const wrongPassword = await api().post("/api/auth/login").send({ email: user.email, password: "yanlis-sifre" });
-    const unknownUser = await api().post("/api/auth/login").send({ email: "yok@ornek.com", password: "yanlis-sifre" });
+    const wrongPassword = await api()
+      .post("/api/auth/login")
+      .send({ email: user.email, password: "yanlis-sifre" });
+    const unknownUser = await api()
+      .post("/api/auth/login")
+      .send({ email: "yok@ornek.com", password: "yanlis-sifre" });
 
     expect(wrongPassword.status).toBe(401);
     expect(unknownUser.status).toBe(401);
@@ -101,7 +117,10 @@ describe("refresh token", () => {
 
   it("izin verilmeyen origin'den gelen yenilemeyi reddeder", async () => {
     const { cookie } = await createSession();
-    const response = await api().post("/api/auth/refresh").set("Origin", "https://kotu.site").set("Cookie", cookie);
+    const response = await api()
+      .post("/api/auth/refresh")
+      .set("Origin", "https://kotu.site")
+      .set("Cookie", cookie);
 
     expect(response.status).toBe(403);
   });
@@ -167,7 +186,9 @@ describe("şifre değişikliği", () => {
     expect(oldToken.body.code).toBe("TOKEN_STALE");
     expect((await refresh(cookie)).status).toBe(401);
 
-    const newToken = await api().get("/api/users/me").set("Authorization", `Bearer ${response.body.accessToken}`);
+    const newToken = await api()
+      .get("/api/users/me")
+      .set("Authorization", `Bearer ${response.body.accessToken}`);
     expect(newToken.status).toBe(200);
   });
 });

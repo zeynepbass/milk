@@ -1,5 +1,7 @@
 import * as userService from "../services/user.service.js";
-import { getLimit } from "../utils/pagination.js";
+import * as followService from "../services/follow.service.js";
+import * as postService from "../services/post.service.js";
+import { uploadedUrls } from "../middleware/upload.js";
 import { clearRefreshCookie, requestMeta, setRefreshCookie } from "../utils/sessionCookie.js";
 
 export const getMe = async (req, res) => {
@@ -23,7 +25,8 @@ export const changeEmail = async (req, res) => {
 };
 
 export const updateAvatar = async (req, res) => {
-  const user = await userService.updateAvatar(req.userId, req.file);
+  const [avatarUrl] = uploadedUrls(req);
+  const user = await userService.updateAvatar(req.userId, avatarUrl);
   res.json({ message: "Profil fotoğrafı güncellendi", user });
 };
 
@@ -36,16 +39,35 @@ export const freezeMe = async (req, res) => {
 export const deleteMe = async (req, res) => {
   await userService.deleteMe(req.userId, req.body);
   clearRefreshCookie(res);
-  res.json({ message: "Kullanıcı başarıyla silindi" });
+  res.json({ message: "Hesabınız silindi" });
 };
 
-export const followUser = async (req, res) => {
-  const { following } = await userService.toggleFollow(req.userId, req.params.id);
-  res.json({ following, message: following ? "Takip edildi" : "Takipten çıkıldı" });
+export const getProfile = async (req, res) => {
+  res.json(await userService.getPublicProfile(req.params.id, req.userId));
+};
+
+export const getUserPosts = async (req, res) => {
+  res.json(await postService.listUserPosts(req.params.id, req.userId, req.query));
+};
+
+export const follow = async (req, res) => {
+  res.json(await followService.follow(req.userId, req.params.id));
+};
+
+export const unfollow = async (req, res) => {
+  res.json(await followService.unfollow(req.userId, req.params.id));
+};
+
+export const getFollowers = async (req, res) => {
+  res.json(await followService.listFollowers(req.params.id, req.query));
+};
+
+export const getFollowing = async (req, res) => {
+  res.json(await followService.listFollowing(req.params.id, req.query));
 };
 
 export const getUsers = async (req, res) => {
-  res.json(await userService.listUsers(getLimit(req)));
+  res.json(await userService.listUsers(req.query));
 };
 
 export const updateOrganicStatus = async (req, res) => {
@@ -64,5 +86,5 @@ export const createFeedback = async (req, res) => {
 };
 
 export const getFeedbacks = async (req, res) => {
-  res.json(await userService.listFeedbacks());
+  res.json(await userService.listFeedbacks(req.query));
 };

@@ -1,55 +1,40 @@
-import { useEffect, useState } from "react";
-import { postProvider } from "@/providers/post.provider";
-import {
-  useSearchStore
-} from "@/shared/store/useSearchStore";
-import {
-  useUserStore
-} from "@/shared/store/useUserStore";
+import { useCallback, useEffect, useState } from "react";
 import { toast } from "react-toastify";
-import usePostActions from "@/features/feed/hooks/post/usePostActions";
+import { getErrorMessage } from "@/shared/api/apiClient";
+import { useSearchStore } from "@/shared/store/useSearchStore";
+import { useAuthStore } from "@/shared/store/useAuthStore";
+import { postService } from "../services/post.service";
+import { toggleSavedBy, usePostActions } from "./usePostActions";
 
-export default function useMyPosts() {
+const SEARCH_DEBOUNCE_MS = 500;
+
+const initialForm = (user) => ({
+  ownerName: user?.name,
+  ownerSurname: user?.surname,
+  ownerRole: user?.role,
+  title: "",
+  description: "",
+  district: user?.district,
+  province: user?.province,
+  category: "",
+  images: [],
+});
+
+export function useMyPosts() {
   const [details, setDetails] = useState([]);
   const [editPostId, setEditPostId] = useState(null);
   const [following, setFollowing] = useState([]);
   const [loadingPost, setLoading] = useState(false);
   const [postLoading, setPostLoading] = useState(false);
 
-  const user = useUserStore((state) => state.user);
+  const user = useAuthStore((state) => state.user);
   const search = useSearchStore((state) => state.search);
-
-  const postService = postProvider.service;
   const postActions = usePostActions();
 
-  const [form, setForm] = useState({
-    ownerName: user?.name,
-    ownerSurname: user?.surname,
-    ownerRole: user?.role,
-    title: "",
-    description: "",
-    district: user?.district,
-    image: user?.avatar,
-    province: user?.province,
-    category: "",
-    images: [],
-  });
+  const [form, setForm] = useState(() => initialForm(user));
 
   useEffect(() => {
-    if (!user) return;
-
-    setForm((prev) => ({
-      ...prev,
-      ownerName: user.name,
-      ownerSurname: user.surname,
-      ownerRole: user.role,
-      title: "",
-      description: "",
-      district: user.district,
-      province: user.province,
-      category: "",
-      images: [],
-    }));
+    if (user) setForm(initialForm(user));
   }, [user]);
 
   useEffect(() => {
@@ -59,20 +44,14 @@ export default function useMyPosts() {
       setLoading(true);
 
       try {
-        const res = await postService.getFollowingPosts({
-          search,
-        });
-
-        if (!ignore) {
-          setFollowing(res);
-        }
+        const posts = await postService.getFollowingPosts({ search });
+        if (!ignore) setFollowing(posts);
       } catch (error) {
+        if (!ignore) toast.error(getErrorMessage(error, "Takip edilen gönderiler alınamadı"));
       } finally {
-        if (!ignore) {
-          setLoading(false);
-        }
+        if (!ignore) setLoading(false);
       }
-    }, 500);
+    }, SEARCH_DEBOUNCE_MS);
 
     return () => {
       ignore = true;
@@ -80,37 +59,31 @@ export default function useMyPosts() {
     };
   }, [search]);
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+
     try {
-      setLoading(true);
-
-      const res = await postService.getMyPosts();
-
-      setDetails(res);
+      setDetails(await postService.getMyPosts());
     } catch (error) {
+      toast.error(getErrorMessage(error, "Gönderiler alınamadı"));
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [fetchData]);
 
   const onSubmit = async (formData) => {
+    setPostLoading(true);
+
     try {
-      setPostLoading(true);
-
-      const res = await postService.createPost(formData);
-
-      toast.success(res.message || "Başarılı");
-
-      setDetails((prev) => [res.post, ...prev]);
+      const result = await postService.createPost(formData);
+      toast.success(result.message || "Başarılı");
+      setDetails((prev) => [result.post, ...prev]);
     } catch (error) {
-      toast.error(
-        error.response?.data?.message ||
-          "Hata oluştu."
-      );
+      toast.error(getErrorMessage(error, "Hata oluştu."));
     } finally {
       setPostLoading(false);
     }
@@ -118,92 +91,49 @@ export default function useMyPosts() {
 
   const deleted = async (postId) => {
     const ok = await postActions.deletePost(postId);
-    if (!ok) return;
-
-    setDetails((prev) => prev.filter((item) => item._id !== postId));
+    if (ok) setDetails((prev) => prev.filter((item) => item._id !== postId));
   };
 
   const handlePostLike = async (id) => {
-    const res = await postActions.likePost(id);
-    if (!res) return;
+    const result = await postActions.likePost(id);
+    if (!result) return;
 
     setDetails((prev) =>
-      prev.map((post) =>
-        post._id === id
-          ? {
-              ...post,
-              likes: res.likes,
-              liked: res.liked,
-            }
-          : post
-      )
+      prev.map((post) => (post._id === id ? { ...post, likes: result.likes, liked: result.liked } : post))
     );
   };
 
   const handlePostSave = async (id) => {
-    const res = await postActions.savePost(id);
-    if (!res) return;
+    const result = await postActions.savePost(id);
+    if (!result) return;
 
-    const userId = user?.id || user?._id;
-
-    setDetails((prev) =>
-      prev.map((post) => {
-        if (post._id !== id) return post;
-
-        const savedBy = Array.isArray(post.savedBy) ? post.savedBy : [];
-
-        const alreadySaved = savedBy.some(
-          (savedUser) => savedUser === userId || savedUser?._id === userId
-        );
-
-        return {
-          ...post,
-          savedBy: alreadySaved
-            ? savedBy.filter(
-                (savedUser) =>
-                  savedUser !== userId && savedUser?._id !== userId
-              )
-            : [...savedBy, userId],
-        };
-      })
-    );
+    setDetails((prev) => prev.map((post) => (post._id === id ? toggleSavedBy(post, user?._id) : post)));
   };
 
   const handleUpdatePost = async (id, formData) => {
     setLoading(true);
-
     const updatedPost = await postActions.updatePost(id, formData);
-
     setLoading(false);
 
     if (!updatedPost) return false;
 
-    setDetails((prev) =>
-      prev.map((post) => (post._id === id ? updatedPost : post))
-    );
-
+    setDetails((prev) => prev.map((post) => (post._id === id ? updatedPost : post)));
     return true;
   };
 
   return {
     details,
     following,
-
     onSubmit,
-
     postLoading,
     loadingPost,
-
     setForm,
     form,
-
     deleted,
     handlePostLike,
     handlePostSave,
     handleUpdatePost,
-
     user,
-
     editPostId,
     setEditPostId,
   };

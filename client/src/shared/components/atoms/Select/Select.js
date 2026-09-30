@@ -1,4 +1,3 @@
-
 export function Select({
   label,
   options = [],
@@ -18,11 +17,7 @@ export function Select({
 
   return (
     <div className="relative">
-      {label && (
-        <label className="block text-sm text-gray-500 pb-2">
-          {label}
-        </label>
-      )}
+      {label && <label className="block text-sm text-gray-500 pb-2">{label}</label>}
 
       <select
         {...props}
@@ -40,11 +35,7 @@ export function Select({
         ))}
       </select>
 
-      {error && (
-        <p className="text-xs text-red-400 mt-1">
-          {error}
-        </p>
-      )}
+      {error && <p className="text-xs text-red-400 mt-1">{error}</p>}
     </div>
   );
 }

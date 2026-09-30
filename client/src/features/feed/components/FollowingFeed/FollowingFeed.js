@@ -1,34 +1,19 @@
 import { useState } from "react";
-import usePostAll from "@/features/feed/hooks/post/usePost";
-import useMyPosts from "@/features/feed/hooks/user/useUserPost";
-import useCommentAll from "@/features/feed/hooks/comments/useComments";
-import { useNavigate } from "react-router-dom";
-import {Loading} from "@/shared/components/atoms"
-import {Card,Sortered} from "@/shared/components/molecules"
-export function FollowingPost() {
-  const navigate = useNavigate();
+import { Loading } from "@/shared/components/atoms";
+import { EmptyPostList } from "@/shared/components/molecules";
+import { PostCard } from "@/features/posts/components/PostCard";
+import { useComments } from "@/features/posts/hooks/useComments";
+import { useMyPosts } from "@/features/posts/hooks/useMyPosts";
+import { useExploreFeed } from "../../hooks/useExploreFeed";
+
+export function FollowingFeed() {
   const [selected, setSelected] = useState(null);
   const handleShowed = (id) => {
     setSelected((prev) => (prev === id ? null : id));
   };
 
-  const {
-
-    loading,
-    user,
-    followId,
-    handlePostLike,
-    handlePostSave,
-    open,
-    setOpen,
-  } = usePostAll();
-  const {
-    deleted,
-    editPostId,
-    setEditPostId,
-    following,
-    handleUpdatePost,
-  } = useMyPosts();
+  const { loading, user, followId, handlePostLike, handlePostSave, open, setOpen } = useExploreFeed();
+  const { deleted, editPostId, setEditPostId, following, handleUpdatePost } = useMyPosts();
   const {
     handleComment,
     handleDelete,
@@ -37,7 +22,7 @@ export function FollowingPost() {
     comments,
     newComment,
     setNewComment,
-  } = useCommentAll(selected);
+  } = useComments(selected);
   const sortedData = [...(following || [])].sort(
     (a, b) => b.user?.dogrulanmisSatici - a.user?.dogrulanmisSatici
   );
@@ -45,11 +30,10 @@ export function FollowingPost() {
 
   return (
     <div className="h-[100vh] overflow-auto p-4 ">
-      <Sortered sortedData={sortedData} />
+      <EmptyPostList items={sortedData} />
 
       <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-        <Card
-        navigate={navigate}
+        <PostCard
           data={sortedData || []}
           selected={selected}
           newComment={newComment}

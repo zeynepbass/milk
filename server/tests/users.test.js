@@ -14,7 +14,10 @@ describe("profil güncelleme", () => {
     const { user, auth } = await createSession();
     const before = await User.findById(user._id).select("+password").lean();
 
-    const response = await api().patch("/api/users/me").set(auth).send({ name: "Yeni", [field]: value });
+    const response = await api()
+      .patch("/api/users/me")
+      .set(auth)
+      .send({ name: "Yeni", [field]: value });
 
     expect(response.status).toBe(400);
     expect(response.body.code).toBe("VALIDATION_ERROR");
@@ -129,7 +132,10 @@ describe("admin işlemleri", () => {
     const target = await createSession();
     const { auth } = await createSession();
 
-    const response = await api().patch(`/api/users/${target.user._id}/role`).set(auth).send({ role: "admin" });
+    const response = await api()
+      .patch(`/api/users/${target.user._id}/role`)
+      .set(auth)
+      .send({ role: "admin" });
     expect(response.status).toBe(403);
   });
 

@@ -49,7 +49,13 @@ export function ChangePasswordForm({ onSubmit }) {
         className="py-2"
       />
 
-      <Button type="submit" variant="primary" loading={loading} loadingText="Kaydediliyor..." text="Şifreyi güncelle" />
+      <Button
+        type="submit"
+        variant="primary"
+        loading={loading}
+        loadingText="Kaydediliyor..."
+        text="Şifreyi güncelle"
+      />
     </form>
   );
 }

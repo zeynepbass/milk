@@ -1,41 +1,88 @@
+import mongoose from "mongoose";
 import Comment from "../models/Comment.js";
 import Post from "../models/Post.js";
 import { forbidden, notFound } from "../utils/AppError.js";
+import { paginate } from "../utils/pagination.js";
+import { enqueueJob } from "../jobs/queue.js";
 
-const LIKER_FIELDS = "name surname avatar";
+const AUTHOR_FIELDS = "name surname avatar";
 
 const commentNotFound = () => notFound("Yorum bulunamadı", "COMMENT_NOT_FOUND");
 
-export const listComments = (postId) =>
-  Comment.find({ post: postId, isActive: true })
-    .populate("user", "name surname avatar")
-    .sort({ createdAt: -1 })
-    .lean();
+const viewerProjection = (viewerId) => ({
+  post: 1,
+  user: 1,
+  text: 1,
+  likesCount: 1,
+  isEdited: 1,
+  createdAt: 1,
+  updatedAt: 1,
+  likedByMe: viewerId
+    ? { $in: [new mongoose.Types.ObjectId(viewerId.toString()), { $ifNull: ["$likes", []] }] }
+    : { $literal: false },
+});
 
-export const addComment = async (userId, postId, text) => {
+const assertActivePost = async (postId) => {
   if (!(await Post.exists({ _id: postId, isActive: true }))) {
     throw notFound("Gönderi bulunamadı", "POST_NOT_FOUND");
   }
-
-  const comment = await Comment.create({ post: postId, user: userId, text });
-  return Comment.findById(comment._id).populate("user", "name surname avatar").lean();
 };
 
-export const toggleLike = async (userId, commentId) => {
-  const comment = await Comment.findOne({ _id: commentId, isActive: true }).select("likes").lean();
-  if (!comment) throw commentNotFound();
-
-  const liked = comment.likes.some((id) => id.toString() === userId.toString());
-
-  const updated = await Comment.findOneAndUpdate(
-    { _id: commentId },
-    { [liked ? "$pull" : "$addToSet"]: { likes: userId } },
-    { returnDocument: "after" }
-  )
-    .populate("likes", LIKER_FIELDS)
+const getCommentView = async (commentId, viewerId) => {
+  const comment = await Comment.findOne({ _id: commentId, isActive: true }, viewerProjection(viewerId))
+    .populate("user", AUTHOR_FIELDS)
     .lean();
 
-  return { likesCount: updated.likes.length, liked: !liked, likes: updated.likes };
+  if (!comment) throw commentNotFound();
+  return comment;
+};
+
+export const listComments = async (postId, viewerId, { cursor, limit }) => {
+  await assertActivePost(postId);
+
+  return paginate(Comment, { post: new mongoose.Types.ObjectId(postId.toString()), isActive: true }, {
+    cursor,
+    limit,
+    projection: viewerProjection(viewerId),
+    populate: { path: "user", select: AUTHOR_FIELDS },
+  });
+};
+
+export const addComment = async (userId, postId, text) => {
+  await assertActivePost(postId);
+
+  const comment = await Comment.create({ post: postId, user: userId, text });
+  await enqueueJob("notify:activity", {
+    type: "post_comment",
+    actorId: userId,
+    postId,
+    commentId: comment._id,
+  });
+
+  return getCommentView(comment._id, userId);
+};
+
+const assertActiveComment = async (commentId) => {
+  if (!(await Comment.exists({ _id: commentId, isActive: true }))) throw commentNotFound();
+};
+
+export const likeComment = async (userId, commentId) => {
+  await assertActiveComment(commentId);
+  await Comment.updateOne(
+    { _id: commentId, likes: { $ne: userId } },
+    { $addToSet: { likes: userId }, $inc: { likesCount: 1 } }
+  );
+
+  const view = await getCommentView(commentId, userId);
+  return { commentId, liked: view.likedByMe, likesCount: view.likesCount };
+};
+
+export const unlikeComment = async (userId, commentId) => {
+  await assertActiveComment(commentId);
+  await Comment.updateOne({ _id: commentId, likes: userId }, { $pull: { likes: userId }, $inc: { likesCount: -1 } });
+
+  const view = await getCommentView(commentId, userId);
+  return { commentId, liked: view.likedByMe, likesCount: view.likesCount };
 };
 
 export const deleteComment = async (userId, commentId) => {

@@ -1,24 +1,13 @@
 import { useEffect, useState } from "react";
-import usePostAll from "@/features/feed/hooks/post/usePostDetails";
-import {
-  Input,
-  Select,
-  Textarea,
-  Button,
-} from "@/shared/components/atoms";
-import {
-  XMarkIcon,
-  ArrowRightIcon,
-} from "@heroicons/react/24/outline";
+import { usePostDetails } from "../../hooks/usePostDetails";
+import { Input, Select, Textarea, Button } from "@/shared/components/atoms";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 
-export const UpdatedPostForm = ({ editPostId, setOpen, onUpdate }) => {
-  const { details } = usePostAll(editPostId);
+export const UpdatePostForm = ({ editPostId, setOpen, onUpdate }) => {
+  const { details } = usePostDetails(editPostId);
   const [loading, setLoading] = useState(false);
 
   const [formData, setForm] = useState({
-    ownerName: "",
-    ownerSurname: "",
-    ownerRole: "",
     title: "",
     description: "",
     province: "",
@@ -51,9 +40,6 @@ export const UpdatedPostForm = ({ editPostId, setOpen, onUpdate }) => {
     if (!details) return;
 
     setForm({
-      ownerName: details.ownerName || "",
-      ownerSurname: details.ownerSurname || "",
-      ownerRole: details.ownerRole || "",
       title: details.title || "",
       description: details.description || "",
       province: details.province || "",
@@ -68,9 +54,6 @@ export const UpdatedPostForm = ({ editPostId, setOpen, onUpdate }) => {
 
     const formDataToSend = new FormData();
 
-    formDataToSend.append("ownerName", formData.ownerName);
-    formDataToSend.append("ownerSurname", formData.ownerSurname);
-    formDataToSend.append("ownerRole", formData.ownerRole);
     formDataToSend.append("title", formData.title);
     formDataToSend.append("description", formData.description);
     formDataToSend.append("province", formData.province);
@@ -93,14 +76,9 @@ export const UpdatedPostForm = ({ editPostId, setOpen, onUpdate }) => {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      className="max-w-4xl mx-auto p-2 space-y-6 "
-    >
+    <form onSubmit={handleSubmit} className="max-w-4xl mx-auto p-2 space-y-6 ">
       <div className="flex items-center justify-between">
-        <h2 className="text-2xl font-bold text-gray-500 dark:text-gray-300">
-          Gönderiyi Düzenle
-        </h2>
+        <h2 className="text-2xl font-bold text-gray-500 dark:text-gray-300">Gönderiyi Düzenle</h2>
 
         <Button
           type="button"
@@ -110,35 +88,6 @@ export const UpdatedPostForm = ({ editPostId, setOpen, onUpdate }) => {
           <XMarkIcon className="w-6 h-6" />
         </Button>
       </div>
-
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <Input
-          name="ownerName"
-          placeholder="Ad"
-          value={formData.ownerName}
-          onChange={handleChange}
-          className="py-2"
-        />
-
-        <Input
-          name="ownerSurname"
-          placeholder="Soyad"
-          value={formData.ownerSurname}
-          onChange={handleChange}
-          className="py-2"
-        />
-      </div>
-
-      <Select
-        name="ownerRole"
-        value={formData.ownerRole}
-        onChange={handleChange}
-        placeholder="Rol seçiniz"
-        options={[
-          { value: "alici", label: "Alıcı" },
-          { value: "satici", label: "Satıcı" },
-        ]}
-      />
 
       <Input
         name="title"
@@ -192,15 +141,14 @@ export const UpdatedPostForm = ({ editPostId, setOpen, onUpdate }) => {
       <input
         type="file"
         multiple
-        accept="image/*"
+        accept="image/jpeg,image/png,image/webp"
+        aria-label="Yeni görseller ekle"
         onChange={handleImages}
         className="w-full"
       />
 
       {formData.images.length > 0 && (
-        <p className="text-sm text-gray-500">
-          {formData.images.length} görsel seçildi
-        </p>
+        <p className="text-sm text-gray-500">{formData.images.length} görsel seçildi</p>
       )}
 
       <div className="flex justify-end">

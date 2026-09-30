@@ -8,7 +8,8 @@ export const REFRESH_RACE_GRACE_MS = 10 * 1000;
 
 const hashToken = (token) => createHash("sha256").update(token).digest("hex");
 
-const invalidRefresh = () => unauthorized("Oturumun süresi doldu, lütfen tekrar giriş yapın", "REFRESH_INVALID");
+const invalidRefresh = () =>
+  unauthorized("Oturumun süresi doldu, lütfen tekrar giriş yapın", "REFRESH_INVALID");
 
 export const createRefreshToken = async ({ userId, familyId = randomUUID(), meta = {} }) => {
   const token = randomBytes(32).toString("base64url");
@@ -39,7 +40,10 @@ const handleReplacedToken = async (stored) => {
   }
 
   await revokeFamily(stored.familyId);
-  logger.warn({ userId: stored.user.toString(), familyId: stored.familyId }, "Refresh token yeniden kullanımı tespit edildi");
+  logger.warn(
+    { userId: stored.user.toString(), familyId: stored.familyId },
+    "Refresh token yeniden kullanımı tespit edildi"
+  );
   throw invalidRefresh();
 };
 

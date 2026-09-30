@@ -1,9 +1,5 @@
 import { useState } from "react";
-import {
-  ArrowRightIcon,
-  DocumentIcon,
-  XMarkIcon,
-} from "@heroicons/react/24/outline";
+import { ArrowRightIcon, DocumentIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { toast } from "react-toastify";
 import { Heading, Button } from "@/shared/components/atoms";
 
@@ -46,36 +42,20 @@ export function OrganicForm() {
             hover:border-blue-400 dark:hover:border-gray-500
           "
         >
-          <input
-            type="file"
-            accept="application/pdf"
-            onChange={handleFile}
-            className="hidden"
-          />
+          <input type="file" accept="application/pdf" onChange={handleFile} className="hidden" />
 
           <DocumentIcon className="w-10 h-10 text-gray-400 mb-2" />
 
-          <p className="text-sm text-gray-500">
-            PDF dosyanızı seçmek için tıklayın
-          </p>
+          <p className="text-sm text-gray-500">PDF dosyanızı seçmek için tıklayın</p>
 
-          <p className="text-xs text-gray-400 mt-1">
-            (Sadece .pdf formatı desteklenir)
-          </p>
+          <p className="text-xs text-gray-400 mt-1">(Sadece .pdf formatı desteklenir)</p>
         </label>
 
         {file && (
           <div className="flex items-center justify-between border rounded-lg px-4 py-2 bg-gray-50">
-            <span className="text-sm text-gray-700 truncate">
-              {file.name}
-            </span>
+            <span className="text-sm text-gray-700 truncate">{file.name}</span>
 
-            <Button
-              type="button"
-              onClick={removeFile}
-              icon={XMarkIcon}
-              variant="danger"
-            />
+            <Button type="button" onClick={removeFile} icon={XMarkIcon} variant="danger" />
           </div>
         )}
 

@@ -21,7 +21,10 @@ const refreshLastMessage = async (db, conversationId) => {
   if (latest) {
     await db
       .collection("conversations")
-      .updateOne({ _id: conversationId }, { $set: { lastMessage: latest.text, lastMessageAt: latest.createdAt } });
+      .updateOne(
+        { _id: conversationId },
+        { $set: { lastMessage: latest.text, lastMessageAt: latest.createdAt } }
+      );
   }
 };
 

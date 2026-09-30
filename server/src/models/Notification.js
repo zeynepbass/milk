@@ -1,51 +1,27 @@
 import mongoose from "mongoose";
 
+export const NOTIFICATION_TYPES = ["new_post", "post_like", "post_comment", "follow"];
+export const ENTITY_KINDS = ["post", "comment", "user"];
+
 const notificationSchema = new mongoose.Schema(
   {
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
+    recipient: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    actor: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    type: { type: String, enum: NOTIFICATION_TYPES, required: true },
+    entity: {
+      kind: { type: String, enum: ENTITY_KINDS, required: true },
+      id: { type: mongoose.Schema.Types.ObjectId, required: true },
     },
-    senderId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-    },
-    postId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Post",
-    },
-    type: {
-      type: String,
-      enum: ["new_post"],
-      required: true,
-    },
-
-    province: {
-      type: String,
-      required: true,
-    },
-    name: {
-      type: String,
-    },
-    surname: {
-      type: String,
-    },
-    date: {
-      type: String,
-      required: true,
-    },
-
-    isRead: {
-      type: Boolean,
-      default: false,
-    },
+    groupKey: { type: String, required: true },
+    count: { type: Number, default: 1, min: 1 },
+    isRead: { type: Boolean, default: false },
+    lastActivityAt: { type: Date, default: Date.now },
   },
-  {
-    timestamps: true,
-  }
+  { timestamps: true }
 );
 
-notificationSchema.index({ userId: 1, createdAt: -1 });
+notificationSchema.index({ recipient: 1, lastActivityAt: -1, _id: -1 });
+notificationSchema.index({ recipient: 1, isRead: 1 });
+notificationSchema.index({ recipient: 1, groupKey: 1, isRead: 1, lastActivityAt: -1 });
 
 export default mongoose.model("Notification", notificationSchema);

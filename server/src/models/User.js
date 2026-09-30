@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
+import { ROLES, SELF_ASSIGNABLE_ROLES } from "../validators/rules.js";
 
-export const USER_ROLES = ["alici", "satici", "admin"];
-export const SELF_ASSIGNABLE_ROLES = ["alici", "satici"];
+export const USER_ROLES = ROLES;
+export { SELF_ASSIGNABLE_ROLES };
 
 const hideSensitiveFields = (doc, ret) => {
   delete ret.password;
@@ -20,15 +21,15 @@ const userSchema = new mongoose.Schema(
     role: { type: String, enum: USER_ROLES, default: "satici" },
     avatar: { type: String },
     status: { type: Boolean, default: true },
-    province: { type: String, trim: true },
+    deletedAt: { type: Date, default: null, index: true },
+    province: { type: String, trim: true, index: true },
     district: { type: String, trim: true },
     lastSeen: { type: Date },
-    isOnline: { type: Boolean, default: false },
     organic: { type: String },
     organicStatus: { type: Boolean, default: false },
     dogrulanmisSatici: { type: Boolean, default: false },
-    followers: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
-    following: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }],
+    followersCount: { type: Number, default: 0, min: 0 },
+    followingCount: { type: Number, default: 0, min: 0 },
   },
   {
     timestamps: true,

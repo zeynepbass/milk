@@ -25,7 +25,6 @@ export function LoginForm() {
 
   return (
     <div className="min-h-screen flex bg-gray-50">
-
       <div className="hidden md:block md:w-1/2 relative overflow-hidden">
         <img
           src="/assets/wallpaper.png"
@@ -35,12 +34,7 @@ export function LoginForm() {
 
         <div className="absolute inset-0 bg-black/35" />
 
-
-
-
-
         <div className="absolute bottom-10 left-10 right-10 z-10 text-white">
-
           <img
             src="/assets/footer-logo.png"
             width="80"
@@ -56,16 +50,14 @@ export function LoginForm() {
           </h2>
 
           <p className="mt-4 max-w-md text-sm lg:text-base text-white/75 leading-relaxed">
-            Hesabınıza giriş yaparak platformdaki tüm özelliklere
-            hızlı ve güvenli bir şekilde erişebilirsiniz.
+            Hesabınıza giriş yaparak platformdaki tüm özelliklere hızlı ve güvenli bir şekilde
+            erişebilirsiniz.
           </p>
         </div>
       </div>
 
-
       <div className="flex-1 flex items-center justify-center px-5 py-10 sm:px-8">
         <div className="w-full max-w-md">
-
           <div className="flex justify-center mb-8  md:hidden">
             <img
               src="/assets/footer-logo.png"
@@ -80,7 +72,6 @@ export function LoginForm() {
             onSubmit={onSubmit}
             className="bg-white rounded-3xl border border-gray-100 shadow-xl shadow-gray-200/50 p-7 sm:p-9"
           >
-
             <div className="mb-8">
               <Heading
                 title="Giriş Yap"
@@ -88,7 +79,6 @@ export function LoginForm() {
                 className="text-3xl font-semibold text-[rgb(71,92,120)]"
               />
             </div>
-
 
             <div className="space-y-5">
               <Input
@@ -105,13 +95,12 @@ export function LoginForm() {
                 label="Parola"
                 type="password"
                 name="password"
-                    className="py-2"
+                className="py-2"
                 value={formData.password}
                 placeholder="••••••••"
                 onChange={handleChange}
               />
             </div>
-
 
             <Button
               type="submit"
@@ -123,13 +112,10 @@ export function LoginForm() {
               Giriş Yap
             </Button>
 
-
             <div className="flex items-center gap-4 mt-8">
               <span className="flex-1 h-px bg-gray-200" />
 
-              <span className="text-sm text-gray-400 whitespace-nowrap">
-                Hesabın yok mu?
-              </span>
+              <span className="text-sm text-gray-400 whitespace-nowrap">Hesabın yok mu?</span>
 
               <span className="flex-1 h-px bg-gray-200" />
             </div>
@@ -143,7 +129,6 @@ export function LoginForm() {
               </Link>
             </div>
           </form>
-
 
           <p className="text-center text-xs text-gray-400 mt-6">
             Giriş yaparak hizmetlerimizi kullanmaya devam edebilirsiniz.

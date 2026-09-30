@@ -1,14 +1,28 @@
-import express from "express";
-import { getConversationWithUser, getMyConversations } from "../controllers/conversation.controller.js";
-import { authMiddleware } from "../middleware/auth.middleware.js";
-import { validate } from "../middleware/validate.js";
-import { conversationWithSchema } from "../validators/message.validators.js";
+import * as conversations from "../controllers/conversation.controller.js";
+import {
+  conversationIdSchema,
+  conversationMessagesSchema,
+  conversationWithSchema,
+} from "../validators/message.validators.js";
+import { defineRoutes } from "./defineRoutes.js";
 
-const router = express.Router();
+const routes = defineRoutes("/api/conversations", "Mesajlaşma");
 
-router.use(authMiddleware);
+routes.get("/", { summary: "Sohbetler ve okunmamış sayıları" }, conversations.getMyConversations);
+routes.get(
+  "/with/:userId",
+  { summary: "Bir kullanıcıyla olan sohbet", schemas: conversationWithSchema },
+  conversations.getConversationWithUser
+);
+routes.get(
+  "/:id/messages",
+  { summary: "Sohbet mesajları", schemas: conversationMessagesSchema },
+  conversations.getMessages
+);
+routes.patch(
+  "/:id/read",
+  { summary: "Sohbeti okundu yap", schemas: conversationIdSchema },
+  conversations.markConversationRead
+);
 
-router.get("/", getMyConversations);
-router.get("/with/:userId", validate(conversationWithSchema), getConversationWithUser);
-
-export default router;
+export default routes.router;

@@ -43,10 +43,7 @@ export function SalesSupport() {
 
   return (
     <div className="max-w-full mx-auto p-6 bg-white dark:bg-gray-800 dark:border-gray-400 rounded-2xl shadow-lg border space-y-6">
-      <Heading
-        title="Görüş, Öneri veya Hata Bildir"
-        desc="Geri bildirimleriniz bizim için değerlidir."
-      />
+      <Heading title="Görüş, Öneri veya Hata Bildir" desc="Geri bildirimleriniz bizim için değerlidir." />
 
       <form onSubmit={handleSubmit} className="flex flex-col gap-6">
         <div className="flex flex-col gap-2">

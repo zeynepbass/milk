@@ -1,35 +1,46 @@
-import { POST_CATEGORIES } from "../models/Post.js";
-import { z, idParams, limitQuery, requiredText, optionalText } from "./common.js";
+import { POST_CATEGORIES, RULES } from "./rules.js";
+import { z, idParams, paginationQuery, requiredText, optionalText } from "./common.js";
+
+const imageUrl = z.string().trim().min(1).max(500);
+
+const toArray = (value) => {
+  if (value === undefined) return [];
+  return Array.isArray(value) ? value : [value];
+};
 
 export const listPostsSchema = {
-  query: limitQuery.extend({
-    district: optionalText(60),
+  query: paginationQuery.extend({
+    district: optionalText(RULES.location.max),
     category: z.enum(POST_CATEGORIES).optional(),
-    title: optionalText(100),
+    title: optionalText(RULES.searchTitle.max),
   }),
 };
 
+export const feedSchema = { query: paginationQuery };
+
 export const createPostSchema = {
   body: z.object({
-    title: requiredText(120),
-    description: optionalText(2000),
+    title: requiredText(RULES.postTitle.max),
+    description: optionalText(RULES.postDescription.max),
     category: z.enum(POST_CATEGORIES),
-    province: optionalText(60),
-    district: optionalText(60),
+    province: optionalText(RULES.location.max),
+    district: optionalText(RULES.location.max),
   }),
 };
 
 export const updatePostSchema = {
   params: idParams,
   body: z.object({
-    title: requiredText(120).optional(),
-    description: optionalText(2000),
+    title: requiredText(RULES.postTitle.max).optional(),
+    description: optionalText(RULES.postDescription.max),
     category: z.enum(POST_CATEGORIES).optional(),
-    province: optionalText(60),
-    district: optionalText(60),
+    province: optionalText(RULES.location.max),
+    district: optionalText(RULES.location.max),
+    removeImages: z
+      .union([uploadUrl, z.array(uploadUrl).max(RULES.postImages.max)])
+      .optional()
+      .transform(toArray),
   }),
 };
 
 export const postIdSchema = { params: idParams };
-
-export const limitOnlySchema = { query: limitQuery };

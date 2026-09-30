@@ -1,56 +1,28 @@
 import { lazy, Suspense } from "react";
-import { Container } from "@/shared/layout";
 import { Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import NotFound from "@/shared/error/index";
+import { AppLayout, GuestOnly } from "@/shared/layout";
+import { NotFoundPage } from "@/shared/pages/NotFoundPage";
+import { useSessionBootstrap } from "@/shared/hooks/useSessionBootstrap";
 import "react-toastify/dist/ReactToastify.css";
 
-const Following = lazy(() =>
-  import("@/features/feed/pages").then((module) => ({
-    default: module.Following,
-  }))
-);
+const lazyNamed = (loader, name) => lazy(() => loader().then((module) => ({ default: module[name] })));
 
-const Outlet = lazy(() =>
-  import("@/features/feed/pages").then((module) => ({
-    default: module.Outlet,
-  }))
-);
+const loadFeedPages = () => import("@/features/feed/pages");
+const loadAuthPages = () => import("@/features/auth/pages");
 
-const FavoritePost = lazy(() =>
-  import("@/features/feed/pages").then((module) => ({
-    default: module.FavoritePost,
-  }))
-);
-
-const Message = lazy(() =>
-  import("@/features/feed/pages").then((module) => ({
-    default: module.MessagePost,
-  }))
-);
-
-
-const Login = lazy(() =>
-  import("@/features/auth/pages").then((module) => ({
-    default: module.LoginPost,
-  }))
-);
-
-const Register = lazy(() =>
-  import("@/features/auth/pages").then((module) => ({
-    default: module.RegisterPost,
-  }))
-);
-
-const Profile = lazy(() =>
-  import("@/features/auth/pages").then((module) => ({
-    default: module.ProfilePost,
-  }))
-);
-
-
+const FollowingPage = lazyNamed(loadFeedPages, "FollowingPage");
+const ExplorePage = lazyNamed(loadFeedPages, "ExplorePage");
+const FavoritesPage = lazyNamed(loadFeedPages, "FavoritesPage");
+const MessagesPage = lazyNamed(() => import("@/features/messages/pages"), "MessagesPage");
+const PostDetailPage = lazyNamed(() => import("@/features/posts/pages"), "PostDetailPage");
+const LoginPage = lazyNamed(loadAuthPages, "LoginPage");
+const RegisterPage = lazyNamed(loadAuthPages, "RegisterPage");
+const ProfilePage = lazyNamed(loadAuthPages, "ProfilePage");
 
 function App() {
+  useSessionBootstrap();
+
   return (
     <>
       <ToastContainer
@@ -61,24 +33,25 @@ function App() {
 
       <Suspense
         fallback={
-          <div className="flex min-h-screen items-center justify-center text-gray-400">
-            Yükleniyor...
-          </div>
+          <div className="flex min-h-screen items-center justify-center text-gray-400">Yükleniyor...</div>
         }
       >
         <Routes>
-          <Route element={<Container />}>
-            <Route path="/" element={<Following />} />
-            <Route path="/kesfet" element={<Outlet />} />
-            <Route path="/profil" element={<Profile />} />
-            <Route path="/favoriler" element={<FavoritePost />} />
-            <Route path="/mesajlar" element={<Message />} />
-         
+          <Route element={<AppLayout />}>
+            <Route path="/" element={<FollowingPage />} />
+            <Route path="/kesfet" element={<ExplorePage />} />
+            <Route path="/profil" element={<ProfilePage />} />
+            <Route path="/favoriler" element={<FavoritesPage />} />
+            <Route path="/mesajlar" element={<MessagesPage />} />
+            <Route path="/urun/:id" element={<PostDetailPage />} />
           </Route>
 
-          <Route path="*" element={<NotFound />} />
-          <Route path="/giris-yap" element={<Login />} />
-          <Route path="/uye-ol" element={<Register />} />
+          <Route element={<GuestOnly />}>
+            <Route path="/giris-yap" element={<LoginPage />} />
+            <Route path="/uye-ol" element={<RegisterPage />} />
+          </Route>
+
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Suspense>
     </>

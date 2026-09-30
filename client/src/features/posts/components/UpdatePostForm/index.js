@@ -1,0 +1,1 @@
+export { UpdatePostForm } from "./UpdatePostForm";

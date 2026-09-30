@@ -1,8 +1,7 @@
 import { Link } from "react-router-dom";
 import { useAuthActions } from "../../hooks/useAuthActions";
 import { useState } from "react";
-import {Input,Select,Button,Heading} from "@/shared/components/atoms"
-
+import { Input, Select, Button, Heading } from "@/shared/components/atoms";
 
 export function RegisterForm() {
   const { register, loading } = useAuthActions();
@@ -29,7 +28,6 @@ export function RegisterForm() {
 
   return (
     <div className="min-h-screen flex bg-gray-50">
-
       <div className="hidden md:block md:w-1/2 relative overflow-hidden">
         <img
           src="/assets/wallpaper.png"
@@ -39,12 +37,7 @@ export function RegisterForm() {
 
         <div className="absolute inset-0 bg-black/35" />
 
-
-
-
-
         <div className="absolute bottom-10 left-10 right-10 z-10 text-white">
-
           <img
             src="/assets/footer-logo.png"
             width="80"
@@ -60,21 +53,19 @@ export function RegisterForm() {
           </h2>
 
           <p className="mt-4 max-w-md text-sm lg:text-base text-white/75 leading-relaxed">
-            Hesabınıza giriş yaparak platformdaki tüm özelliklere
-            hızlı ve güvenli bir şekilde erişebilirsiniz.
+            Hesabınıza giriş yaparak platformdaki tüm özelliklere hızlı ve güvenli bir şekilde
+            erişebilirsiniz.
           </p>
         </div>
       </div>
 
       <div className="flex w-full md:w-1/2 justify-center items-center bg-white px-6">
-        <form
-          className="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg"
-          onSubmit={onSubmit}
-        >
-
-            <Heading title=" Kayıt Ol" desc="Hesabınızı oluşturmak için bilgilerinizi giriniz." className="text-3xl font-semibold text-[rgb(71,92,120)]"/>
-   
-
+        <form className="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg" onSubmit={onSubmit}>
+          <Heading
+            title=" Kayıt Ol"
+            desc="Hesabınızı oluşturmak için bilgilerinizi giriniz."
+            className="text-3xl font-semibold text-[rgb(71,92,120)]"
+          />
 
           <div className="space-y-5">
             <div className="flex gap-3">
@@ -138,29 +129,24 @@ export function RegisterForm() {
                     { value: "alici", label: "Alıcı" },
                   ]}
                 />
-
-             
               </div>
             </div>
           </div>
 
           <Button
-  type="submit"
-  variant="primary"
-  disabled={loading}
-              className="w-full mt-7 text-sm font-medium transition-all hover:shadow-md"
->
-  {loading ? "Kayıt Olunuyor..." : "Üye Ol"}
-</Button>
+            type="submit"
+            variant="primary"
+            disabled={loading}
+            className="w-full mt-7 text-sm font-medium transition-all hover:shadow-md"
+          >
+            {loading ? "Kayıt Olunuyor..." : "Üye Ol"}
+          </Button>
           <p className="mt-6 flex items-center gap-3 text-sm text-gray-400">
             <span className="flex-1 h-px bg-gray-200" />
 
             <span className="whitespace-nowrap">
               Üye misin?{" "}
-              <Link
-                to="/giris-yap"
-                className="text-[rgb(82,144,246)] font-semibold hover:underline"
-              >
+              <Link to="/giris-yap" className="text-[rgb(82,144,246)] font-semibold hover:underline">
                 Giriş yap
               </Link>
             </span>

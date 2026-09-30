@@ -41,7 +41,13 @@ export function DeleteAccountModal({ onConfirm, onClose }) {
             İptal
           </Button>
 
-          <Button type="submit" variant="primary" loading={loading} loadingText="Siliniyor..." className="bg-red-500">
+          <Button
+            type="submit"
+            variant="primary"
+            loading={loading}
+            loadingText="Siliniyor..."
+            className="bg-red-500"
+          >
             Hesabı sil
           </Button>
         </div>

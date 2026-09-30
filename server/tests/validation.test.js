@@ -64,7 +64,9 @@ describe("girdi doğrulama", () => {
 
 describe("sanitize", () => {
   it("$ ve nokta içeren anahtarları temizler", () => {
-    expect(stripOperatorKeys({ a: 1, $where: "x", "b.c": 2, nested: { $gt: 1, ok: [{ $ne: 1, y: 2 }] } })).toEqual({
+    expect(
+      stripOperatorKeys({ a: 1, $where: "x", "b.c": 2, nested: { $gt: 1, ok: [{ $ne: 1, y: 2 }] } })
+    ).toEqual({
       a: 1,
       nested: { ok: [{ y: 2 }] },
     });
@@ -79,7 +81,11 @@ describe("hata yakalayıcı", () => {
     errorHandler(new Error("connection string mongodb://kullanici:sifre@db"), req, res, vi.fn());
 
     expect(res.status).toHaveBeenCalledWith(500);
-    expect(res.json).toHaveBeenCalledWith({ message: "Sunucu hatası", code: "INTERNAL_ERROR", requestId: "istek-1" });
+    expect(res.json).toHaveBeenCalledWith({
+      message: "Sunucu hatası",
+      code: "INTERNAL_ERROR",
+      requestId: "istek-1",
+    });
     expect(req.log.error).toHaveBeenCalled();
   });
 });

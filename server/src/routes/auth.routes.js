@@ -1,15 +1,30 @@
-import express from "express";
 import { login, logout, refresh, register } from "../controllers/auth.controller.js";
-import { validate } from "../middleware/validate.js";
 import { authLimiter, loginLimiter, refreshLimiter } from "../middleware/rateLimiter.js";
 import { requireAllowedOrigin } from "../middleware/originCheck.js";
 import { loginSchema, registerSchema } from "../validators/auth.validators.js";
+import { defineRoutes } from "./defineRoutes.js";
 
-const router = express.Router();
+const routes = defineRoutes("/api/auth", "Auth");
 
-router.post("/register", authLimiter, validate(registerSchema), register);
-router.post("/login", authLimiter, loginLimiter, validate(loginSchema), login);
-router.post("/refresh", refreshLimiter, requireAllowedOrigin, refresh);
-router.post("/logout", requireAllowedOrigin, logout);
+routes.post(
+  "/register",
+  { summary: "Yeni hesap oluştur", auth: false, before: [authLimiter], schemas: registerSchema, status: 201 },
+  register
+);
+routes.post(
+  "/login",
+  { summary: "Giriş yap", auth: false, before: [authLimiter, loginLimiter], schemas: loginSchema },
+  login
+);
+routes.post(
+  "/refresh",
+  { summary: "Refresh cookie ile oturumu yenile", auth: false, before: [refreshLimiter, requireAllowedOrigin] },
+  refresh
+);
+routes.post(
+  "/logout",
+  { summary: "Oturumu kapat", auth: false, before: [requireAllowedOrigin], status: 204 },
+  logout
+);
 
-export default router;
+export default routes.router;

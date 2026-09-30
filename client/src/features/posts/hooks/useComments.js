@@ -1,91 +1,68 @@
-import { useEffect, useState, useCallback } from "react";
-import { commentProvider } from "@/providers/comment.provider";
+import { useCallback, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { getErrorMessage } from "@/shared/api/apiClient";
+import { commentService } from "../services/comment.service";
 
-export default function usePostComment(id) {
+const applyLikeResult = (commentId, result) => (comment) =>
+  comment._id === commentId
+    ? { ...comment, likes: result.likes, likesCount: result.likesCount, liked: result.liked }
+    : comment;
+
+export function useComments(postId) {
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(false);
   const [newComment, setNewComment] = useState("");
 
-  const service = commentProvider.service;
-
   const fetchComments = useCallback(async () => {
-    if (!id) return;
+    if (!postId) return;
 
+    setLoading(true);
     try {
-      setLoading(true);
-
-      const res = await service.getComments(id);
-
-      setComments(res);
+      setComments(await commentService.getComments(postId));
     } catch (error) {
+      toast.error(getErrorMessage(error, "Yorumlar alınamadı"));
     } finally {
       setLoading(false);
     }
-  }, [id, service]);
+  }, [postId]);
 
   useEffect(() => {
     fetchComments();
   }, [fetchComments]);
 
-  const handleComment = async (commentId, text) => {
+  const handleComment = async (targetPostId, text) => {
     if (!text?.trim()) return;
 
     try {
-      const res = await service.postComment(
-        commentId,
-        text
-      );
-
-      setComments((prev) => [res, ...prev]);
+      const comment = await commentService.postComment(targetPostId, text);
+      setComments((prev) => [comment, ...prev]);
     } catch (error) {
+      toast.error(getErrorMessage(error, "Yorum gönderilemedi"));
     }
   };
 
-  const handleAddComment = async (commentId) => {
+  const handleAddComment = async (targetPostId) => {
     if (!newComment.trim()) return;
 
-    try {
-      await handleComment(
-        commentId,
-        newComment
-      );
-
-      setNewComment("");
-    } catch (error) {
-    }
+    await handleComment(targetPostId, newComment);
+    setNewComment("");
   };
 
   const handleDelete = async (commentId) => {
     try {
-      await service.deleteComment(commentId);
-
-      setComments((prev) =>
-        prev.filter(
-          (item) => item._id !== commentId
-        )
-      );
+      await commentService.deleteComment(commentId);
+      setComments((prev) => prev.filter((item) => item._id !== commentId));
     } catch (error) {
+      toast.error(getErrorMessage(error, "Yorum silinemedi"));
     }
   };
 
   const handleCommentLike = async (commentId) => {
     try {
-      const res =
-        await service.likeComment(commentId);
-
-      setComments((prev) =>
-        prev.map((comment) =>
-          comment._id === commentId
-            ? {
-                ...comment,
-                likes: res.likes,
-                likesCount: res.likesCount,
-                liked: res.liked,
-              }
-            : comment
-        )
-      );
+      const result = await commentService.likeComment(commentId);
+      setComments((prev) => prev.map(applyLikeResult(commentId, result)));
     } catch (error) {
+      toast.error(getErrorMessage(error, "Beğeni işlemi başarısız oldu."));
     }
   };
 

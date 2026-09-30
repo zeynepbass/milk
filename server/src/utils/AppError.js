@@ -22,5 +22,4 @@ export const notFound = (message = "Kayıt bulunamadı", code = "NOT_FOUND") =>
 
 export const conflict = (message, code = "CONFLICT") => new AppError(409, code, message);
 
-export const tooManyRequests = (message, code = "TOO_MANY_REQUESTS") =>
-  new AppError(429, code, message);
+export const tooManyRequests = (message, code = "TOO_MANY_REQUESTS") => new AppError(429, code, message);

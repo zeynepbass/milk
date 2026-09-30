@@ -1,11 +1,9 @@
-import express from "express";
 import { sendMessage } from "../controllers/message.controller.js";
-import { authMiddleware } from "../middleware/auth.middleware.js";
-import { validate } from "../middleware/validate.js";
 import { sendMessageSchema } from "../validators/message.validators.js";
+import { defineRoutes } from "./defineRoutes.js";
 
-const router = express.Router();
+const routes = defineRoutes("/api/messages", "Mesajlaşma");
 
-router.post("/", authMiddleware, validate(sendMessageSchema), sendMessage);
+routes.post("/", { summary: "Mesaj gönder", schemas: sendMessageSchema, status: 201 }, sendMessage);
 
-export default router;
+export default routes.router;

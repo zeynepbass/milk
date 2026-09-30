@@ -1,4 +1,12 @@
 node_modules/
+build/
+coverage/
 .env
 .env.*
 !.env.example
+server/uploads/
+.DS_Store
+.claude/
+CLAUDE.md
+AGENTS.md
+*.log

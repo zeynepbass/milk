@@ -1,9 +1,9 @@
-import { MESSAGE_MAX_LENGTH } from "../models/Message.js";
-import { z, objectId, requiredText } from "./common.js";
+import { RULES } from "./rules.js";
+import { z, idParams, objectId, paginationQuery, requiredText } from "./common.js";
 
 export const sendMessageBody = z.object({
   receiverId: objectId,
-  text: requiredText(MESSAGE_MAX_LENGTH),
+  text: requiredText(RULES.message.max),
 });
 
 export const sendMessageSchema = { body: sendMessageBody };
@@ -12,6 +12,11 @@ export const conversationWithSchema = {
   params: z.object({ userId: objectId }),
 };
 
-export const notificationIdSchema = {
-  params: z.object({ id: objectId }),
+export const conversationMessagesSchema = {
+  params: idParams,
+  query: paginationQuery,
 };
+
+export const conversationIdSchema = { params: idParams };
+
+export const conversationReadBody = z.object({ conversationId: objectId });

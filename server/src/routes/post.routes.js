@@ -1,44 +1,50 @@
-import express from "express";
-import { authMiddleware } from "../middleware/auth.middleware.js";
+import * as posts from "../controllers/post.controller.js";
 import { uploadImages } from "../middleware/upload.js";
-import { validate } from "../middleware/validate.js";
-import {
-  createPost,
-  deletePost,
-  getFollowingPosts,
-  getMyPosts,
-  getPostById,
-  getPosts,
-  getSavedPosts,
-  toggleLikePost,
-  toggleSavePost,
-  updatePost,
-} from "../controllers/post.controller.js";
-import { getNotifications, markAsRead } from "../controllers/notification.controller.js";
+import { RULES } from "../validators/rules.js";
 import {
   createPostSchema,
-  limitOnlySchema,
+  feedSchema,
   listPostsSchema,
   postIdSchema,
   updatePostSchema,
 } from "../validators/post.validators.js";
-import { notificationIdSchema } from "../validators/message.validators.js";
+import { addCommentSchema, listCommentsSchema } from "../validators/comment.validators.js";
+import { defineRoutes } from "./defineRoutes.js";
 
-const router = express.Router();
+const routes = defineRoutes("/api/posts", "Gönderiler");
+const imageUpload = uploadImages("images", RULES.postImages.max);
+const imageFiles = { field: "images", multiple: true };
 
-router.get("/", authMiddleware, validate(listPostsSchema), getPosts);
-router.get("/following", authMiddleware, validate(limitOnlySchema), getFollowingPosts);
-router.get("/notifications", authMiddleware, getNotifications);
-router.put("/markAsRead/:id", authMiddleware, validate(notificationIdSchema), markAsRead);
-router.get("/user/me", authMiddleware, validate(limitOnlySchema), getMyPosts);
-router.get("/users/saved-posts", authMiddleware, validate(limitOnlySchema), getSavedPosts);
+routes.get("/", { summary: "Keşfet akışı", schemas: listPostsSchema }, posts.getPosts);
+routes.get("/following", { summary: "Takip edilenlerin gönderileri", schemas: feedSchema }, posts.getFollowingPosts);
+routes.get("/saved", { summary: "Kaydedilen gönderiler", schemas: feedSchema }, posts.getSavedPosts);
+routes.get("/mine", { summary: "Kendi gönderilerim", schemas: feedSchema }, posts.getMyPosts);
+routes.post(
+  "/",
+  { summary: "Gönderi oluştur", before: imageUpload, schemas: createPostSchema, files: imageFiles, status: 201 },
+  posts.createPost
+);
 
-router.post("/", authMiddleware, uploadImages("images", 5), validate(createPostSchema), createPost);
-router.put("/:id", authMiddleware, uploadImages("images", 5), validate(updatePostSchema), updatePost);
-router.delete("/:id", authMiddleware, validate(postIdSchema), deletePost);
-router.post("/:id/like/post", authMiddleware, validate(postIdSchema), toggleLikePost);
-router.post("/:id/save", authMiddleware, validate(postIdSchema), toggleSavePost);
+routes.get("/:id", { summary: "Gönderi detayı", auth: "optional", schemas: postIdSchema }, posts.getPost);
+routes.patch(
+  "/:id",
+  { summary: "Gönderiyi güncelle", before: imageUpload, schemas: updatePostSchema, files: imageFiles },
+  posts.updatePost
+);
+routes.delete("/:id", { summary: "Gönderiyi kaldır", schemas: postIdSchema }, posts.deletePost);
+routes.put("/:id/like", { summary: "Beğen", schemas: postIdSchema }, posts.likePost);
+routes.delete("/:id/like", { summary: "Beğeniyi geri al", schemas: postIdSchema }, posts.unlikePost);
+routes.put("/:id/save", { summary: "Kaydet", schemas: postIdSchema }, posts.savePost);
+routes.delete("/:id/save", { summary: "Kaydı kaldır", schemas: postIdSchema }, posts.unsavePost);
+routes.get(
+  "/:id/comments",
+  { summary: "Yorumlar", auth: "optional", schemas: listCommentsSchema },
+  posts.getComments
+);
+routes.post(
+  "/:id/comments",
+  { summary: "Yorum yap", schemas: addCommentSchema, status: 201 },
+  posts.addComment
+);
 
-router.get("/:id", validate(postIdSchema), getPostById);
-
-export default router;
+export default routes.router;

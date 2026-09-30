@@ -5,26 +5,12 @@ export const buildParticipantsKey = (firstUserId, secondUserId) =>
 
 const conversationSchema = new mongoose.Schema(
   {
-    participants: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: true,
-      },
-    ],
+    participants: [{ type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }],
     participantsKey: { type: String, unique: true, sparse: true },
-    productId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "Post",
-      required: false,
-    },
-    lastMessage: {
-      type: String,
-      default: "",
-    },
-    lastMessageAt: {
-      type: Date,
-    },
+    productId: { type: mongoose.Schema.Types.ObjectId, ref: "Post" },
+    lastMessage: { type: String, default: "" },
+    lastMessageAt: { type: Date },
+    hiddenAt: { type: Date, default: null },
   },
   { timestamps: true }
 );

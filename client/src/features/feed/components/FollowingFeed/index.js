@@ -1,0 +1,1 @@
+export { FollowingFeed } from "./FollowingFeed";

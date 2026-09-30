@@ -1,17 +1,27 @@
 import User from "../models/User.js";
+import Post from "../models/Post.js";
+import Comment from "../models/Comment.js";
 import Feedback from "../models/Feedback.js";
+import RefreshToken from "../models/RefreshToken.js";
 import { badRequest, conflict, notFound, unauthorized } from "../utils/AppError.js";
-import { removeUploadedFile, toUploadUrl } from "../utils/uploads.js";
+import { paginate } from "../utils/pagination.js";
+import { withTransaction } from "../utils/transaction.js";
+import { removeStoredFiles } from "../storage/index.js";
 import { disconnectUser } from "../sockets/emitter.js";
-import { hashPassword, issueSession, verifyPassword } from "./auth.service.js";
+import { hashPassword, issueSession, toSessionUser, verifyPassword } from "./auth.service.js";
 import { revokeAllForUser } from "./token.service.js";
+import { isFollowing, removeAllFollowsOf } from "./follow.service.js";
+import { hideConversationsOf } from "./message.service.js";
+import { removeNotificationsOf } from "./notification.service.js";
+
+const userNotFound = () => notFound("Kullanıcı bulunamadı", "USER_NOT_FOUND");
 
 const findUserOrThrow = async (userId, projection) => {
-  const query = User.findById(userId);
+  const query = User.findOne({ _id: userId, deletedAt: null });
   if (projection) query.select(projection);
 
   const user = await query;
-  if (!user) throw notFound("Kullanıcı bulunamadı", "USER_NOT_FOUND");
+  if (!user) throw userNotFound();
   return user;
 };
 
@@ -26,18 +36,28 @@ const endAllSessions = async (userId) => {
   disconnectUser(userId);
 };
 
-export const getMe = (userId) =>
-  User.findById(userId).populate("followers following", "name surname avatar").lean();
+export const getMe = async (userId) => toSessionUser(await findUserOrThrow(userId));
+
+export const getPublicProfile = async (userId, viewerId) => {
+  const user = await User.findOne({ _id: userId, deletedAt: null })
+    .select("name surname avatar role province district dogrulanmisSatici followersCount followingCount createdAt")
+    .lean();
+
+  if (!user) throw userNotFound();
+
+  const following = viewerId && viewerId.toString() !== userId.toString() ? await isFollowing(viewerId, userId) : false;
+  return { ...user, isFollowing: following };
+};
 
 export const updateMe = async (userId, changes) => {
-  const user = await User.findByIdAndUpdate(
-    userId,
+  const user = await User.findOneAndUpdate(
+    { _id: userId, deletedAt: null },
     { $set: changes },
     { returnDocument: "after", runValidators: true }
   );
 
-  if (!user) throw notFound("Kullanıcı bulunamadı", "USER_NOT_FOUND");
-  return user.toJSON();
+  if (!user) throw userNotFound();
+  return toSessionUser(user);
 };
 
 export const changePassword = async (userId, { currentPassword, newPassword }, meta) => {
@@ -56,7 +76,7 @@ export const changeEmail = async (userId, { email, currentPassword }) => {
   const user = await findUserOrThrow(userId, "+password");
   await assertPassword(user, currentPassword);
 
-  if (user.email === email) return user.toJSON();
+  if (user.email === email) return toSessionUser(user);
 
   if (await User.exists({ email, _id: { $ne: user._id } })) {
     throw conflict("Bu e-posta adresi başka bir hesapta kullanılıyor", "EMAIL_TAKEN");
@@ -73,64 +93,77 @@ export const changeEmail = async (userId, { email, currentPassword }) => {
     throw err;
   }
 
-  return user.toJSON();
+  return toSessionUser(user);
 };
 
-export const updateAvatar = async (userId, file) => {
-  if (!file) throw badRequest("Görsel seçilmedi", "FILE_REQUIRED");
+export const updateAvatar = async (userId, avatarUrl) => {
+  if (!avatarUrl) throw badRequest("Görsel seçilmedi", "FILE_REQUIRED");
 
-  const user = await findUserOrThrow(userId);
+  const user = await findUserOrThrow(userId).catch(async (err) => {
+    await removeStoredFiles([avatarUrl]);
+    throw err;
+  });
+
   const previousAvatar = user.avatar;
-
-  user.avatar = toUploadUrl(file.filename);
+  user.avatar = avatarUrl;
   await user.save();
-  await removeUploadedFile(previousAvatar);
+  await removeStoredFiles([previousAvatar]);
 
-  return user.toJSON();
+  return toSessionUser(user);
 };
 
 export const freezeMe = async (userId) => {
-  const result = await User.updateOne({ _id: userId }, { $set: { status: false } });
-  if (result.matchedCount === 0) throw notFound("Kullanıcı bulunamadı", "USER_NOT_FOUND");
+  const result = await User.updateOne({ _id: userId, deletedAt: null }, { $set: { status: false } });
+  if (result.matchedCount === 0) throw userNotFound();
 
   await endAllSessions(userId);
+};
+
+const collectOwnedFiles = async (user) => {
+  const posts = await Post.find({ user: user._id }).select("images").lean();
+  return [user.avatar, ...posts.flatMap((post) => post.images ?? [])];
 };
 
 export const deleteMe = async (userId, { password }) => {
   const user = await findUserOrThrow(userId, "+password");
   await assertPassword(user, password);
 
-  await User.deleteOne({ _id: user._id });
-  await endAllSessions(user._id);
-  await removeUploadedFile(user.avatar);
+  const files = await collectOwnedFiles(user);
+  const now = new Date();
+
+  await withTransaction(async (session) => {
+    await User.updateOne(
+      { _id: user._id },
+      {
+        $set: {
+          deletedAt: now,
+          status: false,
+          email: `silinmis-${user._id}@milk.invalid`,
+          name: "Silinmiş",
+          surname: "Kullanıcı",
+          followersCount: 0,
+          followingCount: 0,
+        },
+        $unset: { password: "", avatar: "", province: "", district: "", organic: "" },
+      },
+      { session }
+    );
+    await Post.updateMany({ user: user._id }, { $set: { isActive: false, images: [] } }, { session });
+    await Comment.updateMany({ user: user._id }, { $set: { isActive: false } }, { session });
+    await hideConversationsOf(user._id, session);
+    await removeAllFollowsOf(user._id, session);
+    await removeNotificationsOf(user._id, session);
+    await RefreshToken.updateMany({ user: user._id, revokedAt: null }, { $set: { revokedAt: now } }, { session });
+  });
+
+  disconnectUser(user._id);
+  await removeStoredFiles(files);
 };
 
-export const toggleFollow = async (userId, targetId) => {
-  if (userId.toString() === targetId.toString()) {
-    throw badRequest("Kendini takip edemezsin", "SELF_FOLLOW");
-  }
+export const listUsers = (pagination) => paginate(User, { deletedAt: null }, pagination);
 
-  if (!(await User.exists({ _id: targetId }))) {
-    throw notFound("Kullanıcı bulunamadı", "USER_NOT_FOUND");
-  }
-
-  const isFollowing = Boolean(await User.exists({ _id: userId, following: targetId }));
-  const operator = isFollowing ? "$pull" : "$addToSet";
-
-  await Promise.all([
-    User.updateOne({ _id: userId }, { [operator]: { following: targetId } }),
-    User.updateOne({ _id: targetId }, { [operator]: { followers: userId } }),
-  ]);
-
-  return { following: !isFollowing };
-};
-
-export const listUsers = (limit) => User.find().limit(limit).lean();
-
-export const setOrganicStatus = async ({ userId, organicStatus }) => {
-  const changes = organicStatus ? { organicStatus, dogrulanmisSatici: true } : { organicStatus };
-  return updateMe(userId, changes);
-};
+export const setOrganicStatus = ({ userId, organicStatus }) =>
+  updateMe(userId, organicStatus ? { organicStatus, dogrulanmisSatici: true } : { organicStatus });
 
 export const changeRole = async (userId, role) => {
   const user = await updateMe(userId, { role });
@@ -138,7 +171,9 @@ export const changeRole = async (userId, role) => {
   return user;
 };
 
+export const touchLastSeen = (userId) => User.updateOne({ _id: userId }, { $set: { lastSeen: new Date() } });
+
 export const createFeedback = (userId, { type, message }) => Feedback.create({ user: userId, type, message });
 
-export const listFeedbacks = () =>
-  Feedback.find().populate("user", "name email role").sort({ createdAt: -1 }).lean();
+export const listFeedbacks = (pagination) =>
+  paginate(Feedback, {}, { ...pagination, populate: { path: "user", select: "name email role" } });

@@ -1,154 +1,103 @@
-import { useEffect, useState } from "react";
-import { useUserStore } from "@/shared/store/useUserStore";
+import { useCallback, useEffect, useState } from "react";
+import { toast } from "react-toastify";
+import { getErrorMessage } from "@/shared/api/apiClient";
+import { useAuthStore } from "@/shared/store/useAuthStore";
+import { postService } from "../services/post.service";
+import { commentService } from "../services/comment.service";
+import { toggleSavedBy, usePostActions } from "./usePostActions";
 
-import { postProvider } from "@/providers/post.provider";
-import { commentProvider } from "@/providers/comment.provider";
-import usePostActions from "@/features/feed/hooks/post/usePostActions";
-
-export default function usePostDetail(id) {
+export function usePostDetails(postId) {
   const [details, setDetails] = useState(null);
   const [comments, setComments] = useState([]);
   const [loading, setLoading] = useState(false);
   const [showComments, setShowComments] = useState(false);
 
-  const user = useUserStore((state) => state.user);
-
-  const postService = postProvider.service;
-  const commentService = commentProvider.service;
+  const user = useAuthStore((state) => state.user);
   const postActions = usePostActions();
 
-  const fetchData = async () => {
-    if (!id) return;
+  const fetchData = useCallback(async () => {
+    if (!postId) return;
 
+    setLoading(true);
     try {
-      setLoading(true);
-
-      const res = await postService.getPostDetails(id);
-
-      setDetails(res.post);
-      setComments(res.comments);
+      const result = await postService.getPostDetails(postId);
+      setDetails(result.post);
+      setComments(result.comments);
     } catch (error) {
+      toast.error(getErrorMessage(error, "Gönderi alınamadı"));
     } finally {
       setLoading(false);
     }
-  };
+  }, [postId]);
 
   useEffect(() => {
     fetchData();
-  }, [id]);
+  }, [fetchData]);
 
   const handleLike = async (commentId) => {
     try {
-      const res =
-        await commentService.likeComment(commentId);
+      const result = await commentService.likeComment(commentId);
 
       setComments((prev) =>
         prev.map((comment) =>
           comment._id === commentId
-            ? {
-                ...comment,
-                likes: res.likes,
-                likesCount: res.likesCount,
-                liked: res.liked,
-              }
+            ? { ...comment, likes: result.likes, likesCount: result.likesCount, liked: result.liked }
             : comment
         )
       );
     } catch (error) {
+      toast.error(getErrorMessage(error, "Beğeni işlemi başarısız oldu."));
     }
   };
 
-  const handleComment = async (postId, text) => {
+  const handleComment = async (targetPostId, text) => {
     if (!text?.trim()) return;
 
     try {
-      const res =
-        await commentService.postComment(
-          postId,
-          text
-        );
-
-      setComments((prev) => [res, ...prev]);
+      const comment = await commentService.postComment(targetPostId, text);
+      setComments((prev) => [comment, ...prev]);
     } catch (error) {
+      toast.error(getErrorMessage(error, "Yorum gönderilemedi"));
     }
   };
 
   const handleDelete = async (commentId) => {
     try {
       await commentService.deleteComment(commentId);
-
-      setComments((prev) =>
-        prev.filter(
-          (item) => item._id !== commentId
-        )
-      );
+      setComments((prev) => prev.filter((item) => item._id !== commentId));
     } catch (error) {
+      toast.error(getErrorMessage(error, "Yorum silinemedi"));
     }
   };
 
-  const handlePostLike = async (postId) => {
-    const res = await postActions.likePost(postId);
-    if (!res) return;
+  const handlePostLike = async (targetPostId) => {
+    const result = await postActions.likePost(targetPostId);
+    if (!result) return;
 
-    setDetails((prev) => {
-      if (!prev) return prev;
-
-      return {
-        ...prev,
-        likes: res.likes,
-        liked: res.liked,
-      };
-    });
+    setDetails((prev) => (prev ? { ...prev, likes: result.likes, liked: result.liked } : prev));
   };
 
-  const handlePostSave = async (postId) => {
-    const res = await postActions.savePost(postId);
-    if (!res) return;
+  const handlePostSave = async (targetPostId) => {
+    const result = await postActions.savePost(targetPostId);
+    if (!result) return;
 
-    const userId = user?.id || user?._id;
-
-    setDetails((prev) => {
-      if (!prev) return prev;
-
-      const savedBy = Array.isArray(prev.savedBy) ? prev.savedBy : [];
-
-      const alreadySaved = savedBy.some(
-        (savedUser) => savedUser === userId || savedUser?._id === userId
-      );
-
-      return {
-        ...prev,
-        savedBy: alreadySaved
-          ? savedBy.filter(
-              (savedUser) =>
-                savedUser !== userId && savedUser?._id !== userId
-            )
-          : [...savedBy, userId],
-      };
-    });
+    setDetails((prev) => (prev ? toggleSavedBy(prev, user?._id) : prev));
   };
 
-  const handleDeletePost = async (postId) => {
-    return await postActions.deletePost(postId);
-  };
+  const handleDeletePost = (targetPostId) => postActions.deletePost(targetPostId);
 
   return {
     details,
     loading,
-
     comments,
     user,
-
     handleLike,
     handleDelete,
     handleComment,
-
     handlePostLike,
     handlePostSave,
     handleDeletePost,
-
     fetchData,
-
     showComments,
     setShowComments,
   };

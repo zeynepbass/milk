@@ -8,13 +8,13 @@ import {
   UserPlusIcon,
   TrashIcon,
 } from "@heroicons/react/24/outline";
-import { Input, Button,Heading } from "@/shared/components/atoms";
+import { Input, Button, Heading } from "@/shared/components/atoms";
 import { useNavigate, useParams } from "react-router-dom";
-import useCommentAll from "@/features/feed/hooks/post/usePostDetails";
-import usePostAll from "@/features/feed/hooks/post/usePost";
-import { SERVER_URL } from "@/shared/constants/config";
+import { useExploreFeed } from "@/features/feed/hooks/useExploreFeed";
+import { toAssetUrl } from "@/shared/config/env";
+import { usePostDetails } from "../../hooks/usePostDetails";
 
-export function Detail() {
+export function PostDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
 
@@ -31,9 +31,9 @@ export function Detail() {
     handleDeletePost,
     showComments,
     setShowComments,
-  } = useCommentAll(id);
+  } = usePostDetails(id);
 
-  const { followId } = usePostAll();
+  const { followId } = useExploreFeed();
   const [currentImage, setCurrentImage] = useState(0);
   const [newComment, setNewComment] = useState("");
 
@@ -47,11 +47,7 @@ export function Detail() {
   }
 
   if (!details) {
-    return (
-      <p className="text-center mt-10 text-gray-400">
-        Gönderi bulunamadı
-      </p>
-    );
+    return <p className="text-center mt-10 text-gray-400">Gönderi bulunamadı</p>;
   }
 
   const images = details.images || [];
@@ -64,7 +60,7 @@ export function Detail() {
   };
 
   const itemUserId = details?.user?._id || details?.user;
-  const isOwner = user?.id === itemUserId;
+  const isOwner = user?._id === itemUserId;
   const hasUser = !!details?.user;
 
   const formatLocation = (text) => {
@@ -73,9 +69,7 @@ export function Detail() {
     return text
       .toLowerCase()
       .split(" ")
-      .map(
-        (word) => word.charAt(0).toUpperCase() + word.slice(1)
-      )
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
       .join("-");
   };
 
@@ -84,7 +78,7 @@ export function Detail() {
       {images.length > 0 && (
         <div className="relative w-full h-96">
           <img
-            src={`${SERVER_URL}${images[currentImage]}`}
+            src={toAssetUrl(images[currentImage])}
             alt={details.title}
             className="w-full h-full object-cover rounded-xl"
             loading="lazy"
@@ -92,9 +86,12 @@ export function Detail() {
 
           {images.length > 1 && (
             <div className="flex gap-2 justify-center mt-2">
-              {images.map((_, i) => (
-                <div
-                  key={i}
+              {images.map((image, i) => (
+                <button
+                  type="button"
+                  key={image}
+                  aria-label={`${i + 1}. görsel`}
+                  aria-pressed={i === currentImage}
                   onClick={() => setCurrentImage(i)}
                   className={`w-2 h-2 rounded-full cursor-pointer ${
                     i === currentImage ? "bg-black" : "bg-gray-300"
@@ -118,19 +115,15 @@ export function Detail() {
               {details.ownerName} {details.ownerSurname}
             </p>
 
-            <p className="text-sm text-gray-400 dark:text-gray-600">
-              {details.ownerRole}
-            </p>
+            <p className="text-sm text-gray-400 dark:text-gray-600">{details.ownerRole}</p>
           </div>
         </div>
 
         <div>
-          <Heading title={details.title} desc=   {details.description} className="text-3xl font-bold"/>
-  
+          <Heading title={details.title} desc={details.description} className="text-3xl font-bold" />
 
           <p className="text-orange-500 mt-2">
-            {formatLocation(details.province)}-
-            {formatLocation(details.district)}
+            {formatLocation(details.province)}-{formatLocation(details.district)}
           </p>
         </div>
 
@@ -142,15 +135,11 @@ export function Detail() {
           )}
 
           {details.province && (
-            <span className="px-4 py-1 bg-gray-100 rounded-full text-sm">
-              {details.province}
-            </span>
+            <span className="px-4 py-1 bg-gray-100 rounded-full text-sm">{details.province}</span>
           )}
 
           {details.district && (
-            <span className="px-4 py-1 bg-gray-100 rounded-full text-sm">
-              {details.district}
-            </span>
+            <span className="px-4 py-1 bg-gray-100 rounded-full text-sm">{details.district}</span>
           )}
         </div>
 
@@ -172,9 +161,7 @@ export function Detail() {
           >
             <HeartIcon className="w-5 h-5" />
 
-            <span className="text-sm">
-              {details.likes?.length || ""}
-            </span>
+            <span className="text-sm">{details.likes?.length || ""}</span>
           </Button>
 
           {!isOwner && (
@@ -186,9 +173,7 @@ export function Detail() {
             >
               <BookmarkIcon className="w-5 h-5" />
 
-              <span className="text-sm">
-                {details.savedBy?.length || ""}
-              </span>
+              <span className="text-sm">{details.savedBy?.length || ""}</span>
             </Button>
           )}
 
@@ -219,18 +204,13 @@ export function Detail() {
           <div className="mt-4">
             <div className="space-y-2 max-h-40 overflow-y-auto mb-3">
               {comments.length === 0 ? (
-                <p className="text-gray-400 text-sm italic">
-                  Henüz yorum yok
-                </p>
+                <p className="text-gray-400 text-sm italic">Henüz yorum yok</p>
               ) : (
                 comments.map((comment) => (
                   <div key={comment._id} className="mb-3">
                     <div className="flex items-start gap-3">
                       <img
-                        src={
-                          comment?.user?.profileImage ||
-                          "https://i.pravatar.cc/150"
-                        }
+                        src={toAssetUrl(comment?.user?.avatar) || "https://i.pravatar.cc/150"}
                         alt="profile"
                         loading="lazy"
                         className="w-8 h-8 rounded-full object-cover"
@@ -239,17 +219,14 @@ export function Detail() {
                       <div className="flex flex-col w-full">
                         <div className="flex justify-between">
                           <p className="text-sm font-semibold">
-                            {comment?.user?.name}{" "}
-                            {comment?.user?.surname}
+                            {comment?.user?.name} {comment?.user?.surname}
                           </p>
 
-                          {user?.id === comment?.user?._id && (
+                          {user?._id === comment?.user?._id && (
                             <Button
                               variant="icon"
                               type="button"
-                              onClick={() =>
-                                handleDelete(comment._id)
-                              }
+                              onClick={() => handleDelete(comment._id)}
                               className="p-1 text-gray-400 hover:text-red-500"
                             >
                               <XMarkIcon className="w-4 h-4" />
@@ -257,27 +234,20 @@ export function Detail() {
                           )}
                         </div>
 
-                        <p className="text-sm text-gray-600">
-                          {comment.text}
-                        </p>
+                        <p className="text-sm text-gray-600">{comment.text}</p>
 
                         <div className="flex gap-2">
                           {comment.likes?.length > 0 && (
                             <div className="flex items-center mt-2">
                               <div className="flex -space-x-2">
-                                {comment.likes
-                                  .slice(0, 10)
-                                  .map((user) => (
-                                    <img
-                                      key={user._id}
-                                      src={
-                                        user.profileImage ||
-                                        "https://i.pravatar.cc/150"
-                                      }
-                                      className="w-6 h-6 rounded-full object-cover border-2 border-white"
-                                      alt="like-user"
-                                    />
-                                  ))}
+                                {comment.likes.slice(0, 10).map((user) => (
+                                  <img
+                                    key={user._id}
+                                    src={toAssetUrl(user.avatar) || "https://i.pravatar.cc/150"}
+                                    className="w-6 h-6 rounded-full object-cover border-2 border-white"
+                                    alt="like-user"
+                                  />
+                                ))}
 
                                 {comment.likes.length > 10 && (
                                   <div className="w-6 h-6 rounded-full bg-gray-300 text-xs flex items-center justify-center border-2 border-white">
@@ -294,9 +264,7 @@ export function Detail() {
                             className="p-0 text-left text-gray-700 hover:text-[rgb(82,144,246)]"
                           >
                             <span className="underline text-xs">
-                              {comment?.liked
-                                ? "Beğenmekten Vazgeç"
-                                : "Beğen"}
+                              {comment?.liked ? "Beğenmekten Vazgeç" : "Beğen"}
                             </span>
                           </Button>
                         </div>

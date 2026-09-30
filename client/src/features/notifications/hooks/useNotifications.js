@@ -1,43 +1,36 @@
-import { useState } from "react";
-import { postProvider } from "@/providers/post.provider";
+import { useCallback, useState } from "react";
+import { toast } from "react-toastify";
+import { getErrorMessage } from "@/shared/api/apiClient";
+import { notificationService } from "../services/notification.service";
 
-export default function useNotifications() {
+export function useNotifications() {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  const service = postProvider.service;
+  const fetchNotifications = useCallback(async () => {
+    setLoading(true);
 
-  const NotificationAlerts = async () => {
     try {
-      setLoading(true);
-
-      const res = await service.getNotifications();
-
-      setNotifications([...res].reverse());
+      setNotifications(await notificationService.getNotifications());
     } catch (error) {
+      toast.error(getErrorMessage(error, "Bildirimler alınamadı"));
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
 
   const markAsRead = async (id) => {
     try {
-      await service.markAsRead(id);
-
+      await notificationService.markAsRead(id);
       setNotifications((prev) =>
         prev.map((notification) =>
-          notification._id === id
-            ? { ...notification, isRead: true }
-            : notification
+          notification._id === id ? { ...notification, isRead: true } : notification
         )
       );
-    } catch (error) {}
+    } catch (error) {
+      toast.error(getErrorMessage(error, "Bildirim güncellenemedi"));
+    }
   };
 
-  return {
-    NotificationAlerts,
-    notifications,
-    markAsRead,
-    loading,
-  };
+  return { fetchNotifications, notifications, markAsRead, loading };
 }

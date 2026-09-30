@@ -1,4 +1,4 @@
- MILK – Yerel Pazar Platformu
+MILK – Yerel Pazar Platformu
 
 MILK, yerel üreticiler ile tüketicileri buluşturan, gerçek zamanlı mesajlaşma ve sosyal etkileşim özelliklerine sahip bir pazar platformudur.
 
@@ -6,17 +6,20 @@ MILK, yerel üreticiler ile tüketicileri buluşturan, gerçek zamanlı mesajla�
 
 Giriş ve kayıt sistemine sahip bir randevu sistemi web uygulamasıdır.
 ---
+
 Kimlik doğrulama
-Kullanıcılar kayıt olabilir ve giriş yapabilirler. 
+Kullanıcılar kayıt olabilir ve giriş yapabilirler.
 
 Kayıt sırasında kullanıcı bir rol seçer :
 ---
+
 Alıcı-Satıcı
 Kayıt olduktan sonra kullanıcılar e-posta ve şifreleriyle giriş yapabilirler.
 Her kullanıcının bir profil sayfası vardır .
 
 Profil şunları içerir:
 ---
+
 Profil fotoğrafı
 Ad ve soyad
 E-posta adresi
@@ -26,6 +29,7 @@ Semt
 
 Kullanıcılar şunları yapabilir:
 ---
+
 Profili güncelle
 Profil bilgilerini sil
 Gönderiler / Paylaşım
@@ -33,6 +37,7 @@ Kullanıcılar gönderi oluşturabilirler .
 
 Bir gönderi şunları içerir:
 ---
+
 Görüntü
 Tanım
 Telefon numarası
@@ -40,27 +45,31 @@ Adres
 
 Diğer kullanıcılar şunları yapabilir:
 ---
+
 Beğenilen gönderiler
 Gönderilere yorum yapın
 
 Mesajlaşma:
 ---
+
 Mesajlaşma iki yönlüdür .
 Kullanıcılar birbirleriyle gerçek zamanlı olarak sohbet edebilirler.
 
 Ana Sayfa:
 ---
+
 Ana sayfada Koyu Mod ve Açık Mod bulunmaktadır .
 Şehir bazında arama yapılabilir .
 
 Kullanılan Teknolojiler:
 ---
+
 React – Kullanıcı arayüzü oluşturmak için
 State Management – Zustand
-Axios – API istekleri için 
+Axios – API istekleri için
 Tailwind CSS – Kullanıcı arayüzü stillendirmesi için
 React Router DOM – Sayfa yönlendirmesi için
-Node.js – Arka uç ve sunucu tarafı geliştirme 
+Node.js – Arka uç ve sunucu tarafı geliştirme
 
 ---
 
@@ -73,9 +82,9 @@ ZORUNLU OLANLAR
 
 ✅ Gönderi oluşturma
 
-✅ Ürün listeleme 
+✅ Ürün listeleme
 
-✅ Ürün detayı 
+✅ Ürün detayı
 
 ✅ Beğeni
 
@@ -86,7 +95,6 @@ ZORUNLU OLANLAR
 ✅ İlçe filtreleme
 
 ✅ Favori (kaydet)
-
 
 Bildirim
 
@@ -194,5 +202,3 @@ MILK’in amacı, yerel üreticiler ile tüketiciler arasında dijital bir köpr
 👩‍💻 Geliştirici
 
 Zeynep Baş
-
-

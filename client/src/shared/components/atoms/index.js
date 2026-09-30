@@ -1,7 +1,6 @@
-
-export { Input} from "./Input"
-export { Select} from "./Select"
-export { Button} from "./Button"
-export { Loading} from "./Loading"
-export { Textarea} from "./Textarea"
-export {Heading} from "./Heading"
+export { Input } from "./Input";
+export { Select } from "./Select";
+export { Button } from "./Button";
+export { Loading } from "./Loading";
+export { Textarea } from "./Textarea";
+export { Heading } from "./Heading";

@@ -28,6 +28,8 @@ export const toSessionUser = (user) => ({
   organic: user.organic,
   organicStatus: user.organicStatus,
   dogrulanmisSatici: user.dogrulanmisSatici,
+  followersCount: user.followersCount ?? 0,
+  followingCount: user.followingCount ?? 0,
 });
 
 export const issueSession = async (user, meta, familyId) => {
@@ -63,7 +65,7 @@ export const register = async ({ name, surname, email, password, role }) => {
 };
 
 export const login = async ({ email, password }, meta) => {
-  const user = await User.findOne({ email }).select("+password");
+  const user = await User.findOne({ email, deletedAt: null }).select("+password");
 
   if (!user) {
     await verifyPassword(password, await getDummyHash());
@@ -86,7 +88,7 @@ export const refreshSession = async (token, meta) => {
   const rotated = await rotateRefreshToken(token, meta);
   const user = await User.findById(rotated.userId);
 
-  if (!user || user.status === false) {
+  if (!user || user.status === false || user.deletedAt) {
     await revokeFamily(rotated.familyId);
     throw unauthorized("Oturum geçersiz", "REFRESH_INVALID");
   }
@@ -116,9 +118,9 @@ export const authenticateAccessToken = async (token) => {
     throw unauthorized("Geçersiz oturum", "TOKEN_INVALID");
   }
 
-  const user = await User.findById(payload.sub).select("+passwordChangedAt role status").lean();
+  const user = await User.findById(payload.sub).select("+passwordChangedAt role status deletedAt").lean();
 
-  if (!user) {
+  if (!user || user.deletedAt) {
     throw unauthorized("Geçersiz oturum", "TOKEN_INVALID");
   }
 

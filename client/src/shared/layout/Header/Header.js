@@ -1,13 +1,5 @@
 import { useState } from "react";
-import {
-  Dialog,
-  DialogPanel,
-  PopoverGroup,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuItems,
-} from "@headlessui/react";
+import { Dialog, DialogPanel, PopoverGroup, Menu, MenuButton, MenuItem, MenuItems } from "@headlessui/react";
 
 import {
   Bars3Icon,
@@ -47,27 +39,14 @@ export function Header() {
 
   return (
     <header className="w-full mx-auto border-b-2 border-b-gray-200 dark:border-gray-800 dark:bg-gray-900 transition-colors">
-      <nav
-        aria-label="Global"
-        className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8"
-      >
-
+      <nav aria-label="Global" className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8">
         <div className="shrink-0">
           <Link to="/" className="-m-1.5 p-1.5">
-          <img
-  src="/assets/logo.png"
-  alt="Logo"
-  className="h-16 w-auto block dark:hidden outline-none"
-/>
+            <img src="/assets/logo.png" alt="Logo" className="h-16 w-auto block dark:hidden outline-none" />
 
-            <img
-              src="/assets/dark-logo.png"
-              alt="Logo Dark"
-className="h-16 w-auto hidden dark:block"
-            />
+            <img src="/assets/dark-logo.png" alt="Logo Dark" className="h-16 w-auto hidden dark:block" />
           </Link>
         </div>
-
 
         <div className="flex md:hidden">
           <Button
@@ -77,28 +56,16 @@ className="h-16 w-auto hidden dark:block"
           >
             <span className="sr-only">Menüyü aç</span>
 
-            <Bars3Icon
-              className="w-6 h-6"
-              aria-hidden="true"
-            />
+            <Bars3Icon className="w-6 h-6" aria-hidden="true" />
           </Button>
         </div>
 
-
         <PopoverGroup className="hidden md:flex flex-1 mx-3">
-         <Search input={input}setSearch={setSearch}setInput={setInput}/>
+          <Search input={input} setSearch={setSearch} setInput={setInput} />
         </PopoverGroup>
 
-
         <div className="hidden md:flex shrink-0 items-center gap-4">
-
-
-          <Button
-            type="button"
-            onClick={toggleTheme}
-            variant="dark"
-
-          >
+          <Button type="button" onClick={toggleTheme} variant="dark">
             {theme === "light" ? (
               <MoonIcon className="w-5 h-5 text-[rgb(137,205,251)]" />
             ) : (
@@ -106,43 +73,24 @@ className="h-16 w-auto hidden dark:block"
             )}
           </Button>
 
-
-          <Link
-            to="/kesfet"
-            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
-          >
+          <Link to="/kesfet" className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800">
             <GlobeAltIcon className="w-5 h-5 text-[rgb(137,205,251)] dark:text-yellow-400" />
           </Link>
 
-
-          <Link
-            to="/favoriler"
-            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
-          >
+          <Link to="/favoriler" className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800">
             <HeartIcon className="w-5 h-5 text-[rgb(137,205,251)] dark:text-yellow-400" />
           </Link>
 
-
-          <Link
-            to="/mesajlar"
-            className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
-          >
+          <Link to="/mesajlar" className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800">
             <ChatBubbleLeftRightIcon className="w-5 h-5 text-[rgb(137,205,251)] dark:text-yellow-400" />
           </Link>
 
-
-          <Button
-            type="button"
-            onClick={() => setBellOpen(!bellOpen)}
-            variant="dark"
-
-          >
+          <Button type="button" onClick={() => setBellOpen(!bellOpen)} variant="dark">
             <BellAlertIcon className="w-5 h-5 text-[rgb(137,205,251)] dark:text-yellow-400" />
           </Button>
 
           {bellOpen && <NotificationList open={bellOpen} />}
 
-   
           <Menu as="div" className="relative ml-3">
             <MenuButton className="relative flex rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
               <span className="absolute -inset-1.5" />
@@ -158,9 +106,7 @@ className="h-16 w-auto hidden dark:block"
                     loading="lazy"
                   />
                 ) : (
-                  <span className="text-gray-400">
-                    {user?.name?.slice(0, 2).toUpperCase()}
-                  </span>
+                  <span className="text-gray-400">{user?.name?.slice(0, 2).toUpperCase()}</span>
                 )}
               </div>
             </MenuButton>
@@ -214,12 +160,7 @@ className="h-16 w-auto hidden dark:block"
         </div>
       </nav>
 
-
-      <Dialog
-        open={mobileMenuOpen}
-        onClose={setMobileMenuOpen}
-        className="md:hidden"
-      >
+      <Dialog open={mobileMenuOpen} onClose={setMobileMenuOpen} className="md:hidden">
         <div className="fixed inset-0 z-50" />
 
         <DialogPanel
@@ -231,7 +172,6 @@ className="h-16 w-auto hidden dark:block"
             sm:ring-1 sm:ring-gray-900/10
           "
         >
-
           <div className="flex items-center justify-between">
             <Button
               type="button"
@@ -243,20 +183,13 @@ className="h-16 w-auto hidden dark:block"
             >
               <span className="sr-only">Menüyü kapat</span>
 
-              <XMarkIcon
-                className="w-6 h-6"
-                aria-hidden="true"
-              />
+              <XMarkIcon className="w-6 h-6" aria-hidden="true" />
             </Button>
           </div>
 
           <div className="mt-6 flow-root">
             <div className="-my-6 divide-y divide-gray-500/10">
-
-
               <div className="flex py-6 shrink-0 items-center justify-center gap-4">
-
-  
                 <Button
                   type="button"
                   onClick={toggleTheme}
@@ -273,30 +206,17 @@ className="h-16 w-auto hidden dark:block"
                   )}
                 </Button>
 
- 
-                <Link
-                  to="/kesfet"
-                  className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
-                >
+                <Link to="/kesfet" className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800">
                   <GlobeAltIcon className="w-5 h-5 text-[rgb(137,205,251)] dark:text-yellow-400" />
                 </Link>
 
-
-                <Link
-                  to="/favoriler"
-                  className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
-                >
+                <Link to="/favoriler" className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800">
                   <HeartIcon className="w-5 h-5 text-[rgb(137,205,251)] dark:text-yellow-400" />
                 </Link>
 
-         
-                <Link
-                  to="/mesajlar"
-                  className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800"
-                >
+                <Link to="/mesajlar" className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800">
                   <ChatBubbleLeftRightIcon className="w-5 h-5 text-[rgb(137,205,251)] dark:text-yellow-400" />
                 </Link>
-
 
                 <Menu as="div" className="relative ml-3">
                   <MenuButton className="relative flex rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">
@@ -380,16 +300,8 @@ className="h-16 w-auto hidden dark:block"
                 </Menu>
               </div>
 
-
               <div className="space-y-2 py-6">
-
-                        <Search input={input}
-                        setSearch={setSearch}
-                        setInput={setInput}
-    
-                       />
-         
-      
+                <Search input={input} setSearch={setSearch} setInput={setInput} />
               </div>
             </div>
           </div>

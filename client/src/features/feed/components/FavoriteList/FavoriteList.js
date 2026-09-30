@@ -1,23 +1,16 @@
 import { useState, useEffect } from "react";
-import usePostAll from "@/features/feed/hooks/post/usePost";
-import useCommentAll from "@/features/feed/hooks/comments/useComments";
-import { Card } from "@/shared/components/molecules";
-export function Favorite() {
+import { PostCard } from "@/features/posts/components/PostCard";
+import { useComments } from "@/features/posts/hooks/useComments";
+import { useExploreFeed } from "../../hooks/useExploreFeed";
+
+export function FavoriteList() {
   const [selected, setSelected] = useState(null);
   const handleShowed = (id) => {
     setSelected((prev) => (prev === id ? null : id));
   };
 
-  const {
-    favoruite,
-    fetchSavedPosts,
-    data,
-    loading,
-    user,
-    followId,
-    handlePostLike,
-    handlePostSave,
-  } = usePostAll();
+  const { favorites, fetchSavedPosts, data, loading, user, followId, handlePostLike, handlePostSave } =
+    useExploreFeed();
 
   const {
     handleComment,
@@ -27,16 +20,16 @@ export function Favorite() {
     comments,
     newComment,
     setNewComment,
-  } = useCommentAll(selected);
+  } = useComments(selected);
   useEffect(() => {
     fetchSavedPosts();
-  }, [data]);
+  }, [data, fetchSavedPosts]);
   return (
     <div className="h-[100vh] overflow-auto p-4 ">
       <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-1">
-        <Card
-          data={favoruite || []}
-          favoruite={favoruite || ""}
+        <PostCard
+          data={favorites}
+          isFavoriteList
           selected={selected}
           newComment={newComment}
           setNewComment={setNewComment}

@@ -1,15 +1,14 @@
-import { USER_ROLES } from "../models/User.js";
-import { FEEDBACK_TYPES } from "../models/Feedback.js";
-import { z, email, password, idParams, limitQuery, requiredText, optionalText } from "./common.js";
+import { FEEDBACK_TYPES, ROLES, RULES } from "./rules.js";
+import { z, email, password, idParams, paginationQuery, requiredText, optionalText } from "./common.js";
 
 export const updateMeSchema = {
   body: z
     .strictObject({
-      name: requiredText(50).optional(),
-      surname: requiredText(50).optional(),
-      province: optionalText(60),
-      district: optionalText(60),
-      organic: optionalText(500),
+      name: requiredText(RULES.name.max).optional(),
+      surname: requiredText(RULES.name.max).optional(),
+      province: optionalText(RULES.location.max),
+      district: optionalText(RULES.location.max),
+      organic: optionalText(RULES.organic.max),
     })
     .refine((body) => Object.keys(body).length > 0, "Güncellenecek alan yok"),
 };
@@ -34,9 +33,11 @@ export const deleteMeSchema = {
   }),
 };
 
-export const followSchema = { params: idParams };
+export const userIdSchema = { params: idParams };
 
-export const listUsersSchema = { query: limitQuery };
+export const followListSchema = { params: idParams, query: paginationQuery };
+
+export const listUsersSchema = { query: paginationQuery };
 
 export const organicStatusSchema = {
   body: z.strictObject({
@@ -47,12 +48,12 @@ export const organicStatusSchema = {
 
 export const changeRoleSchema = {
   params: idParams,
-  body: z.strictObject({ role: z.enum(USER_ROLES) }),
+  body: z.strictObject({ role: z.enum(ROLES) }),
 };
 
 export const createFeedbackSchema = {
   body: z.object({
     type: z.enum(FEEDBACK_TYPES),
-    message: requiredText(2000),
+    message: requiredText(RULES.feedback.max),
   }),
 };
