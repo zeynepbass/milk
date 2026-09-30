@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { ErrorBoundary } from "./ErrorBoundary";
@@ -12,9 +12,6 @@ function Unstable() {
 
 describe("ErrorBoundary", () => {
   it("hata yakalar ve tekrar denemeyle kurtulur", async () => {
-    vi.spyOn(window, "dispatchEvent");
-    const reportError = vi.spyOn(globalThis, "reportError").mockImplementation(() => {});
-
     render(
       <ErrorBoundary>
         <Unstable />
@@ -26,7 +23,5 @@ describe("ErrorBoundary", () => {
     shouldThrow = false;
     await userEvent.click(screen.getByRole("button", { name: "Tekrar dene" }));
     expect(screen.getByText("İçerik")).toBeInTheDocument();
-
-    reportError.mockRestore();
   });
 });

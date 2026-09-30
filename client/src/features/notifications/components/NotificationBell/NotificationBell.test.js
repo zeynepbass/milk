@@ -26,7 +26,7 @@ describe("NotificationBell", () => {
       })
     );
 
-    renderWithProviders(<NotificationBell />, { user: buildUser() });
+    renderWithProviders(<NotificationBell />, { user: buildUser(), path: "*" });
 
     const bell = await screen.findByRole("button", { name: "Bildirimler, 1 okunmamış" });
     await userEvent.click(bell);
