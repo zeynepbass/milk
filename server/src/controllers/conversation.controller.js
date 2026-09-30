@@ -1,61 +1,9 @@
-import Conversation from "../models/Conversation.js";
-import Message from "../models/Message.js";
-import mongoose from "mongoose";
+import * as messageService from "../services/message.service.js";
 
-export const getConversationBetweenUsers = async (req, res) => {
-  try {
-    const { userId, otherUserId } = req.params;
-
-    if (
-      !mongoose.Types.ObjectId.isValid(userId) ||
-      !mongoose.Types.ObjectId.isValid(otherUserId)
-    ) {
-      return res.status(400).json({ error: "Geçersiz kullanıcı ID" });
-    }
-
-    const requesterId = (req.user.id || req.user._id).toString();
-    if (requesterId !== userId && requesterId !== otherUserId) {
-      return res.status(403).json({ error: "Yetkisiz" });
-    }
-
-    const u1 = new mongoose.Types.ObjectId(userId);
-    const u2 = new mongoose.Types.ObjectId(otherUserId);
-
-    let conversation = await Conversation.findOne({
-      participants: { $all: [u1, u2] },
-    }).populate("participants", "name surname avatar");
-
-    if (!conversation) {
-      return res.json({ _id: null, participants: [], messages: [] });
-    }
-
-    const messages = await Message.find({
-      conversationId: conversation._id,
-    }).sort({ createdAt: 1 });
-
-    res.json({ ...conversation.toObject(), messages });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Mesajlar alınamadı" });
-  }
+export const getMyConversations = async (req, res) => {
+  res.json(await messageService.listConversations(req.userId));
 };
-export const getUserConversations = async (req, res) => {
-  try {
-    const { userId } = req.params;
 
-    const requesterId = (req.user.id || req.user._id).toString();
-    if (requesterId !== userId) {
-      return res.status(403).json({ error: "Yetkisiz" });
-    }
-
-    const conversations = await Conversation.find({
-      participants: userId,
-    })
-      .sort({ lastMessageAt: -1 })
-      .populate("participants", "name surname avatar");
-
-    res.json(conversations);
-  } catch (error) {
-    res.status(500).json({ error: "Chat listesi alınamadı" });
-  }
+export const getConversationWithUser = async (req, res) => {
+  res.json(await messageService.getConversationWith(req.userId, req.params.userId));
 };

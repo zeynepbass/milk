@@ -1,149 +1,43 @@
-import dotenv from "dotenv";
-dotenv.config();
+import http from "node:http";
+import { env } from "./config/env.js";
+import { connectDB, disconnectDB } from "./config/db.js";
+import { createApp } from "./app.js";
+import { createSocketServer } from "./sockets/index.js";
+import { logger } from "./utils/logger.js";
 
-import express from "express";
-import cors from "cors";
-import helmet from "helmet";
-import http from "http";
-import { Server } from "socket.io";
+const start = async () => {
+  await connectDB(env.mongoUri);
 
-import { connectDB } from "./config/db.js";
+  const httpServer = http.createServer(createApp());
+  const io = createSocketServer(httpServer);
 
-import Message from "./models/Message.js";
+  httpServer.listen(env.port, () => {
+    logger.info({ port: env.port, clientUrls: env.clientUrls }, "Sunucu başlatıldı");
+  });
 
-import messageRoutes from "./routes/message.route.js";
-import conversationRoutes from "./routes/conversation.route.js";
-import userRoutes from "./routes/user.routes.js";
-import postRoutes from "./routes/post.routes.js";
-import commentRoutes from "./routes/comment.routes.js";
-import { errorHandler, notFoundHandler } from "./middleware/errorHandler.js";
+  const shutdown = async (signal) => {
+    logger.info({ signal }, "Sunucu kapatılıyor");
+    io.close();
+    httpServer.close();
+    await disconnectDB();
+    process.exit(0);
+  };
 
-const app = express();
-const server = http.createServer(app);
-
-const PORT = process.env.PORT || 5346;
-const CLIENT_URL = process.env.CLIENT_URL || "http://localhost:3000";
-
-connectDB();
-
-const corsOptions = {
-  origin: CLIENT_URL,
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-  allowedHeaders: ["Content-Type", "Authorization"],
+  process.once("SIGTERM", shutdown);
+  process.once("SIGINT", shutdown);
 };
 
-app.use(
-  helmet({
-    crossOriginResourcePolicy: { policy: "cross-origin" },
-  })
-);
-
-app.use(cors(corsOptions));
-
-app.use(express.json({ limit: "50mb" }));
-app.use(
-  express.urlencoded({
-    limit: "50mb",
-    extended: true,
-  })
-);
-
-app.use("/uploads", express.static("uploads"));
-
-app.use("/api/users", userRoutes);
-app.use("/api/posts", postRoutes);
-app.use("/api/comments", commentRoutes);
-app.use("/api/messages", messageRoutes);
-app.use("/api/conversations", conversationRoutes);
-
-app.use(notFoundHandler);
-app.use(errorHandler);
-
-const io = new Server(server, {
-  cors: {
-    origin: CLIENT_URL,
-    methods: ["GET", "POST"],
-    credentials: true,
-  },
+process.on("unhandledRejection", (reason) => {
+  logger.fatal({ err: reason }, "Yakalanmamış promise reddi");
+  process.exit(1);
 });
 
-const onlineUsers = new Map();
-
-io.on("connection", (socket) => {
-  console.log("✅ Socket connected:", socket.id);
-
-  socket.on("addUser", (userId) => {
-    if (!userId) return;
-
-    const userSockets = onlineUsers.get(userId) || [];
-
-    if (!userSockets.includes(socket.id)) {
-      userSockets.push(socket.id);
-      onlineUsers.set(userId, userSockets);
-    }
-
-    io.emit("getUsers", Array.from(onlineUsers.keys()));
-  });
-
-  socket.on(
-    "sendMessage",
-    async ({ senderId, receiverId, text, conversationId }) => {
-      try {
-        const message = await Message.create({
-          senderId,
-          receiverId,
-          conversationId,
-          text,
-        });
-
-        const receiverSockets = onlineUsers.get(receiverId);
-
-        if (receiverSockets) {
-          receiverSockets.forEach((socketId) => {
-            io.to(socketId).emit("getMessage", message);
-          });
-        }
-
-        socket.emit("getMessage", message);
-      } catch (error) {
-        console.error("❌ Mesaj hatası:", error);
-
-        socket.emit(
-          "errorMessage",
-          "Mesaj gönderilemedi"
-        );
-      }
-    }
-  );
-
-
-  socket.on("disconnect", () => {
-    console.log("❌ Socket disconnected:", socket.id);
-
-    for (const [userId, sockets] of onlineUsers.entries()) {
-      const filteredSockets = sockets.filter(
-        (socketId) => socketId !== socket.id
-      );
-
-      if (filteredSockets.length === 0) {
-        onlineUsers.delete(userId);
-      } else {
-        onlineUsers.set(userId, filteredSockets);
-      }
-    }
-
-    io.emit(
-      "getUsers",
-      Array.from(onlineUsers.keys())
-    );
-  });
+process.on("uncaughtException", (err) => {
+  logger.fatal({ err }, "Yakalanmamış hata");
+  process.exit(1);
 });
 
-
-server.listen(PORT, () => {
-  console.log("=================================");
-  console.log(`🚀 Server: http://localhost:${PORT}`);
-  console.log(`🌐 Client: ${CLIENT_URL}`);
-  console.log("=================================");
+start().catch((err) => {
+  logger.fatal({ err }, "Sunucu başlatılamadı");
+  process.exit(1);
 });

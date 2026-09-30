@@ -1,3 +1,0 @@
-
-export { Card} from "./Card"
-

@@ -9,11 +9,8 @@ export const BCRYPT_ROUNDS = env.isTest ? 4 : 12;
 
 const INVALID_CREDENTIALS_MESSAGE = "E-posta veya şifre hatalı";
 
-let dummyHashPromise = null;
-const getDummyHash = () => {
-  dummyHashPromise ??= bcrypt.hash("milk-timing-equalizer", BCRYPT_ROUNDS);
-  return dummyHashPromise;
-};
+const dummyHashPromise = bcrypt.hash("milk-timing-equalizer", BCRYPT_ROUNDS);
+const getDummyHash = () => dummyHashPromise;
 
 export const hashPassword = (plain) => bcrypt.hash(plain, BCRYPT_ROUNDS);
 

@@ -1,335 +1,68 @@
-import User from "../models/User.js";
-import bcrypt from "bcryptjs";
-import { generateToken } from "../config/jwt.js";
+import * as userService from "../services/user.service.js";
 import { getLimit } from "../utils/pagination.js";
+import { clearRefreshCookie, requestMeta, setRefreshCookie } from "../utils/sessionCookie.js";
 
-import Feedback from "../models/Feedback.js";
-export const getFeetBack = async (req, res) => {
-  try {
-    const feedbacks = await Feedback.find()
-      .populate("user", "name email role")
-      .sort({ createdAt: -1 });
-
-    res.status(200).json(feedbacks);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
-};
-export const createFeedback = async (req, res) => {
-  try {
-    const { message, type } = req.body;
-
-    const feedback = await Feedback.create({
-      message,
-      type,
-      user: req.user._id,
-    });
-
-    res.status(201).json({
-      success: true,
-      message: "Geri bildiriminiz başarıyla gönderildi.",
-      feedback,
-    });
-  } catch (err) {
-    res.status(500).json({
-      success: false,
-      message: err.message,
-    });
-  }
-};
-export const register = async (req, res) => {
-  try {
-    const { name, surname, email, password, role } = req.body;
-
-    if (!name || !surname || !email || !password) {
-      return res.status(400).json({
-        message: "Tüm alanlar zorunludur",
-      });
-    }
-
-    const emailRegex = /^\S+@\S+\.\S+$/;
-    if (!emailRegex.test(email)) {
-      return res.status(400).json({
-        message: "Geçerli bir email adresi giriniz",
-      });
-    }
-
-    if (password.length < 6) {
-      return res.status(400).json({
-        message: "Şifre en az 6 karakter olmalıdır",
-      });
-    }
-
-    const userExist = await User.findOne({ email });
-    if (userExist) {
-      return res.status(400).json({
-        message: "Bu email zaten kayıtlı",
-      });
-    }
-
-    const allowedRoles = ["alici", "satici"];
-    const safeRole = allowedRoles.includes(role) ? role : "satici";
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const user = await User.create({
-      name,
-      surname,
-      email,
-      password: hashedPassword,
-      role: safeRole,
-    });
-
-    res.status(201).json({
-      message: "Kayıt başarılı ",
-
-      user: {
-        id: user._id,
-        name: user.name,
-        surname: user.surname,
-        email: user.email,
-        role: user.role,
-      },
-    });
-  } catch (err) {
-    if (err.name === "ValidationError") {
-      return res.status(400).json({
-        message: err.message,
-      });
-    }
-
-    res.status(500).json({
-      message: "Sunucu hatası",
-    });
-  }
-};
-export const getUsers = async (req, res) => {
-  try {
-    const users = await User.find()
-      .select("-password")
-      .limit(getLimit(req));
-
-    res.status(200).json(users);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "Alıcı kullanıcılar alınamadı" });
-  }
-};
-export const updateUserStatus = async (req, res) => {
-  try {
-    const { userId, organicStatus } = req.body;
-
-    const user = await User.findById(userId);
-
-    if (!user) {
-      return res.status(404).json({ message: "Kullanıcı bulunamadı" });
-    }
-
-    if (organicStatus !== undefined) {
-      user.organicStatus = organicStatus;
-
-      if (organicStatus === true) {
-        user.dogrulanmisSatici = true;
-      }
-    }
-
-    await user.save();
-
-    res.status(200).json({
-      message: "Güncellendi",
-      user,
-    });
-  } catch (error) {
-    console.error(error);
-
-    if (error.code === 11000) {
-      return res.status(400).json({
-        message: "Bu email zaten kullanılıyor",
-      });
-    }
-
-    res.status(500).json({
-      message: "Sunucu hatası",
-    });
-  }
-};
-export const login = async (req, res) => {
-  try {
-    const { email, password } = req.body;
-    const user = await User.findOne({
-      email,
-      status: true,
-    });
-    if (!user) return res.status(404).json({ message: "Kullanıcı bulunamadı" });
-
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) return res.status(400).json({ message: "Şifre hatalı" });
-
-    const token = await generateToken({ id: user._id.toString() });
-    res.status(201).json({
-      message: "Giriş başarılı ",
-
-      token,
-      user: {
-        _id: user._id,
-        name: user.name,
-        surname: user.surname,
-        avatar: user.avatar,
-        email: user.email,
-        role: user.role,
-        province: user.province,
-        district: user.district,
-      },
-    });
-
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
+export const getMe = async (req, res) => {
+  res.json(await userService.getMe(req.userId));
 };
 
-export const getProfile = async (req, res) => {
-  try {
-    const user = await User.findById(req.user.id)
-      .select("-password")
-      .populate("followers following", "name surname");
-
-    res.json(user);
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
+export const updateMe = async (req, res) => {
+  const user = await userService.updateMe(req.userId, req.body);
+  res.json({ message: "Güncellendi", user });
 };
-export const deleteUser = async (req, res) => {
-  try {
-    const userId = req.user.id;
 
-    const user = await User.findByIdAndDelete(userId);
-
-    if (!user) {
-      return res.status(404).json({
-        message: "Kullanıcı bulunamadı",
-      });
-    }
-
-    res.status(200).json({
-      message: "Kullanıcı başarıyla silindi",
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({
-      message: "Sunucu hatası",
-    });
-  }
+export const changePassword = async (req, res) => {
+  const session = await userService.changePassword(req.userId, req.body, requestMeta(req));
+  setRefreshCookie(res, session.refreshToken);
+  res.json({ message: "Şifreniz güncellendi", accessToken: session.accessToken, user: session.user });
 };
-export const updateUser = async (req, res) => {
-  try {
-    const id = req.user.id;
-    const {
-      name,
-      surname,
-      email,
-      password,
-      role,
-      avatar,
-      province,
-      district,
-      organic,
-    } = req.body;
-    const user = await User.findById(id);
 
-    if (!user) {
-      return res.status(404).json({ message: "Kullanıcı bulunamadı" });
-    }
-
-    if (name !== undefined) user.name = name;
-    if (surname !== undefined) user.surname = surname;
-    if (email !== undefined) user.email = email;
-    if (role !== undefined) user.role = role;
-    if (avatar !== undefined) user.avatar = avatar;
-    if (province !== undefined) user.province = province;
-    if (district !== undefined) user.district = district;
-    if (organic !== undefined) user.organic = organic;
-
-    if (password && password.trim() !== "") {
-      const hashedPassword = await bcrypt.hash(password, 10);
-      user.password = hashedPassword;
-    }
-
-    await user.save();
-
-    res.status(200).json({
-      message: "Güncellendi",
-      user,
-    });
-  } catch (error) {
-    console.error(error);
-
-    if (error.code === 11000) {
-      return res.status(400).json({
-        message: "Bu email zaten kullanılıyor",
-      });
-    }
-
-    res.status(500).json({
-      message: "Sunucu hatası",
-    });
-  }
+export const changeEmail = async (req, res) => {
+  const user = await userService.changeEmail(req.userId, req.body);
+  res.json({ message: "E-posta adresiniz güncellendi", user });
 };
-export const freezeUser = async (req, res) => {
-  try {
-    const userId = req.user.id;
 
-    const user = await User.findByIdAndUpdate(
-      userId,
-      { status: false },
-      { new: true }
-    );
-
-    if (!user) {
-      return res.status(404).json({
-        message: "Kullanıcı bulunamadı",
-      });
-    }
-
-    res.status(200).json({
-      message: "Hesap donduruldu",
-    });
-  } catch (error) {
-    res.status(500).json({
-      message: "Sunucu hatası",
-    });
-  }
+export const updateAvatar = async (req, res) => {
+  const user = await userService.updateAvatar(req.userId, req.file);
+  res.json({ message: "Profil fotoğrafı güncellendi", user });
 };
+
+export const freezeMe = async (req, res) => {
+  await userService.freezeMe(req.userId);
+  clearRefreshCookie(res);
+  res.json({ message: "Hesap donduruldu" });
+};
+
+export const deleteMe = async (req, res) => {
+  await userService.deleteMe(req.userId, req.body);
+  clearRefreshCookie(res);
+  res.json({ message: "Kullanıcı başarıyla silindi" });
+};
+
 export const followUser = async (req, res) => {
-  try {
-    const targetUser = await User.findById(req.params.id);
-    const currentUser = await User.findById(req.user.id);
+  const { following } = await userService.toggleFollow(req.userId, req.params.id);
+  res.json({ following, message: following ? "Takip edildi" : "Takipten çıkıldı" });
+};
 
-    if (!targetUser)
-      return res.status(404).json({ message: "Kullanıcı bulunamadı" });
+export const getUsers = async (req, res) => {
+  res.json(await userService.listUsers(getLimit(req)));
+};
 
-    if (targetUser._id.equals(currentUser._id)) {
-      return res.status(400).json({
-        message: "Kendini takip edemezsin",
-      });
-    }
+export const updateOrganicStatus = async (req, res) => {
+  const user = await userService.setOrganicStatus(req.body);
+  res.json({ message: "Güncellendi", user });
+};
 
-    const isFollowing = currentUser.following.includes(targetUser._id);
+export const changeRole = async (req, res) => {
+  const user = await userService.changeRole(req.params.id, req.body.role);
+  res.json({ message: "Rol güncellendi", user });
+};
 
-    if (isFollowing) {
-      currentUser.following.pull(targetUser._id);
-      targetUser.followers.pull(currentUser._id);
-    } else {
-      currentUser.following.push(targetUser._id);
-      targetUser.followers.push(currentUser._id);
-    }
+export const createFeedback = async (req, res) => {
+  const feedback = await userService.createFeedback(req.userId, req.body);
+  res.status(201).json({ message: "Geri bildiriminiz başarıyla gönderildi.", feedback });
+};
 
-    await currentUser.save();
-    await targetUser.save();
-
-    res.json({
-      message: isFollowing ? "Takipten çıkıldı" : "Takip edildi",
-    });
-  } catch (err) {
-    res.status(500).json({ message: err.message });
-  }
+export const getFeedbacks = async (req, res) => {
+  res.json(await userService.listFeedbacks());
 };

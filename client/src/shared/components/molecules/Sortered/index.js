@@ -1,3 +1,0 @@
-
-export { Sortered} from "./Sortered"
-

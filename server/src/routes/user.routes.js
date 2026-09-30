@@ -1,35 +1,52 @@
 import express from "express";
 import {
-  register,
-  login,
-  getProfile,
-  followUser,
-  updateUser,
-  deleteUser,
-  freezeUser,
-  getUsers,
-  updateUserStatus,
+  changeEmail,
+  changePassword,
+  changeRole,
   createFeedback,
-  getFeetBack
+  deleteMe,
+  followUser,
+  freezeMe,
+  getFeedbacks,
+  getMe,
+  getUsers,
+  updateAvatar,
+  updateMe,
+  updateOrganicStatus,
 } from "../controllers/user.controller.js";
-import { authMiddleware,adminOnly } from "../middleware/auth.middleware.js";
-import { authLimiter } from "../middleware/rateLimiter.js";
+import { adminOnly, authMiddleware } from "../middleware/auth.middleware.js";
+import { validate } from "../middleware/validate.js";
+import { uploadImage } from "../middleware/upload.js";
+import {
+  changeEmailSchema,
+  changePasswordSchema,
+  changeRoleSchema,
+  createFeedbackSchema,
+  deleteMeSchema,
+  followSchema,
+  listUsersSchema,
+  organicStatusSchema,
+  updateMeSchema,
+} from "../validators/user.validators.js";
 
 const router = express.Router();
 
+router.use(authMiddleware);
 
-router.post("/register", authLimiter, register);
-router.post("/login", authLimiter, login);
-router.get("/feedback",  authMiddleware, adminOnly, getFeetBack);
-router.post("/feedback",  authMiddleware, createFeedback);
+router.get("/me", getMe);
+router.patch("/me", validate(updateMeSchema), updateMe);
+router.put("/me/password", validate(changePasswordSchema), changePassword);
+router.put("/me/email", validate(changeEmailSchema), changeEmail);
+router.put("/me/avatar", uploadImage("avatar"), updateAvatar);
+router.post("/me/freeze", freezeMe);
+router.delete("/me", validate(deleteMeSchema), deleteMe);
 
-router.get("/profile", authMiddleware, getProfile);
-router.put("/updateUser",authMiddleware, updateUser);
-router.put("/organicStatus",authMiddleware, adminOnly, updateUserStatus);
+router.post("/follow/:id", validate(followSchema), followUser);
+router.post("/feedback", validate(createFeedbackSchema), createFeedback);
 
-router.post("/follow/:id", authMiddleware, followUser);
+router.get("/feedback", adminOnly, getFeedbacks);
+router.get("/", adminOnly, validate(listUsersSchema), getUsers);
+router.put("/organicStatus", adminOnly, validate(organicStatusSchema), updateOrganicStatus);
+router.patch("/:id/role", adminOnly, validate(changeRoleSchema), changeRole);
 
-router.get("/", authMiddleware, adminOnly, getUsers);
-router.put("/freeze", authMiddleware, freezeUser);
-router.delete("/:id",authMiddleware, deleteUser);
 export default router;

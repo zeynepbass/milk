@@ -1,6 +1,0 @@
-export {Profile} from "./profile"
-export {CreatePostForm} from "./CreatePostForm"
-export {OrganicForm} from "./organicForm"
-export {UpdatedPostForm} from "./updatedPostForm"
-export {SalesSupports} from "./salesSupport"
-export {Description} from "./description"

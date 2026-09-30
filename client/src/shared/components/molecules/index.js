@@ -1,4 +1,2 @@
-
-export { Card} from "./Card"
-export { Sortered} from "./Sortered"
-export {Search} from "./SearchBar"
+export { EmptyPostList } from "./EmptyPostList";
+export { Search } from "./SearchBar";
