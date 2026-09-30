@@ -1,25 +1,17 @@
 import { SignJWT, jwtVerify } from "jose";
+import { env } from "./env.js";
 
-const getSecret = () => {
-  if (!process.env.JWT_SECRET) {
-    throw new Error(
-      "JWT_SECRET ortam değişkeni tanımlı değil. Sunucu .env dosyasını kontrol edin."
-    );
-  }
+const secret = new TextEncoder().encode(env.jwtSecret);
 
-  return new TextEncoder().encode(process.env.JWT_SECRET);
-};
-
-
-export const generateToken = async (payload) => {
-  return await new SignJWT(payload)
+export const generateAccessToken = (userId) =>
+  new SignJWT({})
     .setProtectedHeader({ alg: "HS256" })
-    .setExpirationTime("7d")
-    .sign(getSecret());
-};
+    .setSubject(userId.toString())
+    .setIssuedAt()
+    .setExpirationTime(`${env.accessTokenTtlSeconds}s`)
+    .sign(secret);
 
-
-export const verifyToken = async (token) => {
-  const { payload } = await jwtVerify(token, getSecret());
+export const verifyAccessToken = async (token) => {
+  const { payload } = await jwtVerify(token, secret, { algorithms: ["HS256"] });
   return payload;
 };

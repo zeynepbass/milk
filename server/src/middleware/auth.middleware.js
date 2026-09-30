@@ -1,32 +1,28 @@
-import User from "../models/User.js";
-import { verifyToken } from "../config/jwt.js";
+import { authenticateAccessToken } from "../services/auth.service.js";
+import { forbidden, unauthorized } from "../utils/AppError.js";
+
+const extractBearerToken = (header) => {
+  if (typeof header !== "string" || !header.startsWith("Bearer ")) return null;
+  return header.slice("Bearer ".length).trim() || null;
+};
 
 export const authMiddleware = async (req, res, next) => {
-  try {
-    const authHeader = req.headers.authorization;
+  const token = extractBearerToken(req.headers.authorization);
 
-    if (!authHeader || !authHeader.startsWith("Bearer "))
-      return res.status(401).json({ message: "Token yok" });
-
-    const token = authHeader.split(" ")[1];
-
-    const decoded = await verifyToken(token);
-
-    const user = await User.findById(decoded.id);
-
-    if (!user) {
-      return res.status(404).json({ message: "User not found" });
-    }
-
-    req.user = user;
-    next();
-  } catch (error) {
-    res.status(401).json({ message: "Geçersiz token" });
+  if (!token) {
+    return next(unauthorized("Oturum açmanız gerekiyor", "TOKEN_MISSING"));
   }
+
+  const user = await authenticateAccessToken(token);
+
+  req.user = user;
+  req.userId = user.id;
+  return next();
 };
+
 export const adminOnly = (req, res, next) => {
-  if (req.user.role !== "admin") {
-    return res.status(403).json({ message: "Sadece admin erişebilir" });
+  if (req.user?.role !== "admin") {
+    return next(forbidden("Sadece admin erişebilir"));
   }
-  next();
+  return next();
 };

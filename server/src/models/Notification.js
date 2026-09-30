@@ -7,6 +7,10 @@ const notificationSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    senderId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
     postId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Post",
@@ -41,5 +45,7 @@ const notificationSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+notificationSchema.index({ userId: 1, createdAt: -1 });
 
 export default mongoose.model("Notification", notificationSchema);

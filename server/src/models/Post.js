@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 
+export const POST_CATEGORIES = ["sut_urunleri", "bal", "zeytinyagi", "peynir", "sebze", "meyve"];
+
 const postSchema = new mongoose.Schema(
   {
     user: {
@@ -61,7 +63,7 @@ const postSchema = new mongoose.Schema(
 
     category: {
       type: String,
-      enum: ["sut_urunleri", "bal", "zeytinyagi", "peynir", "sebze", "meyve"],
+      enum: POST_CATEGORIES,
       required: true,
       index: true,
     },
