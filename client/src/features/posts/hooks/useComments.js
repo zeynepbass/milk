@@ -1,80 +1,109 @@
-import { useCallback, useEffect, useState } from "react";
+import { useInfiniteQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 import { getErrorMessage } from "@/shared/api/apiClient";
+import { queryKeys } from "@/shared/query/queryKeys";
+import {
+  filterInfiniteItems,
+  mapInfiniteItems,
+  pageParamsFromCursor,
+  prependInfiniteItem,
+} from "@/shared/query/infinite";
+import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import { commentService } from "../services/comment.service";
 
-const applyLikeResult = (commentId, result) => (comment) =>
-  comment._id === commentId
-    ? { ...comment, likes: result.likes, likesCount: result.likesCount, liked: result.liked }
-    : comment;
+export function useComments(postId, { enabled = true } = {}) {
+  return useInfiniteQuery({
+    queryKey: queryKeys.posts.comments(postId),
+    queryFn: ({ pageParam }) => commentService.getComments(postId, { cursor: pageParam }),
+    enabled: Boolean(postId) && enabled,
+    ...pageParamsFromCursor,
+  });
+}
 
-export function useComments(postId) {
-  const [comments, setComments] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [newComment, setNewComment] = useState("");
-
-  const fetchComments = useCallback(async () => {
-    if (!postId) return;
-
-    setLoading(true);
-    try {
-      setComments(await commentService.getComments(postId));
-    } catch (error) {
-      toast.error(getErrorMessage(error, "Yorumlar alınamadı"));
-    } finally {
-      setLoading(false);
-    }
-  }, [postId]);
-
-  useEffect(() => {
-    fetchComments();
-  }, [fetchComments]);
-
-  const handleComment = async (targetPostId, text) => {
-    if (!text?.trim()) return;
-
-    try {
-      const comment = await commentService.postComment(targetPostId, text);
-      setComments((prev) => [comment, ...prev]);
-    } catch (error) {
-      toast.error(getErrorMessage(error, "Yorum gönderilemedi"));
-    }
-  };
-
-  const handleAddComment = async (targetPostId) => {
-    if (!newComment.trim()) return;
-
-    await handleComment(targetPostId, newComment);
-    setNewComment("");
-  };
-
-  const handleDelete = async (commentId) => {
-    try {
-      await commentService.deleteComment(commentId);
-      setComments((prev) => prev.filter((item) => item._id !== commentId));
-    } catch (error) {
-      toast.error(getErrorMessage(error, "Yorum silinemedi"));
-    }
-  };
-
-  const handleCommentLike = async (commentId) => {
-    try {
-      const result = await commentService.likeComment(commentId);
-      setComments((prev) => prev.map(applyLikeResult(commentId, result)));
-    } catch (error) {
-      toast.error(getErrorMessage(error, "Beğeni işlemi başarısız oldu."));
-    }
-  };
+const useCommentsCache = (postId) => {
+  const queryClient = useQueryClient();
+  const key = queryKeys.posts.comments(postId);
 
   return {
-    comments,
-    loading,
-    newComment,
-    setNewComment,
-    handleAddComment,
-    handleComment,
-    handleDelete,
-    handleCommentLike,
-    refetch: fetchComments,
+    queryClient,
+    key,
+    snapshot: async () => {
+      await queryClient.cancelQueries({ queryKey: key });
+      return queryClient.getQueryData(key);
+    },
+    restore: (previous) => queryClient.setQueryData(key, previous),
+    update: (updater) => queryClient.setQueryData(key, updater),
   };
+};
+
+export function useAddComment(postId) {
+  const cache = useCommentsCache(postId);
+  const { data: me } = useCurrentUser();
+
+  return useMutation({
+    mutationFn: (text) => commentService.addComment(postId, text),
+    onMutate: async (text) => {
+      const previous = await cache.snapshot();
+      const optimistic = {
+        _id: `pending-${Date.now()}`,
+        text: text.trim(),
+        user: me,
+        likesCount: 0,
+        likedByMe: false,
+        createdAt: new Date().toISOString(),
+        pending: true,
+      };
+      cache.update((data) => prependInfiniteItem(data, optimistic));
+      return { previous, optimisticId: optimistic._id };
+    },
+    onError: (error, text, context) => {
+      cache.restore(context?.previous);
+      toast.error(getErrorMessage(error, "Yorum gönderilemedi"));
+    },
+    onSuccess: (comment, text, context) => {
+      cache.update((data) =>
+        mapInfiniteItems(data, (item) => (item._id === context.optimisticId ? comment : item))
+      );
+    },
+  });
+}
+
+export function useCommentLike(postId) {
+  const cache = useCommentsCache(postId);
+
+  return useMutation({
+    mutationFn: ({ commentId, liked }) => commentService.setLike(commentId, liked),
+    onMutate: async ({ commentId, liked }) => {
+      const previous = await cache.snapshot();
+      cache.update((data) =>
+        mapInfiniteItems(data, (comment) =>
+          comment._id === commentId && comment.likedByMe !== liked
+            ? { ...comment, likedByMe: liked, likesCount: Math.max(0, comment.likesCount + (liked ? 1 : -1)) }
+            : comment
+        )
+      );
+      return { previous };
+    },
+    onError: (error, variables, context) => {
+      cache.restore(context?.previous);
+      toast.error(getErrorMessage(error, "Beğeni işlemi başarısız oldu."));
+    },
+  });
+}
+
+export function useDeleteComment(postId) {
+  const cache = useCommentsCache(postId);
+
+  return useMutation({
+    mutationFn: (commentId) => commentService.deleteComment(commentId),
+    onMutate: async (commentId) => {
+      const previous = await cache.snapshot();
+      cache.update((data) => filterInfiniteItems(data, (comment) => comment._id !== commentId));
+      return { previous };
+    },
+    onError: (error, commentId, context) => {
+      cache.restore(context?.previous);
+      toast.error(getErrorMessage(error, "Yorum silinemedi"));
+    },
+  });
 }

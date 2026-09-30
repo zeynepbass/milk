@@ -1,0 +1,1 @@
+export { PostCardHeader } from "./PostCardHeader";

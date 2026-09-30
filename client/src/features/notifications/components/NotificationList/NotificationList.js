@@ -1,55 +1,76 @@
-import { useEffect } from "react";
-import { useNotifications } from "../../hooks/useNotifications";
+import { Link } from "react-router-dom";
+import { LoadMore, QueryState } from "@/shared/components/molecules";
+import { flattenPages } from "@/shared/query/infinite";
+import { notificationService } from "../../services/notification.service";
+import {
+  useMarkAllNotificationsRead,
+  useMarkNotificationRead,
+  useNotificationList,
+} from "../../hooks/useNotifications";
 
-export function NotificationList({ open }) {
-  const { fetchNotifications, notifications, markAsRead, loading } = useNotifications();
+const formatDate = (value) => new Date(value).toLocaleString("tr-TR");
 
-  useEffect(() => {
-    fetchNotifications();
-  }, [fetchNotifications]);
+function NotificationItem({ notification, onOpen }) {
+  const link = notificationService.linkFor(notification);
+  const className = `block w-full text-left px-4 py-3 border-b dark:border-gray-700 text-sm transition hover:bg-gray-50 dark:hover:bg-gray-700 ${
+    notification.isRead ? "" : "bg-blue-50 dark:bg-gray-900"
+  }`;
+  const content = (
+    <>
+      <span className="block text-gray-700 dark:text-gray-200">{notification.message}</span>
+      <span className="text-xs text-gray-500 mt-1 block">{formatDate(notification.lastActivityAt)}</span>
+    </>
+  );
+
+  return link ? (
+    <Link to={link} className={className} onClick={onOpen}>
+      {content}
+    </Link>
+  ) : (
+    <button type="button" className={className} onClick={onOpen}>
+      {content}
+    </button>
+  );
+}
+
+export function NotificationList({ onNavigate }) {
+  const query = useNotificationList();
+  const markRead = useMarkNotificationRead();
+  const markAllRead = useMarkAllNotificationsRead();
+  const notifications = flattenPages(query.data);
+
+  const open = (notification) => {
+    if (!notification.isRead) markRead.mutate(notification._id);
+    onNavigate?.();
+  };
 
   return (
-    <div className="relative">
-      {notifications?.some((n) => !n.isRead) && (
-        <span className="absolute -top-4 right-4 w-2.5 h-2.5 bg-red-500 rounded-full" />
-      )}
+    <div>
+      <div className="flex items-center justify-between px-4 py-3 border-b dark:border-gray-700">
+        <h2 className="font-semibold text-gray-700 dark:text-yellow-400">Bildirimler</h2>
+        {notifications.some((item) => !item.isRead) && (
+          <button
+            type="button"
+            className="text-xs text-blue-600 dark:text-yellow-400 hover:underline"
+            onClick={() => markAllRead.mutate()}
+          >
+            Tümünü okundu yap
+          </button>
+        )}
+      </div>
 
-      {open && (
-        <div className="absolute right-0 mt-3 w-80 bg-white dark:bg-gray-800 rounded-2xl shadow-xl border z-50 dark:border-none overflow-hidden">
-          <div className="px-4 py-3 border-b font-semibold text-gray-700 dark:text-yellow-400 dark:border-gray-500">
-            Bildirimler
-          </div>
-
-          <div className="max-h-80 overflow-y-auto dark:bg-dark-800">
-            {loading ? (
-              <p className="text-center text-gray-400 py-6 text-sm">Yükleniyor...</p>
-            ) : notifications?.length === 0 ? (
-              <p className="text-center text-gray-400 py-6 text-sm">Bildirimin yok</p>
-            ) : (
-              notifications.map((item) => (
-                <button
-                  type="button"
-                  key={item._id}
-                  onClick={async () => {
-                    if (item.postId) {
-                      await markAsRead(item._id);
-                    }
-                  }}
-                  className={`block w-full text-left px-4 py-3  dark:bg-dark-800 border-b dark:border-b-gray-900 dark:hover:bg-gray-400 text-sm cursor-pointer hover:bg-gray-50 transition ${
-                    !item.isRead ? " dark:bg-dark-800" : ""
-                  }`}
-                >
-                  <p className="text-gray-700 dark:text-gray-200">{item.message}</p>
-
-                  <span className="text-xs text-gray-400 mt-1 block">
-                    {new Date(item.createdAt).toLocaleString("tr-TR")}
-                  </span>
-                </button>
-              ))
-            )}
-          </div>
-        </div>
-      )}
+      <div className="max-h-80 overflow-y-auto">
+        <QueryState
+          query={query}
+          isEmpty={notifications.length === 0}
+          empty={<p className="text-center text-gray-500 py-6 text-sm">Bildirimin yok</p>}
+        >
+          {notifications.map((notification) => (
+            <NotificationItem key={notification._id} notification={notification} onOpen={() => open(notification)} />
+          ))}
+          <LoadMore query={query} label="Daha eski bildirimler" />
+        </QueryState>
+      </div>
     </div>
   );
 }

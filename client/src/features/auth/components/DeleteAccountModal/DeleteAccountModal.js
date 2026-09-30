@@ -1,57 +1,47 @@
-import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Input } from "@/shared/components/atoms";
+import { Modal } from "@/shared/components/molecules";
+import { deleteAccountSchema } from "@/shared/validation/schemas";
+import { useDeleteAccount } from "../../hooks/useAccountMutations";
 
-export function DeleteAccountModal({ onConfirm, onClose }) {
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState(false);
-
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    setLoading(true);
-    await onConfirm(password);
-    setLoading(false);
-  };
+export function DeleteAccountModal({ open, onClose }) {
+  const deleteAccount = useDeleteAccount();
+  const { register, handleSubmit, formState } = useForm({
+    resolver: zodResolver(deleteAccountSchema),
+    defaultValues: { password: "" },
+  });
 
   return (
-    <div className="fixed inset-0 bg-gray-900/30 flex items-center justify-center z-50">
-      <form
-        onSubmit={handleSubmit}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="delete-account-title"
-        className="bg-white rounded-xl p-6 max-w-sm w-full shadow-lg space-y-4"
-      >
-        <h2 id="delete-account-title" className="text-xl font-bold text-gray-700">
-          Hesabı Sil
-        </h2>
-
-        <p className="text-gray-500">Bu işlem geri alınamaz. Devam etmek için şifrenizi girin.</p>
+    <Modal open={open} onClose={onClose} title="Hesabı Sil" size="sm">
+      <form noValidate onSubmit={handleSubmit(({ password }) => deleteAccount.mutate(password))} className="space-y-4">
+        <p className="text-gray-600 dark:text-gray-300 text-sm">
+          Gönderilerin, yorumların ve sohbetlerin gizlenir; bu işlem geri alınamaz. Devam etmek için şifreni gir.
+        </p>
 
         <Input
+          {...register("password")}
           type="password"
           label="Şifre"
           autoComplete="current-password"
-          value={password}
-          onChange={(event) => setPassword(event.target.value)}
-          className="py-2"
+          error={formState.errors.password?.message}
         />
 
-        <div className="flex justify-end space-x-2">
-          <Button type="button" onClick={onClose} variant="dark" className="bg-gray-200">
+        <div className="flex justify-end gap-2">
+          <Button type="button" variant="ghost" onClick={onClose}>
             İptal
           </Button>
-
           <Button
             type="submit"
             variant="primary"
-            loading={loading}
+            loading={deleteAccount.isPending}
             loadingText="Siliniyor..."
-            className="bg-red-500"
+            className="bg-red-600"
           >
             Hesabı sil
           </Button>
         </div>
       </form>
-    </div>
+    </Modal>
   );
 }

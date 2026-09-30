@@ -42,7 +42,7 @@ export function OrganicForm() {
             hover:border-blue-400 dark:hover:border-gray-500
           "
         >
-          <input type="file" accept="application/pdf" onChange={handleFile} className="hidden" />
+          <input type="file" accept="application/pdf" onChange={handleFile} className="sr-only" />
 
           <DocumentIcon className="w-10 h-10 text-gray-400 mb-2" />
 

@@ -1,6 +1,8 @@
 import axios from "axios";
 import { API_BASE_URL } from "@/shared/config/env";
 import { useAuthStore } from "@/shared/store/useAuthStore";
+import { queryClient } from "@/shared/query/queryClient";
+import { queryKeys } from "@/shared/query/queryKeys";
 
 const REFRESH_LOCK = "milk-session-refresh";
 const RACE_RETRY_DELAY_MS = 150;
@@ -27,16 +29,26 @@ const requestRefresh = async (attempt = 0) => {
   }
 };
 
+export const startSession = (session) => {
+  queryClient.setQueryData(queryKeys.me, session.user);
+  useAuthStore.getState().setSession(session);
+};
+
+export const clearLocalSession = () => {
+  useAuthStore.getState().clearSession();
+  queryClient.clear();
+};
+
 let inflightRefresh = null;
 
 export const refreshSession = () => {
   inflightRefresh ??= withCrossTabLock(requestRefresh)
     .then((data) => {
-      useAuthStore.getState().setSession(data);
+      startSession(data);
       return data.accessToken;
     })
     .catch((error) => {
-      useAuthStore.getState().clearSession();
+      clearLocalSession();
       throw error;
     })
     .finally(() => {
@@ -50,6 +62,6 @@ export const endSession = async () => {
   try {
     await sessionClient.post("/auth/logout");
   } finally {
-    useAuthStore.getState().clearSession();
+    clearLocalSession();
   }
 };

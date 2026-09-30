@@ -1,16 +1,19 @@
 import { lazy, Suspense } from "react";
 import { Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import { AppLayout, GuestOnly } from "@/shared/layout";
-import { NotFoundPage } from "@/shared/pages/NotFoundPage";
+import { Loading } from "@/shared/components/atoms";
 import { useSessionBootstrap } from "@/shared/hooks/useSessionBootstrap";
 import "react-toastify/dist/ReactToastify.css";
 
 const lazyNamed = (loader, name) => lazy(() => loader().then((module) => ({ default: module[name] })));
 
+const loadLayouts = () => import("@/shared/layout");
 const loadFeedPages = () => import("@/features/feed/pages");
 const loadAuthPages = () => import("@/features/auth/pages");
 
+const AppLayout = lazyNamed(loadLayouts, "AppLayout");
+const GuestOnly = lazyNamed(loadLayouts, "GuestOnly");
+const NotFoundPage = lazyNamed(() => import("@/shared/pages/NotFoundPage"), "NotFoundPage");
 const FollowingPage = lazyNamed(loadFeedPages, "FollowingPage");
 const ExplorePage = lazyNamed(loadFeedPages, "ExplorePage");
 const FavoritesPage = lazyNamed(loadFeedPages, "FavoritesPage");
@@ -25,17 +28,9 @@ function App() {
 
   return (
     <>
-      <ToastContainer
-        toastClassName="rounded-xl shadow-md"
-        bodyClassName="text-sm font-medium"
-        theme="colored"
-      />
+      <ToastContainer toastClassName="rounded-xl shadow-md" theme="colored" />
 
-      <Suspense
-        fallback={
-          <div className="flex min-h-screen items-center justify-center text-gray-400">Yükleniyor...</div>
-        }
-      >
+      <Suspense fallback={<Loading />}>
         <Routes>
           <Route element={<AppLayout />}>
             <Route path="/" element={<FollowingPage />} />

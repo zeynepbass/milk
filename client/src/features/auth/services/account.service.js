@@ -1,70 +1,45 @@
-import { useAuthStore } from "@/shared/store/useAuthStore";
 import { accountRepository } from "../repositories/account.repository";
 
 const PROFILE_FIELDS = ["name", "surname", "province", "district"];
 
-const pickProfileChanges = (form, current) =>
+export const pickProfileChanges = (values, current) =>
   Object.fromEntries(
-    PROFILE_FIELDS.filter((field) => (form[field] ?? "") !== (current?.[field] ?? "")).map((field) => [
+    PROFILE_FIELDS.filter((field) => (values[field] ?? "") !== (current?.[field] ?? "")).map((field) => [
       field,
-      form[field] ?? "",
+      values[field] ?? "",
     ])
   );
 
-const syncSessionUser = (user) => {
-  if (user) useAuthStore.getState().setUser(user);
-  return user;
-};
-
 export const accountService = {
-  getMe() {
-    return accountRepository.getMe();
+  getMe: () => accountRepository.getMe(),
+
+  async saveProfile(values, current) {
+    let user = current;
+    const changes = pickProfileChanges(values, current);
+
+    if (Object.keys(changes).length > 0) {
+      user = (await accountRepository.updateMe(changes)).user;
+    }
+
+    if (values.email && values.email !== current.email) {
+      user = (await accountRepository.changeEmail({ email: values.email, currentPassword: values.currentPassword }))
+        .user;
+    }
+
+    return user;
   },
 
-  async saveProfile(form, current) {
-    const changes = pickProfileChanges(form, current);
-    if (Object.keys(changes).length === 0) return { user: current, changed: false };
-
-    const { user } = await accountRepository.updateMe(changes);
-    return { user: syncSessionUser(user), changed: true };
-  },
-
-  async changeEmail(email, currentPassword) {
-    const { user } = await accountRepository.changeEmail({ email: email.trim(), currentPassword });
-    return syncSessionUser(user);
-  },
-
-  async changePassword(currentPassword, newPassword) {
-    const session = await accountRepository.changePassword({ currentPassword, newPassword });
-    useAuthStore.getState().setSession(session);
-    return session;
-  },
+  changePassword: (values) => accountRepository.changePassword(values),
 
   async updateAvatar(file) {
     const formData = new FormData();
     formData.append("avatar", file);
-
-    const { user } = await accountRepository.updateAvatar(formData);
-    return syncSessionUser(user);
+    return (await accountRepository.updateAvatar(formData)).user;
   },
 
-  async freeze() {
-    const result = await accountRepository.freeze();
-    useAuthStore.getState().clearSession();
-    return result;
-  },
+  freeze: () => accountRepository.freeze(),
 
-  async deleteAccount(password) {
-    const result = await accountRepository.deleteMe(password);
-    useAuthStore.getState().clearSession();
-    return result;
-  },
+  deleteAccount: (password) => accountRepository.deleteMe(password),
 
-  toggleFollow(userId) {
-    return accountRepository.toggleFollow(userId);
-  },
-
-  sendFeedback(payload) {
-    return accountRepository.sendFeedback(payload);
-  },
+  sendFeedback: (payload) => accountRepository.sendFeedback(payload),
 };

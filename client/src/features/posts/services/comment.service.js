@@ -1,21 +1,16 @@
 import { commentRepository } from "../repositories/comment.repository";
 
-const requireId = (id, message) => {
-  if (!id) throw new Error(message);
-  return id;
-};
-
 export const commentService = {
-  getComments: (postId) => commentRepository.getComments(requireId(postId, "Gönderi bulunamadı.")),
+  getComments: (postId, { cursor } = {}) =>
+    commentRepository.getComments(postId, cursor ? { cursor } : undefined),
 
-  postComment(postId, text) {
+  addComment(postId, text) {
     const trimmed = text?.trim();
     if (!trimmed) throw new Error("Yorum boş bırakılamaz.");
-
-    return commentRepository.postComment(requireId(postId, "Gönderi bulunamadı."), trimmed);
+    return commentRepository.addComment(postId, trimmed);
   },
 
-  deleteComment: (commentId) => commentRepository.deleteComment(requireId(commentId, "Yorum bulunamadı.")),
+  setLike: (commentId, liked) => commentRepository.setLike(commentId, liked),
 
-  likeComment: (commentId) => commentRepository.likeComment(requireId(commentId, "Yorum bulunamadı.")),
+  deleteComment: (commentId) => commentRepository.deleteComment(commentId),
 };

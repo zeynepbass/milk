@@ -1,41 +1,41 @@
-import { useState } from "react";
+import { useMutation } from "@tanstack/react-query";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { getErrorMessage } from "@/shared/api/apiClient";
 import { authService } from "../services/auth.service";
 
-export function useAuthActions() {
-  const [loading, setLoading] = useState(false);
+export function useLogin() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const login = async (credentials) => {
-    setLoading(true);
-
-    try {
-      const session = await authService.login(credentials);
+  return useMutation({
+    mutationFn: (credentials) => authService.login(credentials),
+    onSuccess: (session) => {
       toast.info(session.message || "Giriş başarılı");
       navigate(location.state?.from || "/", { replace: true });
-    } catch (error) {
-      toast.error(getErrorMessage(error, "Giriş yapılamadı"));
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+    onError: (error) => toast.error(getErrorMessage(error, "Giriş yapılamadı")),
+  });
+}
 
-  const register = async (payload) => {
-    setLoading(true);
+export function useRegister() {
+  const navigate = useNavigate();
 
-    try {
-      const result = await authService.register(payload);
+  return useMutation({
+    mutationFn: (payload) => authService.register(payload),
+    onSuccess: (result) => {
       toast.info(result.message || "Kayıt başarılı");
       navigate("/giris-yap");
-    } catch (error) {
-      toast.error(getErrorMessage(error, "Kayıt sırasında hata oluştu"));
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+    onError: (error) => toast.error(getErrorMessage(error, "Kayıt sırasında hata oluştu")),
+  });
+}
 
-  return { login, register, loading };
+export function useLogout() {
+  const navigate = useNavigate();
+
+  return useMutation({
+    mutationFn: () => authService.logout(),
+    onSettled: () => navigate("/giris-yap", { replace: true }),
+  });
 }

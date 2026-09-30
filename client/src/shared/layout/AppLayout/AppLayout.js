@@ -1,7 +1,9 @@
 import { Navigate, Outlet, useLocation } from "react-router-dom";
-import { Footer } from "@/shared/components/organisms";
+import { ErrorBoundary, Footer } from "@/shared/components/organisms";
 import { Loading } from "@/shared/components/atoms";
 import { AUTH_STATUS, useAuthStore } from "@/shared/store/useAuthStore";
+import { MessagesRealtimeSync } from "@/features/messages/components/MessagesRealtimeSync";
+import { NotificationsRealtimeSync } from "@/features/notifications/components/NotificationsRealtimeSync";
 import { Header } from "../Header";
 
 export function AppLayout() {
@@ -9,7 +11,7 @@ export function AppLayout() {
   const location = useLocation();
 
   if (status === AUTH_STATUS.booting) {
-    return <Loading />;
+    return <Loading label="Oturum kontrol ediliyor..." />;
   }
 
   if (status === AUTH_STATUS.anonymous) {
@@ -17,9 +19,21 @@ export function AppLayout() {
   }
 
   return (
-    <div className="container mx-auto">
+    <div className="container mx-auto min-h-screen flex flex-col">
+      <a
+        href="#main-content"
+        className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:bg-white focus:px-4 focus:py-2 focus:rounded"
+      >
+        İçeriğe geç
+      </a>
+      <MessagesRealtimeSync />
+      <NotificationsRealtimeSync />
       <Header />
-      <Outlet />
+      <main id="main-content" className="flex-1">
+        <ErrorBoundary resetKey={location.pathname}>
+          <Outlet />
+        </ErrorBoundary>
+      </main>
       <Footer />
     </div>
   );

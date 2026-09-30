@@ -1,8 +1,8 @@
 import apiClient from "@/shared/api/apiClient";
 
 export const commentApi = {
-  getComments: (postId) => apiClient.get(`/comments/${postId}`),
-  postComment: (postId, text) => apiClient.post(`/comments/${postId}`, { text }),
+  getComments: (postId, params) => apiClient.get(`/posts/${postId}/comments`, { params }),
+  addComment: (postId, text) => apiClient.post(`/posts/${postId}/comments`, { text }),
+  setLike: (commentId, liked) => (liked ? apiClient.put : apiClient.delete)(`/comments/${commentId}/like`),
   deleteComment: (commentId) => apiClient.delete(`/comments/${commentId}`),
-  likeComment: (commentId) => apiClient.post(`/comments/${commentId}/like`),
 };

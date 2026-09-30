@@ -1,62 +1,25 @@
-import { useState } from "react";
-import { Loading } from "@/shared/components/atoms";
-import { EmptyPostList } from "@/shared/components/molecules";
-import { PostCard } from "@/features/posts/components/PostCard";
-import { useComments } from "@/features/posts/hooks/useComments";
-import { useMyPosts } from "@/features/posts/hooks/useMyPosts";
-import { useExploreFeed } from "../../hooks/useExploreFeed";
+import { Link } from "react-router-dom";
+import { PostList } from "@/features/posts/components/PostList";
+import { usePostFeed } from "@/features/posts/hooks/usePostQueries";
 
 export function FollowingFeed() {
-  const [selected, setSelected] = useState(null);
-  const handleShowed = (id) => {
-    setSelected((prev) => (prev === id ? null : id));
-  };
-
-  const { loading, user, followId, handlePostLike, handlePostSave, open, setOpen } = useExploreFeed();
-  const { deleted, editPostId, setEditPostId, following, handleUpdatePost } = useMyPosts();
-  const {
-    handleComment,
-    handleDelete,
-    handleCommentLike,
-    handleAddComment,
-    comments,
-    newComment,
-    setNewComment,
-  } = useComments(selected);
-  const sortedData = [...(following || [])].sort(
-    (a, b) => b.user?.dogrulanmisSatici - a.user?.dogrulanmisSatici
-  );
-  if (loading) return <Loading />;
+  const query = usePostFeed("following");
 
   return (
-    <div className="h-[100vh] overflow-auto p-4 ">
-      <EmptyPostList items={sortedData} />
-
-      <div className="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2">
-        <PostCard
-          data={sortedData || []}
-          selected={selected}
-          newComment={newComment}
-          setNewComment={setNewComment}
-          handleAddComment={handleAddComment}
-
-          editPostId={editPostId}
-          setEditPostId={setEditPostId}
-          followId={followId}
-          setOpen={setOpen}
-          deleted={deleted}
-          onUpdatePost={handleUpdatePost}
-          open={open}
-          handleShowed={handleShowed}
-          profileForm={user || ""}
-          handlePostSave={handlePostSave}
-          handlePostLike={handlePostLike}
-          handleComment={handleComment}
-          handleDelete={handleDelete}
-          handleCommentLike={handleCommentLike}
-          comments={comments || []}
-        />{" "}
-      </div>
-    </div>
+    <section aria-label="Takip ettiklerin" className="p-4">
+      <PostList
+        query={query}
+        prioritizeVerified
+        emptyTitle="Akışın henüz boş"
+        emptyDescription="Üreticileri takip ettiğinde paylaşımları burada görünür."
+      />
+      {query.isSuccess && (query.data?.pages[0]?.items.length ?? 0) === 0 && (
+        <p className="text-center mt-4">
+          <Link to="/kesfet" className="text-[rgb(82,144,246)] dark:text-yellow-400 font-medium hover:underline">
+            Keşfet sayfasına git
+          </Link>
+        </p>
+      )}
+    </section>
   );
 }

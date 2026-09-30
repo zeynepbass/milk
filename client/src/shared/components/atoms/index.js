@@ -1,6 +1,7 @@
-export { Input } from "./Input";
-export { Select } from "./Select";
+export { Avatar } from "./Avatar";
 export { Button } from "./Button";
-export { Loading } from "./Loading";
-export { Textarea } from "./Textarea";
 export { Heading } from "./Heading";
+export { Input } from "./Input";
+export { Loading } from "./Loading";
+export { Select } from "./Select";
+export { Textarea } from "./Textarea";

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { API_BASE_URL } from "@/shared/config/env";
 import { useAuthStore } from "@/shared/store/useAuthStore";
-import { refreshSession } from "./session";
+import { clearLocalSession, refreshSession } from "./session";
 
 const RECOVERABLE_CODES = new Set(["TOKEN_EXPIRED", "TOKEN_INVALID", "TOKEN_STALE", "TOKEN_MISSING"]);
 const SESSION_ENDING_CODES = new Set(["ACCOUNT_FROZEN"]);
@@ -32,7 +32,7 @@ apiClient.interceptors.response.use(
     }
 
     if (SESSION_ENDING_CODES.has(code)) {
-      useAuthStore.getState().clearSession();
+      clearLocalSession();
       return Promise.reject(error);
     }
 

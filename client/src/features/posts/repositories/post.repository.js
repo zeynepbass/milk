@@ -3,14 +3,12 @@ import { postApi } from "../api/post.api";
 const unwrap = async (request) => (await request).data;
 
 export const postRepository = {
-  getPosts: (params) => unwrap(postApi.getPosts(params)),
-  getFollowingPosts: (params) => unwrap(postApi.getFollowingPosts(params)),
-  getSavedPosts: () => unwrap(postApi.getSavedPosts()),
-  getMyPosts: () => unwrap(postApi.getMyPosts()),
-  getPostDetails: (id) => unwrap(postApi.getPostDetails(id)),
+  getFeed: (scope, params) => unwrap(postApi.getFeed(scope, params)),
+  getUserPosts: (userId, params) => unwrap(postApi.getUserPosts(userId, params)),
+  getPost: (postId) => unwrap(postApi.getPost(postId)),
   createPost: (formData) => unwrap(postApi.createPost(formData)),
-  updatePost: (id, formData) => unwrap(postApi.updatePost(id, formData)),
-  deletePost: (id) => unwrap(postApi.deletePost(id)),
-  likePost: (id) => unwrap(postApi.likePost(id)),
-  savePost: (id) => unwrap(postApi.savePost(id)),
+  updatePost: (postId, formData) => unwrap(postApi.updatePost(postId, formData)),
+  deletePost: (postId) => unwrap(postApi.deletePost(postId)),
+  setLike: (postId, liked) => unwrap(postApi.setLike(postId, liked)),
+  setSave: (postId, saved) => unwrap(postApi.setSave(postId, saved)),
 };

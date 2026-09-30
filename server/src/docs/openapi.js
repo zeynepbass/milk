@@ -1,7 +1,10 @@
 import { z } from "zod";
 import { listOperations } from "./registry.js";
 
-const toJsonSchema = (schema) => z.toJSONSchema(schema, { io: "input", unrepresentable: "any" });
+const toJsonSchema = (schema) => {
+  const { $schema: _dialect, ...json } = z.toJSONSchema(schema, { io: "input", unrepresentable: "any" });
+  return json;
+};
 
 const toOpenApiPath = (path) => path.replace(/:(\w+)/g, "{$1}");
 

@@ -2,12 +2,19 @@ import request from "supertest";
 import { createApp } from "../src/app.js";
 import User from "../src/models/User.js";
 
+export { drainJobs } from "../src/jobs/queue.js";
+
 export const ORIGIN = "http://localhost:3000";
 export const PASSWORD = "gizli-sifre-123";
 
 export const app = createApp();
 
 export const api = () => request(app);
+
+export const PNG_BYTES = Buffer.from(
+  "89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000d4944415478da63f8cfc0f01f0005000201a5e5e3cb0000000049454e44ae426082",
+  "hex"
+);
 
 export const extractRefreshCookie = (response) =>
   (response.headers["set-cookie"] ?? []).find((cookie) => cookie.startsWith("milk_rt="))?.split(";")[0];
@@ -53,7 +60,19 @@ export const createAdminSession = async () => {
   return session;
 };
 
-export const PNG_BYTES = Buffer.from(
-  "89504e470d0a1a0a0000000d49484452000000010000000108060000001f15c4890000000d4944415478da63f8cfc0f01f0005000201a5e5e3cb0000000049454e44ae426082",
-  "hex"
-);
+export const createPost = (auth, overrides = {}) => {
+  const request = api()
+    .post("/api/posts")
+    .set(auth)
+    .field("title", overrides.title ?? "Taze süt")
+    .field("category", overrides.category ?? "sut_urunleri");
+
+  if (overrides.province) request.field("province", overrides.province);
+
+  const images = overrides.images ?? 1;
+  for (let index = 0; index < images; index += 1) {
+    request.attach("images", PNG_BYTES, { filename: `urun-${index}.png`, contentType: "image/png" });
+  }
+
+  return request;
+};

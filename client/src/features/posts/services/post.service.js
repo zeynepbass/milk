@@ -1,21 +1,40 @@
 import { postRepository } from "../repositories/post.repository";
 
-const toSearchParams = (search) => (search?.trim() ? { title: search.trim() } : undefined);
+const compactParams = (params) =>
+  Object.fromEntries(Object.entries(params).filter(([, value]) => value !== undefined && value !== null && value !== ""));
 
-const requireId = (id) => {
-  if (!id) throw new Error("Gönderi bulunamadı.");
-  return id;
+const appendIfPresent = (formData, key, value) => {
+  if (value !== undefined && value !== null) formData.append(key, value);
+};
+
+export const toPostFormData = ({ values, files = [], removeImages = [] }) => {
+  const formData = new FormData();
+
+  ["title", "description", "category", "province", "district"].forEach((key) =>
+    appendIfPresent(formData, key, values[key])
+  );
+  files.forEach((file) => formData.append("images", file));
+  removeImages.forEach((url) => formData.append("removeImages", url));
+
+  return formData;
 };
 
 export const postService = {
-  getPosts: ({ search } = {}) => postRepository.getPosts(toSearchParams(search)),
-  getFollowingPosts: ({ search } = {}) => postRepository.getFollowingPosts(toSearchParams(search)),
-  getSavedPosts: () => postRepository.getSavedPosts(),
-  getMyPosts: () => postRepository.getMyPosts(),
-  getPostDetails: (id) => postRepository.getPostDetails(requireId(id)),
-  createPost: (formData) => postRepository.createPost(formData),
-  updatePost: (id, formData) => postRepository.updatePost(requireId(id), formData),
-  deletePost: (id) => postRepository.deletePost(requireId(id)),
-  likePost: (id) => postRepository.likePost(requireId(id)),
-  savePost: (id) => postRepository.savePost(requireId(id)),
+  getFeed: (scope, { cursor, search, ...filters } = {}) =>
+    postRepository.getFeed(scope, compactParams({ cursor, title: search?.trim(), ...filters })),
+
+  getUserPosts: (userId, { cursor } = {}) => postRepository.getUserPosts(userId, compactParams({ cursor })),
+
+  getPost: (postId) => postRepository.getPost(postId),
+
+  createPost: ({ values, files }) => postRepository.createPost(toPostFormData({ values, files })),
+
+  updatePost: (postId, { values, files, removeImages }) =>
+    postRepository.updatePost(postId, toPostFormData({ values, files, removeImages })),
+
+  deletePost: (postId) => postRepository.deletePost(postId),
+
+  setLike: (postId, liked) => postRepository.setLike(postId, liked),
+
+  setSave: (postId, saved) => postRepository.setSave(postId, saved),
 };

@@ -1,141 +1,36 @@
-import { Input, Button } from "@/shared/components/atoms";
-import { toAssetUrl } from "@/shared/config/env";
-import { useMessages } from "../../hooks/useMessages";
+import { useCallback, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import { ConversationList } from "../ConversationList";
+import { ChatWindow } from "../ChatWindow";
+
+const productQuestion = (product) =>
+  product.title ? `"${product.title}" hakkında bilgi alabilir miyim?` : "Ürün hakkında bilgi alabilir miyim?";
 
 export function ChatDialog() {
-  const {
-    loading,
-    conversations,
-    user,
-    getOtherUser,
-    onlineUsers,
-    handleUserSelect,
-    messages,
-    input,
-    setInput,
-    selectedUser,
-    handleSend,
-  } = useMessages();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const product = location.state?.product ?? null;
+
+  const [partner, setPartner] = useState(() =>
+    product?.userId ? { _id: product.userId, name: product.userName || "Satıcı" } : null
+  );
+
+  const clearProductState = useCallback(
+    () => navigate(location.pathname, { replace: true, state: null }),
+    [navigate, location.pathname]
+  );
+
+  const initialMessage = product && partner?._id === product.userId ? productQuestion(product) : null;
 
   return (
-    <div className="flex h-screen bg-gray-100 dark:bg-gray-900">
-      <div className="w-80 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col">
-        <div className="p-4 border-b dark:border-gray-700">
-          <h2 className="font-semibold text-gray-700 dark:text-gray-300">Sohbetler</h2>
-        </div>
-
-        <div className="flex-1 overflow-y-auto p-3 space-y-2">
-          {loading && <p className="text-center text-gray-400">Yükleniyor...</p>}
-
-          {conversations.map((conv) => {
-            const otherUser = getOtherUser(conv);
-            if (!otherUser) return null;
-
-            const isOnline = onlineUsers.includes(otherUser._id);
-
-            return (
-              <button
-                type="button"
-                key={conv._id}
-                onClick={() => handleUserSelect(otherUser)}
-                className={`flex w-full text-left items-center gap-3 p-2 rounded-xl cursor-pointer transition ${
-                  selectedUser?._id === otherUser._id
-                    ? "bg-blue-100 dark:bg-gray-700"
-                    : "hover:bg-gray-100 dark:hover:bg-gray-700"
-                }`}
-              >
-                <div className="relative">
-                  <img
-                    src={toAssetUrl(otherUser?.avatar) || "/assets/footer-logo.png"}
-                    alt={otherUser?.name ?? ""}
-                    className="w-12 h-12 rounded-full object-cover"
-                  />
-
-                  <span
-                    className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-white ${
-                      isOnline ? "bg-green-500" : "bg-gray-400"
-                    }`}
-                  />
-                </div>
-
-                <div className="flex-1">
-                  <p className="font-medium text-gray-800 dark:text-gray-200">{otherUser?.name}</p>
-
-                  <p className="text-xs text-gray-400 truncate">{conv.lastMessage || "Henüz mesaj yok"}</p>
-                </div>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      <div className="flex-1 flex flex-col">
-        <div className="h-16 border-b bg-white dark:bg-gray-800 dark:border-gray-700 flex items-center px-4">
-          <div className="flex items-center gap-3">
-            <img
-              src={toAssetUrl(selectedUser?.avatar) || "/assets/footer-logo.png"}
-              alt={selectedUser?.name ?? ""}
-              className="w-10 h-10 object-contain rounded-full"
-            />
-
-            <div>
-              <p className="font-semibold text-gray-800 dark:text-gray-200">{selectedUser?.name}</p>
-
-              <p className="text-xs text-gray-400">
-                {onlineUsers.includes(selectedUser?._id) ? "Çevrimiçi" : "Çevrimdışı"}
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="flex-1 overflow-y-auto p-4 space-y-3 bg-gray-50 dark:bg-gray-900">
-          {messages.length === 0 && <p className="text-center text-gray-400 mt-10">Mesaj yok</p>}
-
-          {messages.map((msg) => {
-            const isMe = msg.senderId === user?._id;
-
-            return (
-              <div key={msg._id} className={`flex ${isMe ? "justify-end" : "justify-start"}`}>
-                <div
-                  className={`px-4 py-2 rounded-2xl max-w-xs text-sm shadow ${
-                    isMe
-                      ? "bg-blue-500 dark:bg-yellow-400 text-white rounded-br-none"
-                      : "bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-bl-none"
-                  }`}
-                >
-                  {msg.text}
-                </div>
-              </div>
-            );
-          })}
-        </div>
-
-        <div className="p-3 border-t bg-white dark:bg-gray-800 dark:border-gray-700 flex gap-2 items-center">
-          <div className="flex-1 min-w-0">
-            <Input
-              type="text"
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              placeholder={selectedUser ? "Mesaj yaz..." : "Önce kullanıcı seç"}
-              className="py-2"
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  handleSend();
-                }
-              }}
-            />
-          </div>
-
-          <Button
-            type="button"
-            variant="primary"
-            onClick={handleSend}
-            className="shrink-0 rounded-full px-5 py-2"
-          >
-            Gönder
-          </Button>
-        </div>
-      </div>
+    <div className="flex flex-col md:flex-row h-[calc(100vh-8rem)] bg-gray-100 dark:bg-gray-900">
+      <ConversationList selectedUserId={partner?._id} onSelect={setPartner} />
+      <ChatWindow
+        key={partner?._id ?? "empty"}
+        partner={partner}
+        initialMessage={initialMessage}
+        onInitialMessageSent={clearProductState}
+      />
     </div>
   );
 }

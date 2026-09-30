@@ -9,15 +9,10 @@ export const AUTH_STATUS = {
 export const useAuthStore = create((set) => ({
   status: AUTH_STATUS.booting,
   accessToken: null,
-  user: null,
+  userId: null,
 
-  setSession: ({ accessToken, user }) => set({ status: AUTH_STATUS.authenticated, accessToken, user }),
+  setSession: ({ accessToken, user }) =>
+    set({ status: AUTH_STATUS.authenticated, accessToken, userId: user?._id ?? null }),
 
-  setAccessToken: (accessToken) => set({ accessToken }),
-
-  setUser: (user) => set((state) => ({ user: { ...state.user, ...user } })),
-
-  clearSession: () => set({ status: AUTH_STATUS.anonymous, accessToken: null, user: null }),
+  clearSession: () => set({ status: AUTH_STATUS.anonymous, accessToken: null, userId: null }),
 }));
-
-export const selectCurrentUserId = (state) => state.user?._id ?? null;

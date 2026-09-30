@@ -10,7 +10,9 @@
     "test:watch": "vitest",
     "migrate:up": "migrate-mongo up",
     "migrate:status": "migrate-mongo status",
-    "migrate:down": "migrate-mongo down"
+    "migrate:down": "migrate-mongo down",
+    "test:coverage": "vitest run --coverage",
+    "seed": "node scripts/seed.js"
   },
   "repository": {
     "type": "git",

@@ -18,7 +18,11 @@ export default defineConfig({
     },
     coverage: {
       provider: "v8",
-      include: ["src/services/**", "src/middleware/**", "src/sockets/**"],
+      include: ["src/services/**", "src/middleware/**", "src/sockets/**", "src/jobs/**", "src/utils/**"],
+      reporter: ["text-summary", "text", "lcov"],
+      thresholds: {
+        "src/services/**": { statements: 80, branches: 70, functions: 80, lines: 80 },
+      },
     },
   },
 });

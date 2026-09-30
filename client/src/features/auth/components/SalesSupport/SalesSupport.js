@@ -1,86 +1,62 @@
-import { useState } from "react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
-import { toast } from "react-toastify";
-import { getErrorMessage } from "@/shared/api/apiClient";
-import { accountService } from "../../services/account.service";
-import { Textarea, Heading, Button } from "@/shared/components/atoms";
+import { Button, Heading, Textarea } from "@/shared/components/atoms";
+import { feedbackSchema } from "@/shared/validation/schemas";
+import { useSendFeedback } from "../../hooks/useAccountMutations";
+
+const TYPES = [
+  { label: "Genel", value: "genel" },
+  { label: "Hata Bildirimi", value: "hata" },
+  { label: "Talep", value: "talep" },
+];
 
 export function SalesSupport() {
-  const [feedbackLoading, setFeedbackLoading] = useState(false);
+  const sendFeedback = useSendFeedback();
+  const { register, handleSubmit, reset, watch, formState } = useForm({
+    resolver: zodResolver(feedbackSchema),
+    defaultValues: { type: "genel", message: "" },
+  });
+  const selectedType = watch("type");
 
-  const [type, setType] = useState("genel");
-  const [message, setMessage] = useState("");
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-
-    if (!message.trim()) return;
-
-    const payload = {
-      type,
-      message,
-    };
-
-    setFeedbackLoading(true);
-
-    try {
-      const result = await accountService.sendFeedback(payload);
-      toast.info(result.message || "Başarılı");
-      setMessage("");
-      setType("genel");
-    } catch (error) {
-      toast.error(getErrorMessage(error, "Geri bildirim gönderilemedi."));
-    } finally {
-      setFeedbackLoading(false);
-    }
-  };
-
-  const types = [
-    { label: "Genel", value: "genel" },
-    { label: "Hata Bildirimi", value: "hata" },
-    { label: "Talep", value: "talep" },
-  ];
+  const submit = (values) => sendFeedback.mutate(values, { onSuccess: () => reset() });
 
   return (
-    <div className="max-w-full mx-auto p-6 bg-white dark:bg-gray-800 dark:border-gray-400 rounded-2xl shadow-lg border space-y-6">
+    <div className="p-6 bg-white dark:bg-gray-800 dark:border-gray-700 rounded-2xl shadow-lg border space-y-6">
       <Heading title="Görüş, Öneri veya Hata Bildir" desc="Geri bildirimleriniz bizim için değerlidir." />
 
-      <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-        <div className="flex flex-col gap-2">
-          <span className="text-sm text-gray-500">Geri bildirim türü</span>
-
+      <form noValidate onSubmit={handleSubmit(submit)} className="flex flex-col gap-6">
+        <fieldset>
+          <legend className="text-sm text-gray-600 dark:text-gray-300 mb-2">Geri bildirim türü</legend>
           <div className="flex flex-wrap gap-2">
-            {types.map((item) => (
-              <Button
-                key={item.value}
-                type="button"
-                active={type === item.value}
-                onClick={() => setType(item.value)}
-                className={
-                  type === item.value
-                    ? "bg-gray-100 text-gray-600 dark:bg-gray-900 dark:text-gray-200"
-                    : "bg-blue-500 text-white dark:bg-gray-900 dark:text-gray-400"
-                }
+            {TYPES.map((type) => (
+              <label
+                key={type.value}
+                className={`cursor-pointer rounded-full px-4 py-2 text-sm focus-within:ring-2 focus-within:ring-blue-500 ${
+                  selectedType === type.value
+                    ? "bg-[rgb(82,144,246)] text-white"
+                    : "bg-gray-100 text-gray-700 dark:bg-gray-900 dark:text-gray-300"
+                }`}
               >
-                {item.label}
-              </Button>
+                <input type="radio" value={type.value} {...register("type")} className="sr-only" />
+                {type.label}
+              </label>
             ))}
           </div>
-        </div>
+        </fieldset>
 
         <Textarea
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
+          {...register("message")}
           rows={5}
           label="Mesaj"
           placeholder="Mesajınızı yazın..."
+          error={formState.errors.message?.message}
         />
 
         <div className="flex justify-end">
           <Button
             type="submit"
-            disabled={!message.trim() || feedbackLoading}
-            loading={feedbackLoading}
+            loading={sendFeedback.isPending}
             variant="primary"
             text="Gönder"
             loadingText="Gönderiliyor..."

@@ -1,301 +1,63 @@
 import { useState } from "react";
-import {
-  HeartIcon,
-  BookmarkIcon,
-  ChatBubbleBottomCenterIcon,
-  ArrowRightIcon,
-  XMarkIcon,
-  UserPlusIcon,
-  TrashIcon,
-} from "@heroicons/react/24/outline";
-import { Input, Button, Heading } from "@/shared/components/atoms";
 import { useNavigate, useParams } from "react-router-dom";
-import { useExploreFeed } from "@/features/feed/hooks/useExploreFeed";
-import { toAssetUrl } from "@/shared/config/env";
-import { usePostDetails } from "../../hooks/usePostDetails";
+import { Heading } from "@/shared/components/atoms";
+import { EmptyState, QueryState } from "@/shared/components/molecules";
+import { POST_CATEGORY_OPTIONS } from "@/shared/validation/labels";
+import { useAuthStore } from "@/shared/store/useAuthStore";
+import { usePost } from "../../hooks/usePostQueries";
+import { ImageCarousel } from "../ImageCarousel";
+import { PostCardHeader } from "../PostCardHeader";
+import { PostActions } from "../PostActions";
+import { CommentsPanel } from "../CommentsPanel";
+import { EditPostModal } from "../EditPostModal";
+
+const categoryLabel = (value) => POST_CATEGORY_OPTIONS.find((option) => option.value === value)?.label ?? value;
+
+function Tag({ children }) {
+  return <span className="px-4 py-1 bg-gray-100 dark:bg-gray-700 dark:text-gray-200 rounded-full text-sm">{children}</span>;
+}
 
 export function PostDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
-
-  const {
-    handleDelete,
-    handleComment,
-    details,
-    loading,
-    handleLike,
-    user,
-    comments,
-    handlePostLike,
-    handlePostSave,
-    handleDeletePost,
-    showComments,
-    setShowComments,
-  } = usePostDetails(id);
-
-  const { followId } = useExploreFeed();
-  const [currentImage, setCurrentImage] = useState(0);
-  const [newComment, setNewComment] = useState("");
-
-  const handleDeleteAndExit = async (postId) => {
-    const ok = await handleDeletePost(postId);
-    if (ok) navigate("/");
-  };
-
-  if (loading) {
-    return <p className="text-center text-gray-400 mb-2">Yükleniyor...</p>;
-  }
-
-  if (!details) {
-    return <p className="text-center mt-10 text-gray-400">Gönderi bulunamadı</p>;
-  }
-
-  const images = details.images || [];
-
-  const handleAddComment = (postId) => {
-    if (!newComment.trim()) return;
-
-    handleComment(postId, newComment);
-    setNewComment("");
-  };
-
-  const itemUserId = details?.user?._id || details?.user;
-  const isOwner = user?._id === itemUserId;
-  const hasUser = !!details?.user;
-
-  const formatLocation = (text) => {
-    if (!text) return "";
-
-    return text
-      .toLowerCase()
-      .split(" ")
-      .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-      .join("-");
-  };
+  const currentUserId = useAuthStore((state) => state.userId);
+  const query = usePost(id);
+  const [commentsOpen, setCommentsOpen] = useState(true);
+  const [editing, setEditing] = useState(false);
+  const post = query.data;
 
   return (
-    <div className="max-w-5xl mx-auto p-6 dark:bg-gray-800 rounded-lg m-2">
-      {images.length > 0 && (
-        <div className="relative w-full h-96">
-          <img
-            src={toAssetUrl(images[currentImage])}
-            alt={details.title}
-            className="w-full h-full object-cover rounded-xl"
-            loading="lazy"
+    <QueryState
+      query={query}
+      isEmpty={!post}
+      empty={<EmptyState title="Gönderi bulunamadı" description="Bu gönderi kaldırılmış olabilir." />}
+    >
+      {post && (
+        <article className="max-w-5xl mx-auto p-6 dark:bg-gray-800 rounded-lg m-2 space-y-6">
+          <ImageCarousel images={post.images ?? []} title={post.title} />
+          <PostCardHeader post={post} />
+
+          <Heading title={post.title} desc={post.description} className="text-3xl font-bold" />
+
+          <div className="flex flex-wrap gap-3">
+            {post.category && <Tag>{categoryLabel(post.category)}</Tag>}
+            {post.province && <Tag>{post.province}</Tag>}
+            {post.district && <Tag>{post.district}</Tag>}
+          </div>
+
+          <PostActions
+            post={post}
+            isOwner={post.user?._id === currentUserId}
+            commentsOpen={commentsOpen}
+            onToggleComments={() => setCommentsOpen((open) => !open)}
+            onEdit={() => setEditing(true)}
+            onDeleted={() => navigate("/", { replace: true })}
           />
 
-          {images.length > 1 && (
-            <div className="flex gap-2 justify-center mt-2">
-              {images.map((image, i) => (
-                <button
-                  type="button"
-                  key={image}
-                  aria-label={`${i + 1}. görsel`}
-                  aria-pressed={i === currentImage}
-                  onClick={() => setCurrentImage(i)}
-                  className={`w-2 h-2 rounded-full cursor-pointer ${
-                    i === currentImage ? "bg-black" : "bg-gray-300"
-                  }`}
-                />
-              ))}
-            </div>
-          )}
-        </div>
+          {commentsOpen && <CommentsPanel postId={post._id} />}
+          {editing && <EditPostModal post={post} onClose={() => setEditing(false)} />}
+        </article>
       )}
-
-      <div className="mt-6 space-y-6">
-        <div className="flex items-center space-x-4">
-          <div className="bg-gray-200 w-14 h-14 rounded-full flex items-center justify-center font-semibold">
-            {details.ownerName?.[0]}
-            {details.ownerSurname?.[0]}
-          </div>
-
-          <div>
-            <p className="font-bold dark:text-gray-400">
-              {details.ownerName} {details.ownerSurname}
-            </p>
-
-            <p className="text-sm text-gray-400 dark:text-gray-600">{details.ownerRole}</p>
-          </div>
-        </div>
-
-        <div>
-          <Heading title={details.title} desc={details.description} className="text-3xl font-bold" />
-
-          <p className="text-orange-500 mt-2">
-            {formatLocation(details.province)}-{formatLocation(details.district)}
-          </p>
-        </div>
-
-        <div className="flex gap-3">
-          {details.category && (
-            <span className="px-4 py-1 bg-[#B38471] text-white rounded-full text-sm capitalize">
-              {details.category.replace("_", " ")}
-            </span>
-          )}
-
-          {details.province && (
-            <span className="px-4 py-1 bg-gray-100 rounded-full text-sm">{details.province}</span>
-          )}
-
-          {details.district && (
-            <span className="px-4 py-1 bg-gray-100 rounded-full text-sm">{details.district}</span>
-          )}
-        </div>
-
-        <div className="flex justify-end gap-3">
-          <Button
-            variant="icon"
-            type="button"
-            onClick={() => setShowComments(!showComments)}
-            className="bg-purple-100"
-          >
-            <ChatBubbleBottomCenterIcon className="w-5 h-5" />
-          </Button>
-
-          <Button
-            variant="icon"
-            type="button"
-            onClick={() => handlePostLike(details._id)}
-            className="bg-pink-100 text-red-500"
-          >
-            <HeartIcon className="w-5 h-5" />
-
-            <span className="text-sm">{details.likes?.length || ""}</span>
-          </Button>
-
-          {!isOwner && (
-            <Button
-              variant="icon"
-              type="button"
-              onClick={() => handlePostSave(details._id)}
-              className="bg-yellow-100 text-yellow-500"
-            >
-              <BookmarkIcon className="w-5 h-5" />
-
-              <span className="text-sm">{details.savedBy?.length || ""}</span>
-            </Button>
-          )}
-
-          {!isOwner && hasUser && (
-            <Button
-              variant="icon"
-              type="button"
-              onClick={() => followId(itemUserId)}
-              className="bg-gray-100 text-gray-500 hover:text-gray-700"
-            >
-              <UserPlusIcon className="w-5 h-5" />
-            </Button>
-          )}
-
-          {isOwner && (
-            <Button
-              variant="icon"
-              type="button"
-              onClick={() => handleDeleteAndExit(details._id)}
-              className="bg-blue-100 text-blue-500 hover:text-blue-700"
-            >
-              <TrashIcon className="w-5 h-5" />
-            </Button>
-          )}
-        </div>
-
-        {showComments && (
-          <div className="mt-4">
-            <div className="space-y-2 max-h-40 overflow-y-auto mb-3">
-              {comments.length === 0 ? (
-                <p className="text-gray-400 text-sm italic">Henüz yorum yok</p>
-              ) : (
-                comments.map((comment) => (
-                  <div key={comment._id} className="mb-3">
-                    <div className="flex items-start gap-3">
-                      <img
-                        src={toAssetUrl(comment?.user?.avatar) || "https://i.pravatar.cc/150"}
-                        alt="profile"
-                        loading="lazy"
-                        className="w-8 h-8 rounded-full object-cover"
-                      />
-
-                      <div className="flex flex-col w-full">
-                        <div className="flex justify-between">
-                          <p className="text-sm font-semibold">
-                            {comment?.user?.name} {comment?.user?.surname}
-                          </p>
-
-                          {user?._id === comment?.user?._id && (
-                            <Button
-                              variant="icon"
-                              type="button"
-                              onClick={() => handleDelete(comment._id)}
-                              className="p-1 text-gray-400 hover:text-red-500"
-                            >
-                              <XMarkIcon className="w-4 h-4" />
-                            </Button>
-                          )}
-                        </div>
-
-                        <p className="text-sm text-gray-600">{comment.text}</p>
-
-                        <div className="flex gap-2">
-                          {comment.likes?.length > 0 && (
-                            <div className="flex items-center mt-2">
-                              <div className="flex -space-x-2">
-                                {comment.likes.slice(0, 10).map((user) => (
-                                  <img
-                                    key={user._id}
-                                    src={toAssetUrl(user.avatar) || "https://i.pravatar.cc/150"}
-                                    className="w-6 h-6 rounded-full object-cover border-2 border-white"
-                                    alt="like-user"
-                                  />
-                                ))}
-
-                                {comment.likes.length > 10 && (
-                                  <div className="w-6 h-6 rounded-full bg-gray-300 text-xs flex items-center justify-center border-2 border-white">
-                                    +{comment.likes.length - 10}
-                                  </div>
-                                )}
-                              </div>
-                            </div>
-                          )}
-
-                          <Button
-                            type="button"
-                            onClick={() => handleLike(comment._id)}
-                            className="p-0 text-left text-gray-700 hover:text-[rgb(82,144,246)]"
-                          >
-                            <span className="underline text-xs">
-                              {comment?.liked ? "Beğenmekten Vazgeç" : "Beğen"}
-                            </span>
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
-
-            <div className="flex space-x-2">
-              <Input
-                type="text"
-                placeholder="Yorum yap..."
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
-                className="flex-1 border rounded-full px-3 py-2 text-sm"
-              />
-
-              <Button
-                variant="icon"
-                type="button"
-                onClick={() => handleAddComment(details._id)}
-                className="bg-[rgb(137,205,251)] text-white"
-              >
-                <ArrowRightIcon className="w-4 h-4" />
-              </Button>
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
+    </QueryState>
   );
 }

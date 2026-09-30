@@ -37,7 +37,7 @@ export const updatePostSchema = {
     province: optionalText(RULES.location.max),
     district: optionalText(RULES.location.max),
     removeImages: z
-      .union([uploadUrl, z.array(uploadUrl).max(RULES.postImages.max)])
+      .union([imageUrl, z.array(imageUrl).max(RULES.postImages.max)])
       .optional()
       .transform(toArray),
   }),

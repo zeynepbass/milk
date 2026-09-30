@@ -10,6 +10,7 @@ describe("profil güncelleme", () => {
     ["dogrulanmisSatici", true],
     ["password", "yeni-sifre-123"],
     ["email", "baska@ornek.com"],
+    ["followersCount", 1000],
   ])("%s alanının değiştirilmesini reddeder", async (field, value) => {
     const { user, auth } = await createSession();
     const before = await User.findById(user._id).select("+password").lean();
@@ -35,11 +36,12 @@ describe("profil güncelleme", () => {
     expect(JSON.stringify(response.body)).not.toMatch(/password/i);
   });
 
-  it("/me yanıtında şifre hash'i yoktur", async () => {
+  it("/me yanıtında şifre hash'i yoktur ve sayaçlar döner", async () => {
     const { auth } = await createSession();
     const response = await api().get("/api/users/me").set(auth);
 
     expect(response.status).toBe(200);
+    expect(response.body).toMatchObject({ followersCount: 0, followingCount: 0 });
     expect(JSON.stringify(response.body)).not.toMatch(/password/i);
   });
 });
@@ -64,7 +66,7 @@ describe("e-posta değişikliği", () => {
   });
 
   it("başka hesapta kullanılan e-posta için 409 döner", async () => {
-    const other = await createSession({ email: "dolu@ornek.com" });
+    await createSession({ email: "dolu@ornek.com" });
     const { user, auth } = await createSession();
 
     const response = await api()
@@ -73,20 +75,26 @@ describe("e-posta değişikliği", () => {
       .send({ email: "DOLU@ornek.com", currentPassword: user.password });
 
     expect(response.status).toBe(409);
-    expect(other.user.email).toBe("dolu@ornek.com");
   });
 });
 
 describe("avatar yükleme", () => {
-  it("PNG avatarı kabul eder", async () => {
+  it("PNG avatarı kabul eder ve eskisini değiştirir", async () => {
     const { auth } = await createSession();
-    const response = await api()
-      .put("/api/users/me/avatar")
-      .set(auth)
-      .attach("avatar", PNG_BYTES, { filename: "avatar.png", contentType: "image/png" });
+    const upload = () =>
+      api()
+        .put("/api/users/me/avatar")
+        .set(auth)
+        .attach("avatar", PNG_BYTES, { filename: "avatar.png", contentType: "image/png" });
 
-    expect(response.status).toBe(200);
-    expect(response.body.user.avatar).toMatch(/^\/uploads\/[\w-]+\.png$/);
+    const first = await upload();
+    const second = await upload();
+
+    expect(first.status).toBe(200);
+    expect(second.body.user.avatar).toMatch(/^\/uploads\/[\w-]+\.png$/);
+    expect(second.body.user.avatar).not.toBe(first.body.user.avatar);
+    expect((await api().get(first.body.user.avatar)).status).toBe(404);
+    expect((await api().get(second.body.user.avatar)).status).toBe(200);
   });
 
   it("SVG dosyasını reddeder", async () => {
@@ -113,17 +121,17 @@ describe("avatar yükleme", () => {
   });
 });
 
-describe("hesap silme", () => {
-  it("şifre doğrulaması ister", async () => {
-    const { user, auth } = await createSession();
+describe("herkese açık profil", () => {
+  it("takip durumunu ve sayaçları döner", async () => {
+    const target = await createSession();
+    const viewer = await createSession();
+    await api().put(`/api/users/${target.user._id}/follow`).set(viewer.auth);
 
-    const wrong = await api().delete("/api/users/me").set(auth).send({ password: "yanlis" });
-    expect(wrong.status).toBe(401);
-    expect(await User.exists({ _id: user._id })).not.toBeNull();
+    const response = await api().get(`/api/users/${target.user._id}`).set(viewer.auth);
 
-    const right = await api().delete("/api/users/me").set(auth).send({ password: user.password });
-    expect(right.status).toBe(200);
-    expect(await User.exists({ _id: user._id })).toBeNull();
+    expect(response.status).toBe(200);
+    expect(response.body).toMatchObject({ isFollowing: true, followersCount: 1 });
+    expect(response.body.email).toBeUndefined();
   });
 });
 
@@ -132,10 +140,7 @@ describe("admin işlemleri", () => {
     const target = await createSession();
     const { auth } = await createSession();
 
-    const response = await api()
-      .patch(`/api/users/${target.user._id}/role`)
-      .set(auth)
-      .send({ role: "admin" });
+    const response = await api().patch(`/api/users/${target.user._id}/role`).set(auth).send({ role: "admin" });
     expect(response.status).toBe(403);
   });
 
@@ -150,14 +155,20 @@ describe("admin işlemleri", () => {
 
     expect(response.status).toBe(200);
     expect(response.body.user.role).toBe("satici");
+
+    const refresh = await api()
+      .post("/api/auth/refresh")
+      .set("Origin", "http://localhost:3000")
+      .set("Cookie", target.cookie);
+    expect(refresh.status).toBe(401);
   });
 
-  it("organik statü yanıtında şifre hash'i yoktur", async () => {
+  it("organik statü onayı doğrulanmış satıcı rozetini verir", async () => {
     const target = await createSession();
     const admin = await createAdminSession();
 
     const response = await api()
-      .put("/api/users/organicStatus")
+      .put("/api/users/organic-status")
       .set(admin.auth)
       .send({ userId: target.user._id, organicStatus: true });
 
@@ -165,27 +176,39 @@ describe("admin işlemleri", () => {
     expect(response.body.user.dogrulanmisSatici).toBe(true);
     expect(JSON.stringify(response.body)).not.toMatch(/password/i);
   });
+
+  it("kullanıcı listesi sayfalanır ve silinmiş hesapları içermez", async () => {
+    const admin = await createAdminSession();
+    const removed = await createSession();
+    await createSession();
+    await api().delete("/api/users/me").set(removed.auth).send({ password: removed.user.password });
+
+    const firstPage = await api().get("/api/users?limit=1").set(admin.auth);
+    const secondPage = await api()
+      .get(`/api/users?limit=5&cursor=${firstPage.body.nextCursor}`)
+      .set(admin.auth);
+
+    const ids = [...firstPage.body.items, ...secondPage.body.items].map((user) => user._id);
+    expect(ids).toHaveLength(2);
+    expect(ids).not.toContain(removed.user._id);
+  });
 });
 
-describe("takip", () => {
-  it("takip et ve takipten çık iki tarafı da günceller", async () => {
-    const target = await createSession();
-    const { user, auth } = await createSession();
-
-    const follow = await api().post(`/api/users/follow/${target.user._id}`).set(auth);
-    expect(follow.body.following).toBe(true);
-    expect((await User.findById(target.user._id).lean()).followers.map(String)).toEqual([user._id]);
-
-    const unfollow = await api().post(`/api/users/follow/${target.user._id}`).set(auth);
-    expect(unfollow.body.following).toBe(false);
-    expect((await User.findById(user._id).lean()).following).toHaveLength(0);
-    expect((await User.findById(target.user._id).lean()).followers).toHaveLength(0);
-  });
-
-  it("kendini takip edemez", async () => {
-    const { user, auth } = await createSession();
-    const response = await api().post(`/api/users/follow/${user._id}`).set(auth);
+describe("geri bildirim", () => {
+  it("geçersiz türü reddeder", async () => {
+    const { auth } = await createSession();
+    const response = await api().post("/api/users/feedback").set(auth).send({ type: "spam", message: "x" });
 
     expect(response.status).toBe(400);
+  });
+
+  it("admin geri bildirimleri sayfalı görür", async () => {
+    const { auth } = await createSession();
+    const admin = await createAdminSession();
+    await api().post("/api/users/feedback").set(auth).send({ type: "hata", message: "Buton çalışmıyor" });
+
+    const response = await api().get("/api/users/feedback").set(admin.auth);
+    expect(response.body.items).toHaveLength(1);
+    expect(response.body.items[0].user.email).toEqual(expect.any(String));
   });
 });

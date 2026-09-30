@@ -10,6 +10,5 @@ export const accountRepository = {
   updateAvatar: (formData) => unwrap(accountApi.updateAvatar(formData)),
   freeze: () => unwrap(accountApi.freeze()),
   deleteMe: (password) => unwrap(accountApi.deleteMe(password)),
-  toggleFollow: (userId) => unwrap(accountApi.toggleFollow(userId)),
   sendFeedback: (payload) => unwrap(accountApi.sendFeedback(payload)),
 };

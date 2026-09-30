@@ -1,160 +1,95 @@
 import { Link } from "react-router-dom";
-import { useAuthActions } from "../../hooks/useAuthActions";
-import { useState } from "react";
-import { Input, Select, Button, Heading } from "@/shared/components/atoms";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Button, Heading, Input, Select } from "@/shared/components/atoms";
+import { registerSchema } from "@/shared/validation/schemas";
+import { useRegister } from "../../hooks/useAuthActions";
+import { AuthLayout } from "../AuthLayout";
+
+const ROLE_OPTIONS = [
+  { value: "satici", label: "Satıcı" },
+  { value: "alici", label: "Alıcı" },
+];
 
 export function RegisterForm() {
-  const { register, loading } = useAuthActions();
-
-  const [formData, setFormData] = useState({
-    name: "",
-    surname: "",
-    email: "",
-    role: "satici",
-    password: "",
+  const registerAccount = useRegister();
+  const { register, handleSubmit, formState } = useForm({
+    resolver: zodResolver(registerSchema),
+    defaultValues: { name: "", surname: "", email: "", password: "", role: "satici" },
   });
-
-  const handleChange = (e) => {
-    setFormData({
-      ...formData,
-      [e.target.name]: e.target.value,
-    });
-  };
-
-  const onSubmit = (e) => {
-    e.preventDefault();
-    register(formData);
-  };
+  const { errors } = formState;
 
   return (
-    <div className="min-h-screen flex bg-gray-50">
-      <div className="hidden md:block md:w-1/2 relative overflow-hidden">
-        <img
-          src="/assets/wallpaper.png"
-          alt="Milk Wallpaper"
-          className="absolute inset-0 h-full w-full object-cover"
+    <AuthLayout>
+      <form
+        noValidate
+        onSubmit={handleSubmit((values) => registerAccount.mutate(values))}
+        className="bg-white p-8 rounded-2xl shadow-lg"
+      >
+        <Heading
+          title="Kayıt Ol"
+          desc="Hesabınızı oluşturmak için bilgilerinizi giriniz."
+          className="text-3xl font-semibold text-[rgb(71,92,120)]"
         />
 
-        <div className="absolute inset-0 bg-black/35" />
-
-        <div className="absolute bottom-10 left-10 right-10 z-10 text-white">
-          <img
-            src="/assets/footer-logo.png"
-            width="80"
-            height="40"
-            alt="Milk logo"
-            className="object-contain"
-          />
-
-          <h2 className="text-3xl lg:text-4xl font-semibold leading-tight pt-4">
-            İşlerinizi daha kolay
-            <br />
-            yönetmeye başlayın.
-          </h2>
-
-          <p className="mt-4 max-w-md text-sm lg:text-base text-white/75 leading-relaxed">
-            Hesabınıza giriş yaparak platformdaki tüm özelliklere hızlı ve güvenli bir şekilde
-            erişebilirsiniz.
-          </p>
-        </div>
-      </div>
-
-      <div className="flex w-full md:w-1/2 justify-center items-center bg-white px-6">
-        <form className="w-full max-w-md bg-white p-8 rounded-2xl shadow-lg" onSubmit={onSubmit}>
-          <Heading
-            title=" Kayıt Ol"
-            desc="Hesabınızı oluşturmak için bilgilerinizi giriniz."
-            className="text-3xl font-semibold text-[rgb(71,92,120)]"
-          />
-
-          <div className="space-y-5">
-            <div className="flex gap-3">
-              <div className="flex-1">
-                <Input
-                  label="Ad"
-                  name="name"
-                  value={formData.name}
-                  className="py-2"
-                  placeholder="Adınız"
-                  onChange={handleChange}
-                />
-              </div>
-
-              <div className="flex-1">
-                <Input
-                  label="Soyad"
-                  className="py-2"
-                  name="surname"
-                  value={formData.surname}
-                  placeholder="Soyadınız"
-                  onChange={handleChange}
-                />
-              </div>
-            </div>
-
-            <div>
-              <Input
-                label="Email"
-                type="email"
-                className="py-2"
-                name="email"
-                value={formData.email}
-                placeholder="ornek@mail.com"
-                onChange={handleChange}
-              />
-            </div>
-
-            <div className="flex gap-3">
-              <div className="flex-1">
-                <Input
-                  label="Parola"
-                  type="password"
-                  name="password"
-                  className="py-2"
-                  value={formData.password}
-                  placeholder="En az 8 karakter"
-                  minLength={8}
-                  onChange={handleChange}
-                />
-              </div>
-
-              <div className="flex-1 relative">
-                <Select
-                  label="Üye Alanı"
-                  name="role"
-                  value={formData.role}
-                  onChange={handleChange}
-                  options={[
-                    { value: "satici", label: "Satıcı" },
-                    { value: "alici", label: "Alıcı" },
-                  ]}
-                />
-              </div>
-            </div>
+        <div className="space-y-5">
+          <div className="flex gap-3">
+            <Input {...register("name")} label="Ad" autoComplete="given-name" error={errors.name?.message} wrapperClassName="flex-1" />
+            <Input
+              {...register("surname")}
+              label="Soyad"
+              autoComplete="family-name"
+              error={errors.surname?.message}
+              wrapperClassName="flex-1"
+            />
           </div>
 
-          <Button
-            type="submit"
-            variant="primary"
-            disabled={loading}
-            className="w-full mt-7 text-sm font-medium transition-all hover:shadow-md"
-          >
-            {loading ? "Kayıt Olunuyor..." : "Üye Ol"}
-          </Button>
-          <p className="mt-6 flex items-center gap-3 text-sm text-gray-400">
-            <span className="flex-1 h-px bg-gray-200" />
+          <Input
+            {...register("email")}
+            label="E-posta"
+            type="email"
+            autoComplete="email"
+            placeholder="ornek@mail.com"
+            error={errors.email?.message}
+          />
 
-            <span className="whitespace-nowrap">
-              Üye misin?{" "}
-              <Link to="/giris-yap" className="text-[rgb(82,144,246)] font-semibold hover:underline">
-                Giriş yap
-              </Link>
-            </span>
+          <div className="flex gap-3">
+            <Input
+              {...register("password")}
+              label="Parola"
+              type="password"
+              autoComplete="new-password"
+              placeholder="En az 8 karakter"
+              error={errors.password?.message}
+              wrapperClassName="flex-1"
+            />
+            <Select
+              {...register("role")}
+              label="Üyelik türü"
+              options={ROLE_OPTIONS}
+              error={errors.role?.message}
+              wrapperClassName="flex-1"
+            />
+          </div>
+        </div>
 
-            <span className="flex-1 h-px bg-gray-200" />
-          </p>
-        </form>
-      </div>
-    </div>
+        <Button
+          type="submit"
+          variant="primary"
+          loading={registerAccount.isPending}
+          loadingText="Kayıt olunuyor..."
+          className="w-full mt-7 text-sm font-medium"
+        >
+          Üye Ol
+        </Button>
+
+        <p className="mt-6 text-center text-sm text-gray-500">
+          Üye misin?{" "}
+          <Link to="/giris-yap" className="text-[rgb(40,100,210)] font-semibold hover:underline">
+            Giriş yap
+          </Link>
+        </p>
+      </form>
+    </AuthLayout>
   );
 }

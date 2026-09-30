@@ -1,19 +1,14 @@
-import { useAuthStore } from "@/shared/store/useAuthStore";
-import { endSession } from "@/shared/api/session";
+import { endSession, startSession } from "@/shared/api/session";
 import { authRepository } from "../repositories/auth.repository";
 
 export const authService = {
   async login(credentials) {
     const session = await authRepository.login(credentials);
-    useAuthStore.getState().setSession(session);
+    startSession(session);
     return session;
   },
 
-  register(payload) {
-    return authRepository.register(payload);
-  },
+  register: (payload) => authRepository.register(payload),
 
-  logout() {
-    return endSession();
-  },
+  logout: () => endSession(),
 };
