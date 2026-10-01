@@ -4,6 +4,7 @@ const ENTITY_PATHS = {
   post: (id) => `/urun/${id}`,
   comment: () => null,
   user: () => "/profil",
+  organic_application: () => "/profil",
 };
 
 export const notificationService = {

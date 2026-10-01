@@ -3,7 +3,7 @@ import mongoose from "mongoose";
 import { AppError } from "../utils/AppError.js";
 
 const MULTER_MESSAGES = {
-  LIMIT_FILE_SIZE: "Dosya boyutu en fazla 5MB olabilir",
+  LIMIT_FILE_SIZE: "Dosya boyutu sınırı aşıldı",
   LIMIT_FILE_COUNT: "En fazla 5 dosya yüklenebilir",
   LIMIT_UNEXPECTED_FILE: "Beklenmeyen dosya alanı",
 };

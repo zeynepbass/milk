@@ -13,3 +13,4 @@ AGENTS.md
 test-results/
 playwright-report/
 blob-report/
+server/private-uploads/

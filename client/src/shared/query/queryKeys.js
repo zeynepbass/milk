@@ -23,5 +23,10 @@ export const queryKeys = {
     withUser: (userId) => ["conversations", "with", userId],
     messages: (conversationId) => ["conversations", "messages", conversationId],
   },
+  organic: {
+    all: ["organic"],
+    mine: () => ["organic", "mine"],
+    list: (status) => ["organic", "list", status ?? "all"],
+  },
   presence: ["presence"],
 };

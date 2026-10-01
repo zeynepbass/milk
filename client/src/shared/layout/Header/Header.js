@@ -6,7 +6,7 @@ import { useSearchStore } from "@/shared/store/useSearchStore";
 import { useCurrentUser } from "@/features/auth/hooks/useCurrentUser";
 import { useLogout } from "@/features/auth/hooks/useAuthActions";
 import { NotificationBell } from "@/features/notifications/components/NotificationBell";
-import { NAV_ITEMS } from "./navItems";
+import { navItemsFor } from "./navItems";
 import { ThemeToggle } from "./ThemeToggle";
 import { UserMenu } from "./UserMenu";
 import { MobileMenu } from "./MobileMenu";
@@ -21,6 +21,7 @@ export function Header() {
   const { data: user } = useCurrentUser();
   const logout = useLogout();
   const navigate = useNavigate();
+  const navItems = navItemsFor(user);
 
   const handleSearch = (value) => {
     setSearch(value);
@@ -54,7 +55,7 @@ export function Header() {
 
         <nav aria-label="Ana gezinme" className="hidden md:flex shrink-0 items-center gap-2">
           <ThemeToggle />
-          {NAV_ITEMS.map(({ to, label, icon: Icon, end }) => (
+          {navItems.map(({ to, label, icon: Icon, end }) => (
             <NavLink key={to} to={to} end={end} aria-label={label} title={label} className={NAV_LINK_CLASS}>
               <Icon className="w-5 h-5" aria-hidden="true" />
             </NavLink>
@@ -82,6 +83,7 @@ export function Header() {
         open={mobileMenuOpen}
         onClose={() => setMobileMenuOpen(false)}
         search={searchBox}
+        items={navItems}
         onLogout={() => logout.mutate()}
       />
     </header>

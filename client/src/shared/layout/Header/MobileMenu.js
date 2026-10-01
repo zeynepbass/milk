@@ -1,9 +1,8 @@
 import { Dialog, DialogPanel, DialogTitle } from "@headlessui/react";
 import { NavLink } from "react-router-dom";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { NAV_ITEMS } from "./navItems";
 
-export function MobileMenu({ open, onClose, search, onLogout }) {
+export function MobileMenu({ open, onClose, search, items, onLogout }) {
   return (
     <Dialog open={open} onClose={onClose} className="md:hidden relative z-50">
       <div className="fixed inset-0 bg-black/30" aria-hidden="true" />
@@ -25,7 +24,7 @@ export function MobileMenu({ open, onClose, search, onLogout }) {
 
         <nav aria-label="Mobil gezinme" className="mt-6">
           <ul className="space-y-1">
-            {[...NAV_ITEMS, { to: "/profil", label: "Profil" }].map((item) => (
+            {[...items, { to: "/profil", label: "Profil" }].map((item) => (
               <li key={item.to}>
                 <NavLink
                   to={item.to}

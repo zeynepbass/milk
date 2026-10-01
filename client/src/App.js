@@ -17,6 +17,7 @@ const ExplorePage = lazyNamed(() => import("@/features/feed/pages/ExplorePage"),
 const FavoritesPage = lazyNamed(() => import("@/features/feed/pages/FavoritesPage"), "FavoritesPage");
 const MessagesPage = lazyNamed(() => import("@/features/messages/pages"), "MessagesPage");
 const PostDetailPage = lazyNamed(() => import("@/features/posts/pages"), "PostDetailPage");
+const AdminPage = lazyNamed(() => import("@/features/organic/pages/AdminPage"), "AdminPage");
 const ProfilePage = lazyNamed(() => import("@/features/auth/pages/ProfilePage"), "ProfilePage");
 
 function App() {
@@ -35,6 +36,7 @@ function App() {
             <Route path="/favoriler" element={<FavoritesPage />} />
             <Route path="/mesajlar" element={<MessagesPage />} />
             <Route path="/urun/:id" element={<PostDetailPage />} />
+            <Route path="/yonetim" element={<AdminPage />} />
           </Route>
 
           <Route element={<GuestOnly />}>

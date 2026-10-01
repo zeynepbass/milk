@@ -1,7 +1,14 @@
 import mongoose from "mongoose";
 
-export const NOTIFICATION_TYPES = ["new_post", "post_like", "post_comment", "follow"];
-export const ENTITY_KINDS = ["post", "comment", "user"];
+export const NOTIFICATION_TYPES = [
+  "new_post",
+  "post_like",
+  "post_comment",
+  "follow",
+  "organic_approved",
+  "organic_rejected",
+];
+export const ENTITY_KINDS = ["post", "comment", "user", "organic_application"];
 
 const notificationSchema = new mongoose.Schema(
   {

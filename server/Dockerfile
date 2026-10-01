@@ -21,7 +21,7 @@ COPY package.json migrate-mongo-config.js ./
 COPY src ./src
 COPY migrations ./migrations
 COPY scripts ./scripts
-RUN mkdir -p /app/uploads && chown -R node:node /app/uploads
+RUN mkdir -p /app/uploads /app/private-uploads && chown -R node:node /app/uploads /app/private-uploads
 USER node
 EXPOSE 5346
 HEALTHCHECK --interval=30s --timeout=5s --start-period=20s --retries=3 \

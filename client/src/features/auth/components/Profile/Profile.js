@@ -4,7 +4,7 @@ import { ProfileCard } from "../ProfileCard";
 import { ProfileTabs } from "../ProfileTabs";
 import { MyPostsPanel } from "../MyPostsPanel";
 import { AccountSettings } from "../AccountSettings";
-import { OrganicForm } from "../OrganicForm";
+import { OrganicApplicationForm } from "@/features/organic/components/OrganicApplicationForm";
 import { SalesSupport } from "../SalesSupport";
 
 export function Profile() {
@@ -15,7 +15,11 @@ export function Profile() {
     ? [
         { id: "posts", label: "Gönderiler", content: <MyPostsPanel canPost={user.role !== "alici"} /> },
         { id: "settings", label: "Hesap Ayarları", content: <AccountSettings /> },
-        { id: "organic", label: "Organik Sertifika", content: <OrganicForm /> },
+        {
+          id: "organic",
+          label: "Organik Sertifika",
+          content: <OrganicApplicationForm canApply={user.role !== "alici"} />,
+        },
         { id: "feedback", label: "Geri Bildirim Gönder", content: <SalesSupport /> },
       ]
     : [];

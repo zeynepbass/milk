@@ -16,6 +16,7 @@ Object.assign(process.env, {
   JWT_SECRET: "e2e-secret-e2e-secret-e2e-secret-e2e",
   CLIENT_URLS: process.env.E2E_CLIENT_URL ?? "http://localhost:3100",
   UPLOAD_DIR: path.join(os.tmpdir(), "milk-e2e-uploads"),
+  PRIVATE_UPLOAD_DIR: path.join(os.tmpdir(), "milk-e2e-private-uploads"),
   LOG_LEVEL: "warn",
   JOBS_POLL_INTERVAL_MS: "200",
 });
@@ -29,3 +30,6 @@ process.once("SIGTERM", stop);
 process.once("SIGINT", stop);
 
 await import(pathToFileURL(path.join(serverDir, "src/server.js")).href);
+
+const { seed } = await import(pathToFileURL(path.join(serverDir, "scripts/seed.js")).href);
+await seed();

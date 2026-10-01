@@ -58,6 +58,7 @@ services:
       JWT_SECRET: ${JWT_SECRET:-local-development-secret-change-me-now}
       CLIENT_URLS: http://localhost:3000
       UPLOAD_DIR: /app/uploads
+      PRIVATE_UPLOAD_DIR: /app/private-uploads
       REDIS_URL: redis://redis:6379
     ports:
       - "5346:5346"
@@ -65,6 +66,7 @@ services:
       - ./server/src:/app/src
       - ./server/migrations:/app/migrations
       - uploads:/app/uploads
+      - private-uploads:/app/private-uploads
     depends_on:
       mongo:
         condition: service_healthy
@@ -90,3 +92,4 @@ services:
 volumes:
   mongo-data:
   uploads:
+  private-uploads:

@@ -15,6 +15,7 @@ export default defineConfig({
       JWT_SECRET: "test-secret-test-secret-test-secret",
       CLIENT_URLS: "http://localhost:3000",
       UPLOAD_DIR: path.join(os.tmpdir(), "milk-test-uploads"),
+      PRIVATE_UPLOAD_DIR: path.join(os.tmpdir(), "milk-test-private-uploads"),
     },
     coverage: {
       provider: "v8",

@@ -128,3 +128,56 @@ test("oturum yenilemesi sayfa yenilendiğinde kullanıcıyı içeride tutar", as
   await page.goto("/profil");
   await expect(page).toHaveURL(/\/giris-yap$/);
 });
+
+test("satıcı organik sertifika başvurusu yapar, yönetici onaylar, satıcı rozet ve bildirim alır", async ({
+  browser,
+}) => {
+  const sellerContext = await browser.newContext();
+  const adminContext = await browser.newContext();
+  const sellerPage = await sellerContext.newPage();
+  const adminPage = await adminContext.newPage();
+  const organicSeller = { ...seller, email: `organik-${stamp}@ornek.com` };
+
+  await registerAndLogin(sellerPage, organicSeller);
+  await sellerPage.goto("/profil");
+  await sellerPage.getByRole("tab", { name: "Organik Sertifika" }).click();
+  await sellerPage.locator('input[type="file"][accept="application/pdf"]').setInputFiles({
+    name: "sertifika.pdf",
+    mimeType: "application/pdf",
+    buffer: Buffer.from(
+      "%PDF-1.4\n1 0 obj\n<< /Type /Catalog >>\nendobj\ntrailer\n<< /Root 1 0 R >>\n%%EOF\n"
+    ),
+  });
+  await sellerPage.getByRole("button", { name: "Başvur" }).click();
+  await expect(sellerPage.getByText("Başvurun inceleniyor")).toBeVisible();
+
+  await adminPage.goto("/giris-yap");
+  await adminPage.getByLabel("E-posta").fill("admin@milk.demo");
+  await adminPage.getByLabel("Parola").fill("Demo12345!");
+  await adminPage.getByRole("button", { name: "Giriş Yap" }).click();
+  await adminPage
+    .getByRole("navigation", { name: "Ana gezinme" })
+    .getByRole("link", { name: "Yönetim" })
+    .click();
+
+  const application = adminPage.getByRole("article", { name: "Mehmet Demir" });
+  await expect(application).toBeVisible();
+  await screenshot(adminPage, "yonetim");
+  await application.getByRole("button", { name: "Onayla" }).click();
+  await expect(application).toBeHidden();
+
+  const bell = sellerPage
+    .getByRole("navigation", { name: "Ana gezinme" })
+    .getByRole("button", { name: /okunmamış/ });
+  await expect(bell).toHaveAccessibleName(/1 okunmamış/);
+
+  await sellerPage.reload();
+  await sellerPage.getByRole("tab", { name: "Organik Sertifika" }).click();
+  await expect(sellerPage.getByText("Doğrulanmış satıcısın")).toBeVisible();
+  await expect(
+    sellerPage.getByRole("region", { name: "Profil" }).getByLabel("Doğrulanmış satıcı")
+  ).toBeVisible();
+
+  await sellerContext.close();
+  await adminContext.close();
+});

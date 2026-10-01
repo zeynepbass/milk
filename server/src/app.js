@@ -17,6 +17,7 @@ import commentRoutes from "./routes/comment.routes.js";
 import notificationRoutes from "./routes/notification.routes.js";
 import messageRoutes from "./routes/message.routes.js";
 import conversationRoutes from "./routes/conversation.routes.js";
+import organicRoutes from "./routes/organic.routes.js";
 
 const corsOptions = {
   origin: (origin, callback) => callback(null, !origin || isAllowedOrigin(origin)),
@@ -77,6 +78,7 @@ export const createApp = () => {
   app.use("/api/notifications", notificationRoutes);
   app.use("/api/messages", messageRoutes);
   app.use("/api/conversations", conversationRoutes);
+  app.use("/api/organic-applications", organicRoutes);
 
   mountDocs(app);
 

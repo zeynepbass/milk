@@ -57,3 +57,28 @@ export const uploadImages = (field, maxCount) => [multerInstance.array(field, ma
 export const uploadImage = (field) => [multerInstance.single(field), persistImages];
 
 export const uploadedUrls = (req) => (req.files ?? (req.file ? [req.file] : [])).map((file) => file.url);
+
+const MAX_DOCUMENT_SIZE = 10 * 1024 * 1024;
+
+const unsupportedDocument = () => badRequest("Sadece PDF belgeler yüklenebilir", "UNSUPPORTED_FILE_TYPE");
+
+const documentUploader = multer({
+  storage: multer.memoryStorage(),
+  limits: { fileSize: MAX_DOCUMENT_SIZE, files: 1 },
+  fileFilter: (req, file, cb) => {
+    if (file.mimetype === "application/pdf") {
+      cb(null, true);
+    } else {
+      cb(unsupportedDocument());
+    }
+  },
+});
+
+const verifyPdf = async (req, res, next) => {
+  if (!req.file) return next(badRequest("Belge seçilmedi", "FILE_REQUIRED"));
+
+  const detected = await fileTypeFromBuffer(req.file.buffer);
+  return detected?.mime === "application/pdf" ? next() : next(unsupportedDocument());
+};
+
+export const uploadDocument = (field) => [documentUploader.single(field), verifyPdf];

@@ -28,7 +28,7 @@ report "console kullanımı bulundu:" "$(source_files | tr '\n' '\0' | xargs -0 
 
 report "Yorum satırı bulundu:" "$(source_files | tr '\n' '\0' | xargs -0 grep -nE '^[[:space:]]*(//|/\*)|\{/\*' 2>/dev/null || true)"
 
-report "Asistan izi bulundu:" "$(git ls-files -z --cached --others --exclude-standard | grep -zv -e '^scripts/check-hygiene.sh$' -e 'package-lock.json$' -e '^.gitignore$' -e '^commitlint.config.js$' | xargs -0 grep -nIiE 'co-authored-by|generated with|claude|chatgpt|copilot|\bAI\b' 2>/dev/null || true)"
+report "Asistan izi bulundu:" "$(git ls-files -z --cached --others --exclude-standard | grep -zv -e '^scripts/check-hygiene.sh$' -e 'package-lock.json$' -e '^.gitignore$' | xargs -0 grep -nIiE 'co-authored-by|generated with|claude|chatgpt|copilot|\bAI\b' 2>/dev/null || true)"
 
 report "Commit mesajlarında asistan izi bulundu:" "$(git log --format='%h %s%n%b' | grep -iE 'co-authored-by|generated with|claude' || true)"
 

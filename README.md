@@ -35,7 +35,8 @@ Küçük üreticiler ürünlerini genelde aracılar üzerinden ya da dağınık 
 | Mesajlaşma                                                       |        ✓        |         ✓         |         ✓          |
 | Gönderi paylaşma, düzenleme, kaldırma (yalnızca kendi gönderisi) |        –        |         ✓         |         ✓          |
 | Kullanıcı listesi, geri bildirimler                              |        –        |         –         |         ✓          |
-| Organik satıcı onayı (`dogrulanmisSatici` rozeti)                |        –        |         –         |         ✓          |
+| Organik sertifika başvurusu (PDF)                                |        –        |         ✓         |         ✓          |
+| Başvuru inceleme ve organik satıcı onayı (`dogrulanmisSatici`)   |        –        |         –         |         ✓          |
 | Rol değiştirme                                                   |        –        |         –         |         ✓          |
 
 Kayıt sırasında yalnızca `alici` veya `satici` seçilebilir. Rol, organik onay ve hesap durumu gibi alanlar kullanıcının kendi profil güncellemesiyle değiştirilemez; bu alanları içeren istekler `400` ile reddedilir.
@@ -55,7 +56,11 @@ Kayıt sırasında yalnızca `alici` veya `satici` seçilebilir. Rol, organik on
   - İki kişi arasında tek konuşma tutulur; mesajlar sayfalanır.
   - Okundu bilgisi, konuşma başına okunmamış sayısı ve çevrimiçi durumu gösterilir.
   - Ürün kartındaki mesaj butonu, ürün bilgisini route state ile taşır.
-- **Hesap silme:** Soft delete uygulanır. Gönderiler, yorumlar, konuşmalar, takip ilişkileri ve bildirimler tek transaction içinde gizlenir veya temizlenir; yüklenen dosyalar silinir.
+- **Organik sertifika:**
+  - Satıcı profilinden PDF belgesiyle başvurur. Belge magic byte ile doğrulanır, en fazla 10 MB olabilir ve herkese açık olmayan ayrı bir depoya kaydedilir.
+  - Belgeyi yalnızca sahibi ve yöneticiler indirebilir. Aynı anda tek bekleyen başvuru olabilir.
+  - Yönetici `/yonetim` sayfasında başvuruyu onaylar veya gerekçe yazarak reddeder. Onayla birlikte doğrulanmış satıcı rozeti aynı transaction içinde verilir ve satıcıya anlık bildirim gider.
+- **Hesap silme:** Soft delete uygulanır. Gönderiler, yorumlar, konuşmalar, takip ilişkileri, bildirimler ve sertifika başvuruları tek transaction içinde gizlenir veya temizlenir; yüklenen dosyalar ve belgeler silinir.
 - **Erişilebilirlik:**
   - Modallarda odak tuzağı ve Escape ile kapatma var.
   - İkon butonlarında erişilebilir isimler, form hatalarında `aria-invalid` ve `aria-describedby` kullanılıyor.
@@ -161,19 +166,19 @@ Bildirim üretimi HTTP isteğinin dışında, MongoDB'de tutulan bir iş kuyruğ
 
 ## Teknoloji seçimleri
 
-| Alan                   | Seçim                                                                      | Gerekçe                                                                                                                    |
-| ---------------------- | -------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------- |
-| Dil                    | JavaScript (ES Modules)                                                    | Tip güvenliği sınırlarda zod ile, davranış testlerle sağlanır ([ADR 0005](docs/adr/0005-typescript-yerine-zod-ve-test.md)) |
-| API                    | Express 5 + Mongoose 9                                                     | Mevcut kod tabanı. Express 5 async hata yakalamayı kendisi yapar.                                                          |
-| Doğrulama              | zod 4 (server), `zod/mini` (client)                                        | Tek kural dosyası (`validators/rules.js`) iki tarafta da kullanılır. OpenAPI bu şemalardan üretilir.                       |
-| Kimlik doğrulama       | jose + opak refresh token                                                  | [ADR 0001](docs/adr/0001-token-stratejisi.md)                                                                              |
-| Takip ilişkisi         | Ayrı `follows` koleksiyonu                                                 | [ADR 0002](docs/adr/0002-takip-iliskisi-ayri-koleksiyon.md)                                                                |
-| Bildirim dağıtımı      | MongoDB tabanlı iş kuyruğu                                                 | [ADR 0003](docs/adr/0003-bildirim-dagitimi.md)                                                                             |
-| Gerçek zamanlı         | Socket.io, `user:<id>` odaları, opsiyonel Redis adapter                    | [ADR 0004](docs/adr/0004-socket-oda-yapisi-ve-olcekleme.md)                                                                |
-| Sunucu durumu (client) | TanStack Query                                                             | Önbellek, invalidation, iyimser güncelleme, infinite query                                                                 |
-| Formlar                | react-hook-form + zod                                                      | Server ile aynı kurallar                                                                                                   |
-| Loglama                | pino + pino-http                                                           | JSON loglar, `X-Request-Id` ile istek takibi, hassas alanlar maskelenir                                                    |
-| Test                   | Vitest, Supertest, mongodb-memory-server, Testing Library, MSW, Playwright | –                                                                                                                          |
+| Alan                   | Seçim                                                                      | Gerekçe                                                                                                 |
+| ---------------------- | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| Dil                    | JavaScript (ES Modules)                                                    | Tip güvenliği sınırlarda zod ile, davranış testlerle sağlanır                                           |
+| API                    | Express 5 + Mongoose 9                                                     | Mevcut kod tabanı. Express 5 async hata yakalamayı kendisi yapar.                                       |
+| Doğrulama              | zod 4 (server), `zod/mini` (client)                                        | Tek kural dosyası (`validators/rules.js`) iki tarafta da kullanılır. OpenAPI bu şemalardan üretilir.    |
+| Kimlik doğrulama       | jose + opak refresh token                                                  | Access token kısa ömürlü ve bellekte; refresh token httpOnly cookie'de, rotation ve reuse detection ile |
+| Takip ilişkisi         | Ayrı `follows` koleksiyonu                                                 | Benzersiz index tekrar eden takibi engeller, sayaçlar atomik güncellenir                                |
+| Bildirim dağıtımı      | MongoDB tabanlı iş kuyruğu                                                 | Bildirimler istek dışında dağıtılır, sunucu yeniden başlasa da kaybolmaz                                |
+| Gerçek zamanlı         | Socket.io, `user:<id>` odaları, opsiyonel Redis adapter                    | Olaylar yalnızca ilgili kullanıcının odasına gider; Redis ile yatay ölçeklenir                          |
+| Sunucu durumu (client) | TanStack Query                                                             | Önbellek, invalidation, iyimser güncelleme, infinite query                                              |
+| Formlar                | react-hook-form + zod                                                      | Server ile aynı kurallar                                                                                |
+| Loglama                | pino + pino-http                                                           | JSON loglar, `X-Request-Id` ile istek takibi, hassas alanlar maskelenir                                 |
+| Test                   | Vitest, Supertest, mongodb-memory-server, Testing Library, MSW, Playwright | –                                                                                                       |
 
 ## Kurulum
 
@@ -231,20 +236,22 @@ npm --prefix client start
 
 ### Ortam değişkenleri (server)
 
-| Değişken                                                                                             | Varsayılan              | Açıklama                                                                         |
-| ---------------------------------------------------------------------------------------------------- | ----------------------- | -------------------------------------------------------------------------------- |
-| `MONGO_URI`                                                                                          | –                       | MongoDB bağlantısı                                                               |
-| `JWT_SECRET`                                                                                         | –                       | En az 32 karakter                                                                |
-| `CLIENT_URLS`                                                                                        | `http://localhost:3000` | Virgülle ayrılmış CORS ve origin whitelist'i                                     |
-| `ACCESS_TOKEN_TTL_SECONDS`                                                                           | `900`                   | Access token ömrü                                                                |
-| `REFRESH_TOKEN_TTL_DAYS`                                                                             | `30`                    | Refresh token ömrü                                                               |
-| `REDIS_URL`                                                                                          | –                       | Tanımlıysa Socket.io Redis adapter ve Redis tabanlı çevrimiçi listesi kullanılır |
-| `STORAGE_DRIVER`                                                                                     | `local`                 | `local` veya `s3`                                                                |
-| `S3_BUCKET`, `S3_REGION`, `S3_PUBLIC_URL`, `S3_ENDPOINT`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY` | –                       | S3 uyumlu depolama                                                               |
-| `JOBS_ENABLED`, `JOBS_POLL_INTERVAL_MS`                                                              | `true`, `1000`          | İş kuyruğu                                                                       |
-| `TRUST_PROXY`                                                                                        | `false`                 | Ters proxy arkasında `true`                                                      |
+| Değişken                                                                                             | Varsayılan              | Açıklama                                                                                                                |
+| ---------------------------------------------------------------------------------------------------- | ----------------------- | ----------------------------------------------------------------------------------------------------------------------- |
+| `MONGO_URI`                                                                                          | –                       | MongoDB bağlantısı                                                                                                      |
+| `JWT_SECRET`                                                                                         | –                       | En az 32 karakter                                                                                                       |
+| `CLIENT_URLS`                                                                                        | `http://localhost:3000` | Virgülle ayrılmış CORS ve origin whitelist'i                                                                            |
+| `ACCESS_TOKEN_TTL_SECONDS`                                                                           | `900`                   | Access token ömrü                                                                                                       |
+| `REFRESH_TOKEN_TTL_DAYS`                                                                             | `30`                    | Refresh token ömrü                                                                                                      |
+| `REDIS_URL`                                                                                          | –                       | Tanımlıysa Socket.io Redis adapter ve Redis tabanlı çevrimiçi listesi kullanılır                                        |
+| `STORAGE_DRIVER`                                                                                     | `local`                 | `local` veya `s3`                                                                                                       |
+| `S3_BUCKET`, `S3_REGION`, `S3_PUBLIC_URL`, `S3_ENDPOINT`, `S3_ACCESS_KEY_ID`, `S3_SECRET_ACCESS_KEY` | –                       | S3 uyumlu depolama                                                                                                      |
+| `PRIVATE_UPLOAD_DIR`                                                                                 | `private-uploads`       | Sertifika belgeleri için herkese açık olmayan yerel dizin                                                               |
+| `S3_PRIVATE_BUCKET`                                                                                  | `S3_BUCKET`             | S3 kullanılıyorsa sertifika belgeleri bu kovada `private/` önekiyle tutulur; kova herkese açık okumaya kapalı olmalıdır |
+| `JOBS_ENABLED`, `JOBS_POLL_INTERVAL_MS`                                                              | `true`, `1000`          | İş kuyruğu                                                                                                              |
+| `TRUST_PROXY`                                                                                        | `false`                 | Ters proxy arkasında `true`                                                                                             |
 
-Deploy adımları için: [docs/deploy.md](docs/deploy.md).
+Production için server `docker build --target production ./server` ile container olarak, client `REACT_APP_SERVER_URL` verilerek statik build (veya `client` imajındaki nginx) olarak dağıtılır. Veritabanı olarak MongoDB Atlas, dosyalar için `STORAGE_DRIVER=s3` ile S3 uyumlu bir depo kullanılabilir. Client ve API aynı site altında olmalıdır (ör. `milk.app` ve `api.milk.app`); refresh cookie `SameSite=Lax`tır.
 
 ## Testler
 
@@ -257,14 +264,14 @@ npm run lint
 npm run hygiene
 ```
 
-| Komut                                   | Ne yapar                                                                                             |
-| --------------------------------------- | ---------------------------------------------------------------------------------------------------- |
-| `npm test`                              | Server testleri: Vitest, Supertest, bellek içi MongoDB replica set                                   |
-| `npm --prefix server run test:coverage` | Service katmanında %80 kapsama eşiğiyle çalışır                                                      |
-| `npm --prefix client test`              | Client testleri: Testing Library ve MSW                                                              |
-| `npm run test:e2e`                      | Playwright senaryosu: satıcı kaydı → gönderi → alıcı takip, beğeni, yorum → bildirim → mesaj → yanıt |
-| `npm run lint`                          | ESLint (`no-console` ve yorum satırı yasağı dahil)                                                   |
-| `npm run hygiene`                       | TypeScript, `console`, yorum satırı ve istenmeyen dosya kontrolü                                     |
+| Komut                                   | Ne yapar                                                                                                                                                                 |
+| --------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `npm test`                              | Server testleri: Vitest, Supertest, bellek içi MongoDB replica set                                                                                                       |
+| `npm --prefix server run test:coverage` | Service katmanında %80 kapsama eşiğiyle çalışır                                                                                                                          |
+| `npm --prefix client test`              | Client testleri: Testing Library ve MSW                                                                                                                                  |
+| `npm run test:e2e`                      | Playwright senaryoları: satıcı kaydı → gönderi → alıcı takip, beğeni, yorum → bildirim → mesaj → yanıt; organik sertifika başvurusu → yönetici onayı → rozet ve bildirim |
+| `npm run lint`                          | ESLint (`no-console` ve yorum satırı yasağı dahil)                                                                                                                       |
+| `npm run hygiene`                       | TypeScript, `console`, yorum satırı ve istenmeyen dosya kontrolü                                                                                                         |
 
 Server testlerinin kapsadıkları:
 
@@ -276,7 +283,7 @@ Server testlerinin kapsadıkları:
 - bildirim gruplama, mesaj okundu bilgisi,
 - socket yetkilendirmesi, migration'lar ve iş kuyruğu.
 
-CI (GitHub Actions) her PR'da lint, hijyen, commit mesajı kontrolü, server ve client testleri, build, E2E ve Docker imajı build adımlarını çalıştırır. Performans ölçümleri için: [docs/metrics.md](docs/metrics.md).
+CI (GitHub Actions) her PR'da lint, hijyen, server ve client testleri, build, E2E ve Docker imajı build adımlarını çalıştırır.
 
 ## API dokümantasyonu
 
@@ -297,6 +304,10 @@ Görüntüler Playwright senaryosu sırasında alınır (`docs/screenshots`).
 | -------------------------------------- | ------------------------------------------ |
 | ![Keşfet](docs/screenshots/kesfet.png) | ![Mesajlar](docs/screenshots/mesajlar.png) |
 
+**Organik sertifika başvurularının incelenmesi**
+
+![Yönetim](docs/screenshots/yonetim.png)
+
 Canlı demo henüz yayında değil.
 
 ## Proje yapısı
@@ -308,10 +319,8 @@ client/src
 server/src
   config  controllers  docs  jobs  middleware  models  routes  services  sockets  storage  utils  validators
 server/migrations   server/scripts   server/tests
-e2e/                docs/adr/
+e2e/
 ```
-
-Karar kayıtları: [docs/adr](docs/adr).
 
 ## Lisans
 

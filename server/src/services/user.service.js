@@ -13,6 +13,7 @@ import { revokeAllForUser } from "./token.service.js";
 import { isFollowing, removeAllFollowsOf } from "./follow.service.js";
 import { hideConversationsOf } from "./message.service.js";
 import { removeNotificationsOf } from "./notification.service.js";
+import { discardDocuments, removeApplicationsOf } from "./organic.service.js";
 
 const userNotFound = () => notFound("Kullanıcı bulunamadı", "USER_NOT_FOUND");
 
@@ -134,6 +135,8 @@ export const deleteMe = async (userId, { password }) => {
   const files = await collectOwnedFiles(user);
   const now = new Date();
 
+  let documentKeys = [];
+
   await withTransaction(async (session) => {
     await User.updateOne(
       { _id: user._id },
@@ -156,6 +159,7 @@ export const deleteMe = async (userId, { password }) => {
     await hideConversationsOf(user._id, session);
     await removeAllFollowsOf(user._id, session);
     await removeNotificationsOf(user._id, session);
+    documentKeys = await removeApplicationsOf(user._id, session);
     await RefreshToken.updateMany(
       { user: user._id, revokedAt: null },
       { $set: { revokedAt: now } },
@@ -165,6 +169,7 @@ export const deleteMe = async (userId, { password }) => {
 
   disconnectUser(user._id);
   await removeStoredFiles(files);
+  await discardDocuments(documentKeys);
 };
 
 export const listUsers = (pagination) => paginate(User, { deletedAt: null }, pagination);

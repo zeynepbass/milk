@@ -9,6 +9,7 @@ services:
       TRUST_PROXY: "true"
     volumes: !override
       - uploads:/app/uploads
+      - private-uploads:/app/private-uploads
 
   client:
     build:

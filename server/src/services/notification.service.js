@@ -14,6 +14,8 @@ export const GROUPING_WINDOWS = Object.freeze({
   post_like: 24 * HOUR,
   post_comment: HOUR,
   follow: 24 * HOUR,
+  organic_approved: 0,
+  organic_rejected: 0,
 });
 
 const ACTOR_FIELDS = "name surname avatar";
@@ -29,6 +31,8 @@ const MESSAGE_BUILDERS = {
   post_comment: (name, count) =>
     count > 1 ? `${name} ve ${count - 1} kişi daha gönderine yorum yaptı` : `${name} gönderine yorum yaptı`,
   follow: (name) => `${name} seni takip etmeye başladı`,
+  organic_approved: () => "Organik sertifika başvurun onaylandı, doğrulanmış satıcı rozetin aktif",
+  organic_rejected: () => "Organik sertifika başvurun reddedildi, ayrıntılar profilinde",
 };
 
 export const toNotificationView = (notification) => ({
