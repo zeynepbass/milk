@@ -321,7 +321,3 @@ server/src
 server/migrations   server/scripts   server/tests
 e2e/
 ```
-
-## Lisans
-
-[MIT](LICENCE)
