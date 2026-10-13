@@ -283,8 +283,6 @@ Server testlerinin kapsadıkları:
 - bildirim gruplama, mesaj okundu bilgisi,
 - socket yetkilendirmesi, migration'lar ve iş kuyruğu.
 
-CI (GitHub Actions) her PR'da lint, hijyen, server ve client testleri, build, E2E ve Docker imajı build adımlarını çalıştırır.
-
 ## API dokümantasyonu
 
 - Swagger arayüzü: `/api/docs`
